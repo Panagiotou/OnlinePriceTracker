@@ -7,3 +7,8 @@ ENV/
 env.bak/
 venv.bak/
 
+
+# Logs
+logs
+*.log
+npm-debug.log*
