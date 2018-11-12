@@ -7,6 +7,7 @@ sudo pip install nodeenv
 
 
 # Usage
+cd into the folder you want to work on and run :
 
 nodeenv env
 
