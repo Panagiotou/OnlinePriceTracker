@@ -12,6 +12,7 @@
 
 # Documentation
 
+  * [Contributing](docs/contributing.md)
   * [Installation](docs/installation.md)
   * [Usage](docs/usage.md)
 
