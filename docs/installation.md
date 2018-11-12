@@ -8,6 +8,6 @@ sudo apt install nodejs
 
 sudo apt install npm
 
-# Installing the dependencies(see ../package.json)
+# Installing the dependencies (see the [package.json](../package.json) file scripts, install)
 
-$ npm install
+npm install
