@@ -1,0 +1,22 @@
+{
+  "name": "onlinepricetracker",
+  "version": "1.0.0",
+  "description": "Online Price Tracker",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "npm install -g express",
+    "update": "npm update -g",
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Panagiotou/OnlinePriceTracker.git"
+  },
+  "author": "Panagiotou Emmanouil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Panagiotou/OnlinePriceTracker/issues"
+  },
+  "homepage": "https://github.com/Panagiotou/OnlinePriceTracker#readme"
+}
