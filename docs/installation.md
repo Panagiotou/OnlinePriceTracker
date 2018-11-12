@@ -15,7 +15,7 @@ sudo apt install npm
 # Cloning the project from github:
 Enter the directory where the 'env' folder is located and run:
 
-git clone https://github.com/Panagiotou/OnlinePriceTracker.git
+git clone https://github.com/<your_username>/OnlinePriceTracker.git (This is the repo you have forked from the original)
 
 # Installing the dependencies (see the [package.json](../package.json) file scripts, install):
 
