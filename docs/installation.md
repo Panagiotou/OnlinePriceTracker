@@ -21,6 +21,7 @@ git clone https://github.com/<your_username>/OnlinePriceTracker.git (This is the
 
 !!! only proceed if your virtual enviroment is set up correctly
 You should see something like this in the command window : (env) panagiotou@panagiotou:
-Run:
+
+cd OnlinePriceTracker and run:
 
 npm install
