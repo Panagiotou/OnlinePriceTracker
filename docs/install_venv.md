@@ -1,8 +1,7 @@
-# You can install nodeenv globally with easy_install:
+# Install pip:
+sudo apt-get install python-pip
 
-sudo easy_install nodeenv
-
-# or with pip (if you have pip installed):
+# With pip (if you have pip installed):
 
 sudo pip install nodeenv  
 
