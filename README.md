@@ -14,6 +14,7 @@
 
   * [Contributing](docs/contributing.md)
   * [Installation](docs/installation.md)
+  * [Setup Mysql Database](docs/database.md)
   * [Usage](docs/usage.md)
 
 # Deadlines: ---
