@@ -27,12 +27,12 @@ npm install
   
 MySQL Database:  
 https://dev.mysql.com/downloads/file/?id=480824 κατέβασμα χωρίς εγγραφή/σύνδεση  
-Εγκατάσταση (αγνόηση απαιτούμενων, ****)  
+Εγκατάσταση (αγνόηση απαιτούμενων, \*\*\*\*)  
 Από την έναρξη ανοίγουμε το MySQL 8.0 Command Line Client  
 CREATE DATABASE LOO;  
-CREATE USER 'George'@'localhost' IDENTIFIED BY '****';  
+CREATE USER 'George'@'localhost' IDENTIFIED BY '\*\*\*\*';  
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON LOO.* TO 'George'@'localhost';  
-ALTER USER 'George'@'localhost' IDENTIFIED WITH mysql_native_password BY '****'  
+ALTER USER 'George'@'localhost' IDENTIFIED WITH mysql_native_password BY '\*\*\*\*'  
 exit;  
 Φτιάχνουμε μέσα στο OnlinePriceTracker ένα αρχείο ".env" ίδιο με το "sample.env", αλλά με συμπληρωμένα στοιχεία (ο κωδικός είναι χρήστη).  
 Στη γραμμή εντολών:  
