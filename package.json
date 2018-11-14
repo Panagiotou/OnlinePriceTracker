@@ -18,5 +18,10 @@
   "bugs": {
     "url": "https://github.com/Panagiotou/OnlinePriceTracker/issues"
   },
-  "homepage": "https://github.com/Panagiotou/OnlinePriceTracker#readme"
+  "homepage": "https://github.com/Panagiotou/OnlinePriceTracker#readme",
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0"
+  }
 }

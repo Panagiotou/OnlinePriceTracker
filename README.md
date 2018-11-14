@@ -16,6 +16,7 @@
   * [Installation](docs/installation.md)
   * [Setup Mysql Database](docs/database.md)
   * [Usage](docs/usage.md)
+  * [Windows Installation](docs/windows_installation.md)
 
 # Deadlines:
 * Πρώτο παραδοτέο ως Δευτέρα 26/11/2018 [εδώ](https://courses.softlab.ntua.gr/softeng/2018b/project.html) .
