@@ -16,6 +16,7 @@
   * [Installation](docs/installation.md)
   * [Setup Mysql Database](docs/database.md)
   * [Usage](docs/usage.md)
+  * [Fill](docs/FillDatabase.md) the database with test data
 
 # Deadlines: ---
 (Κατάθεση ενδιάμεσων παραδοτέων στο σύνολο της διάρκειας του εξαμήνου, οι
