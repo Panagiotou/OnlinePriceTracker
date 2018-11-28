@@ -1,10 +1,13 @@
 ## Setup the Mysql Database
 
 # Install Mysql (run mysql first in a command line to see if it is already installed)
+<ul>
+<li>sudo apt-get update</li>
+<li>sudo apt-get install mysql-server</li>
+ <li>sudo mysql_secure_installation</li>
+</ul>
 
-sudo apt-get update
-sudo apt-get install mysql-server
-mysql_secure_installation
+
 
 
 # Connect to your MySQL database:
@@ -25,7 +28,7 @@ $ mysql> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, CREATE TEMPO
 
 exit;
 
-# After you are done, run:
+# After you are done, run (While beign inside the OnlinePriceTracker folder):
 
 gedit .env
 
