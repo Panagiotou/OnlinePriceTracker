@@ -15,7 +15,7 @@ $ sudo mysql
 
 $ mysql> CREATE DATABASE DB_NAME;
 
-# Create a user called DB_USER, exclude Symbols: ( e.g. @#$% ) and Ambiguous Characters ( e.g. (){}[]) for the password but include a '!' to the password to satisfy the current policy requirements :
+# Create a user called DB_USER, exclude Symbols: ( e.g. @#$% ) and Ambiguous Characters ( e.g. (){}[]) for the password but include a '!' to the password to satisfy the current policy requirements (to see the password requirements run SHOW VARIABLES LIKE 'validate_password%'; ):
 
 $ mysql> CREATE USER 'DB_USER'@'localhost' IDENTIFIED BY 'my-strong-password-here';
 
