@@ -8,6 +8,10 @@ pip3 install -r requirements.txt
 
 This should install all the python3 modules needed to run crawl.py
 
+Now run sudo apt-get install chromium-chromedriver
+
+This will install the chromedriver needed to run the program
+
 
 # Run python3 crawl.py
 
