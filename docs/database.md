@@ -1,10 +1,13 @@
 ## Setup the Mysql Database
 
 # Install Mysql (run mysql first in a command line to see if it is already installed)
+<ul>
+<li>sudo apt-get update</li>
+<li>sudo apt-get install mysql-server</li>
+ <li>sudo mysql_secure_installation</li>
+</ul>
 
-sudo apt-get update
-sudo apt-get install mysql-server
-mysql_secure_installation
+
 
 
 # Connect to your MySQL database:
@@ -15,7 +18,7 @@ $ sudo mysql
 
 $ mysql> CREATE DATABASE DB_NAME;
 
-# Create a user called DB_USER, exclude Symbols: ( e.g. @#$% ) and Ambiguous Characters ( e.g. (){}[]) for the password but include a '!' to the password to satisfy the current policy requirements :
+# Create a user called DB_USER, exclude Symbols: ( e.g. @#$% ) and Ambiguous Characters ( e.g. (){}[]) for the password but include a '!' to the password to satisfy the current policy requirements (to see the password requirements run SHOW VARIABLES LIKE 'validate_password%'; ):
 
 $ mysql> CREATE USER 'DB_USER'@'localhost' IDENTIFIED BY 'my-strong-password-here';
 
@@ -25,7 +28,7 @@ $ mysql> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, CREATE TEMPO
 
 exit;
 
-# After you are done, run:
+# After you are done, run (While beign inside the OnlinePriceTracker folder):
 
 gedit .env
 
