@@ -17,7 +17,7 @@ app.listen(8000, function(){
 // Connection to database
 
 var mysql      = require('mysql');
-var connection = mysql.createConnection({
+var conn = mysql.createConnection({
   host     : process.env.DB_HOST,
   user     : process.env.DB_USER,
   password : process.env.DB_PASS,
@@ -25,9 +25,9 @@ var connection = mysql.createConnection({
 });
 
 
-connection.connect(function(err) {
+conn.connect(function(err) {
   if (err) throw err;
   console.log('Database connection established !');
 });
 
-connection.end();
+conn.end();

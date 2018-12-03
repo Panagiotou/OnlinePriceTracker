@@ -24,7 +24,7 @@ $ mysql> CREATE USER 'DB_USER'@'localhost' IDENTIFIED BY 'my-strong-password-her
 
 # Grant this user DB_USER the permission to access your DB_NAME database:
 
-$ mysql> GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON DB_NAME.* TO 'DB_USER'@'localhost';
+$ mysql> GRANT SELECT, INSERT, REFERENCES, UPDATE, DELETE, CREATE, DROP, ALTER, CREATE TEMPORARY TABLES, LOCK TABLES ON DB_NAME.* TO 'DB_USER'@'localhost';
 
 exit;
 
