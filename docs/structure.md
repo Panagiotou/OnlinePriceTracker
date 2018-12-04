@@ -6,8 +6,9 @@
   Documentation.
 * `static/`
   Static files like image files, will be saved here.
-* `style/`
-  For the css files.
+* `public/`
+  * `css/`
+      For the css files.
 * `routes/`
   Basic routes for the project.
 * `views/`

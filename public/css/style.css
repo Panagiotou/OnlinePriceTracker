@@ -1,5 +1,5 @@
 body{
-	background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url(this.jpg);
+	background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url(../static/this.jpg);
 	height: 100vh;
 	background-size: cover;
 	background-position: center;
@@ -67,6 +67,14 @@ body{
 	color: #2f4f91;
 }
 
+.alert-error{
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
 
-
-
+.alert-success_msg{
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}

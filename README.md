@@ -18,6 +18,7 @@
   * [Usage](docs/usage.md)
   * [Windows Installation](docs/windows_installation.md)
   * [Fill](docs/FillDatabase.md) the database with test data
+  * Project [structure](docs/structure.md)
 
 
 # Deadlines:

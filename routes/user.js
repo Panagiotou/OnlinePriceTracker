@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
+
 require('dotenv').config() // require passwords and usernames etc from .env file
 
 // Connection to database
@@ -14,49 +16,56 @@ var conn = mysql.createConnection({
 
 conn.connect(function(err) {
     if (err) throw err;
-    console.log('Database connection established !');
 });
 
 // Register Form
-router.get('/register', function(req, res){
-  res.render('register');
+router.get('/', function(req, res){
+  res.sendFile('/views/register.html', { root: '.' });
 });
 
 // Register Proccess
-router.post('/register', function(req, res){
-  const username = req.body.username;
-  const password = req.body.password;
-  const password2 = req.body.password2;
-  const name = req.body.name
-  const surname = req.body.surname
-
+router.post('/', function(req, res){
   req.checkBody('username', 'Username is required').notEmpty();
   req.checkBody('password', 'Password is required').notEmpty();
-  req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
   req.checkBody('name', 'Name is required').notEmpty();
   req.checkBody('surname', 'Surname is required').notEmpty();
-
   let errors = req.validationErrors();
-
+  console.log( errors )
   if(errors){
-    res.render('register', {
-      errors:errors
-    });
+    res.sendFile('/views/register.html', { root: '.', errors: errors});
   }
-  else {
-    var sql = "INSERT INTO User (username, password, name, surname) VALUES (?,?,?,?)";
-    var values = [username, password, name, surname];
-    conn.query(sql, values, function (err) {
-      if (err) {
-        throw err;
-      }
-      else{
-        console.log("New User added to database!");
-      }
-    });
-  });
+  else{
+    req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
+    let errors1 = req.validationErrors();
+    console.log( errors )
+    if(errors1){
+      res.sendFile('/views/register.html', { root: '.', errors: errors1});
+    }
+    else{
+      const username = req.body.username;
+      const password = req.body.password;
+      const password2 = req.body.password2;
+      const name = req.body.name
+      const surname = req.body.surname
 
-
+      console.log( errors )
+      if(errors){
+        res.sendFile('/views/register.html', { root: '.', errors: errors});
+      }
+      else {
+        var sql = "INSERT INTO User (username, password, name, surname) VALUES (?,?,?,?)";
+        var values = [username, password, name, surname];
+        conn.query(sql, values, function (err) {
+          if (err) {
+            throw err;
+          }
+          else{
+            console.log("New User added to database!");
+          }
+        });
+      }
+    }
+  }
 });
 
 // Login Form
