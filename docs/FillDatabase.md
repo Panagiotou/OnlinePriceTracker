@@ -12,7 +12,7 @@ Now run sudo apt-get install chromium-chromedriver
 
 This will install the chromedriver needed to run the program
 
-At last open mysql (sudo mysql) and run these to queries:
+At last open mysql (sudo mysql) and run these two queries:
 
 * ALTER DATABASE DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 * ALTER TABLE Product CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
