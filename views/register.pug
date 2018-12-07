@@ -1,10 +1,8 @@
-doctype html
-html
-  head
-    link(href='css/style.css', rel='stylesheet')
-  body
+extends layout
+
+block content
     form(action='/register', method='POST')
-      title Registration Form Design
+      title Registration
       .register-page
         .form
           input(type='text', placeholder='Username', name='username')

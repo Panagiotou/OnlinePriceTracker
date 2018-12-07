@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const flash = require('connect-flash');
 
 require('dotenv').config() // require passwords and usernames etc from .env file
 
@@ -30,16 +31,14 @@ router.post('/register', function(req, res){
   req.checkBody('name', 'Name is required').notEmpty();
   req.checkBody('surname', 'Surname is required').notEmpty();
   let errors = req.validationErrors();
-  console.log( errors )
   if(errors){
-    res.render('register');
+    res.render('register', {errors: errors});
   }
   else{
     req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
     let errors1 = req.validationErrors();
-    console.log( errors )
     if(errors1){
-      res.render('register', { root: '.', errors: errors1});
+      res.render('register', {errors: errors1});
     }
     else{
       const username = req.body.username;
@@ -47,23 +46,21 @@ router.post('/register', function(req, res){
       const password2 = req.body.password2;
       const name = req.body.name
       const surname = req.body.surname
-
-      console.log( errors )
-      if(errors){
-        res.render('register', { root: '.', errors: errors});
-      }
-      else {
-        var sql = "INSERT INTO User (username, password, name, surname) VALUES (?,?,?,?)";
-        var values = [username, password, name, surname];
-        conn.query(sql, values, function (err) {
-          if (err) {
-            throw err;
+      var sql = "INSERT INTO User (username, password, name, surname) VALUES (?,?,?,?)";
+      var values = [username, password, name, surname];
+      conn.query(sql, values, function (err) {
+        if (err) {
+          if(err.code === 'ER_DUP_ENTRY'){
+            let errors3 = [{ param: 'username', msg: 'User already exists', value: '' }];
+            res.render('register', {errors: errors3});
           }
-          else{
-            console.log("New User added to database!");
-          }
-        });
-      }
+        }
+        else{
+          console.log("New User added to database!");
+          req.flash('success_msg','You are now registered and can log in');
+          res.redirect('/login');
+        }
+      });
     }
   }
 });
@@ -74,7 +71,7 @@ router.get('/login', function(req, res){
 });
 
 // Login Process
-router.post('login', function(req, res){
+router.post('/login', function(req, res){
   const username = req.body.username;
   const password = req.body.password;
 
@@ -89,27 +86,24 @@ router.post('login', function(req, res){
     });
   }
   else {
-    conn.connect(function(err) {
-      if (err) throw err;
-      //Escape the address value:
       var sql = "SELECT password FROM User WHERE username = ?"
-      //Send an array with value(s) to replace the escaped values:
       conn.query(sql, username, function (err, result) {
         if (err) {
           throw err;
         }
         else{
-            if(result.password === password){
-              console.log("Connected!");
+            if(result[0].password === password){
+              req.flash('success_msg','You are now logged in');
+              res.redirect('/'); // after login go to logged in
             }
             else{
-              console.log("User doesnt exist");
+              let errors1 = [{ param: '', msg: 'You have entered an invalid username or password', value: '' }];
+              res.render('login', {errors: errors1});
             }
         }
       });
-    });
-  }
 
+  }
 });
 
 // logout

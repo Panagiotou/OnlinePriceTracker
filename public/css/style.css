@@ -71,10 +71,12 @@ body{
   color: #a94442;
   background-color: #f2dede;
   border-color: #ebccd1;
+	font-family: "Roboto", sans-serif;
 }
 
 .alert-success_msg{
   color: #3c763d;
   background-color: #dff0d8;
   border-color: #d6e9c6;
+	font-family: "Roboto", sans-serif;
 }

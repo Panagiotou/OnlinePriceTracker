@@ -1,19 +1,16 @@
 doctype html
 
-//- use if your pug files have similarities
-  to avoid copying large blocks of same code.
-  
-  in the new file:
-  extends layout
-  
-  block content
-    code here
-
+//- use if your pug files have similarities to avoid copying large blocks of same code.
 
 html
   head
-    title Online Price Tracker
+    link(href='css/style.css', rel='stylesheet')
 
+.container
+  != messages('message', locals)
+  if errors
+    each error, i in errors
+      div(class="alert alert-error") #{error.msg}      
   body
     block content
     br

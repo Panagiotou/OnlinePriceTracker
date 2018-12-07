@@ -3,6 +3,7 @@ const session = require('express-session');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const path = require('path');
+const bodyParser = require('body-parser');
 
 const app = express();
 
@@ -15,10 +16,6 @@ app.set('view engine', 'pug');
 //Set Public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-//Home route
-app.get('/', function(req, res){
-  res.send('Hello World');
-});
 
 
 
@@ -38,6 +35,12 @@ conn.connect(function(err) {
   if (err) throw err;
   console.log('Database connection established !');
 });
+
+// Body Parser Middleware
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+// parse application/json
+app.use(bodyParser.json());
 
 // Express Session Middleware
 app.use(session({
@@ -81,5 +84,9 @@ app.listen(8000, function(){
   console.log('Server started at http://localhost:8000/');
 });
 
+//Home route
+app.get('/', function(req, res){
+  res.render('home');
+});
 
 conn.end();

@@ -1,13 +1,10 @@
-doctype html
-html
-	head
-		title Login Form Design
-		link(href='css/style.css', rel='stylesheet')
-	body
-		h1 #{title}
-		.login-page
-			.form
-				form.login-form
+extends layout
+
+block content
+		form(action='/login', method='POST')
+			title Login
+			.login-page
+				.form
 					input(type='text', placeholder='Username', name='username')
 					input(type='password', placeholder='Password', name='password')
 					button log in
