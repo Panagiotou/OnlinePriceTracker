@@ -19,12 +19,12 @@ conn.connect(function(err) {
 });
 
 // Register Form
-router.get('/', function(req, res){
-  res.sendFile('/views/register.html', { root: '.' });
+router.get('/register', function(req, res){
+  res.render('register');
 });
 
 // Register Proccess
-router.post('/', function(req, res){
+router.post('/register', function(req, res){
   req.checkBody('username', 'Username is required').notEmpty();
   req.checkBody('password', 'Password is required').notEmpty();
   req.checkBody('name', 'Name is required').notEmpty();
@@ -32,14 +32,14 @@ router.post('/', function(req, res){
   let errors = req.validationErrors();
   console.log( errors )
   if(errors){
-    res.sendFile('/views/register.html', { root: '.', errors: errors});
+    res.render('register');
   }
   else{
     req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
     let errors1 = req.validationErrors();
     console.log( errors )
     if(errors1){
-      res.sendFile('/views/register.html', { root: '.', errors: errors1});
+      res.render('register', { root: '.', errors: errors1});
     }
     else{
       const username = req.body.username;
@@ -50,7 +50,7 @@ router.post('/', function(req, res){
 
       console.log( errors )
       if(errors){
-        res.sendFile('/views/register.html', { root: '.', errors: errors});
+        res.render('register', { root: '.', errors: errors});
       }
       else {
         var sql = "INSERT INTO User (username, password, name, surname) VALUES (?,?,?,?)";
@@ -74,7 +74,7 @@ router.get('/login', function(req, res){
 });
 
 // Login Process
-router.post('/login', function(req, res){
+router.post('login', function(req, res){
   const username = req.body.username;
   const password = req.body.password;
 
@@ -84,7 +84,7 @@ router.post('/login', function(req, res){
   let errors = req.validationErrors();
 
   if(errors){
-    res.render('register', {
+    res.render('login', {
       errors:errors
     });
   }

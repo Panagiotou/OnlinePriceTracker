@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    link(href='css/style.css', rel='stylesheet')
+  body
+    form(action='/register', method='POST')
+      title Registration Form Design
+      .register-page
+        .form
+          input(type='text', placeholder='Username', name='username')
+          input(type='password', placeholder='Password', name='password')
+          input(type='password', placeholder='Confirm password', name='password2')
+          input(type='text', placeholder='Name', name='name')
+          input(type='text', placeholder='Surname', name='surname')
+          button Create
+          p.message
+            | Already Registered? 
+            a(href='login') Log in

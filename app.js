@@ -8,10 +8,17 @@ const app = express();
 
 require('dotenv').config() // require passwords and usernames etc from .env file
 
+//Load View Engine
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+
+//Set Public folder
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Home route
 app.get('/', function(req, res){
   res.send('Hello World');
+  //res.render('register');
 });
 
 
@@ -68,7 +75,8 @@ app.use(expressValidator({
 
 // Route Files
 let user = require('./routes/user');
-app.use('/register', user);
+app.use('/', user);
+
 
 app.listen(8000, function(){
   console.log('Server started at http://localhost:8000/');
