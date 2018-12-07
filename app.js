@@ -18,7 +18,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Home route
 app.get('/', function(req, res){
   res.send('Hello World');
-  //res.render('register');
 });
 
 
