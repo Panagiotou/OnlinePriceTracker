@@ -10,10 +10,31 @@ html
   != messages('message', locals)
   if errors
     each error, i in errors
-      div(class="alert alert-error") #{error.msg}      
+      div(class="alert alert-error") #{error.msg}
+
+  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
   body
-    block content
-    br
-    hr
-    footer
-      p Copyright &copy; Online Price Tracker 2018
+
+  #navbar
+      a.active(href='#home')
+       i.glyphicon.glyphicon-home
+      a(href='#news') Προσφορές
+      a(href='#contact') Επικοινωνία
+      a(href='#app') OPT App
+
+  block content
+  br
+  footer
+      p(class="bottom") Copyright &copy; Online Price Tracker 2018
+
+      script.
+        var prevScrollpos = window.pageYOffset;
+        window.onscroll = function() {
+        var currentScrollPos = window.pageYOffset;
+        if (prevScrollpos > currentScrollPos) {
+        document.getElementById("navbar").style.top = "0";
+        } else {
+        document.getElementById("navbar").style.top = "-50px";
+        }
+        prevScrollpos = currentScrollPos;
+        }

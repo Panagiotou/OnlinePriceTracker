@@ -2,4 +2,16 @@ extends layout
 
 block content
   title Login
-  p Home page
+
+  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+
+  body
+
+  #navbar
+      a.active(href='#home')
+       i.glyphicon.glyphicon-home
+      a(href='#news') Προσφορές
+      a(href='#contact') Επικοινωνία
+      a(href='#app') OPT App
+      a(href='login', style='float:right') Σύνδεση
+      a(href='register', style='float:right') Εγγραφή
