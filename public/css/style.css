@@ -7,8 +7,8 @@ body{
 
 footer{
 	position: fixed;
-  bottom: 0;
-  width: 300px;
+	bottom: 0;
+	width: 300px;
 }
 
 p{
@@ -83,15 +83,15 @@ p{
 }
 
 .alert-error{
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
+	color: #a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
 	font-family: "Roboto", sans-serif;
 }
 
 .alert-success_msg{
-  color: #3c763d;
-  background-color: #dff0d8;
-  border-color: #d6e9c6;
+	color: #3c763d;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
 	font-family: "Roboto", sans-serif;
 }
