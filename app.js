@@ -17,9 +17,6 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
-
-
 // Connection to database
 
 var mysql      = require('mysql');
@@ -42,12 +39,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
+
 // Express Session Middleware
 app.use(session({
   secret: 'keyboard cat',
-  resave: true,
-  saveUninitialized: true
+  resave: false,
+  saveUninitialized: true,
 }));
+
+
 
 // Express Messages Middleware
 app.use(require('connect-flash')());

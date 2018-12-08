@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const flash = require('connect-flash');
+const session = require('express-session');
 
 require('dotenv').config() // require passwords and usernames etc from .env file
 
@@ -15,8 +16,21 @@ var conn = mysql.createConnection({
   database : process.env.DB_NAME
 });
 
+
 conn.connect(function(err) {
     if (err) throw err;
+});
+
+// After loggin, this will change router file
+router.get('/logged_in', function(req, res){
+  if (req.session && req.session.username) {
+    // Check if session exists and if username exists
+    res.render('logged_in');
+
+  } else {
+    req.flash('error','You dont have access to this site, please login first.');
+    res.redirect('/login');
+  }
 });
 
 // Register Form
@@ -52,6 +66,7 @@ router.post('/register', function(req, res){
         if (err) {
           if(err.code === 'ER_DUP_ENTRY'){
             let errors3 = [{ param: 'username', msg: 'User already exists', value: '' }];
+            req.session.username = username; // Keep the username in this session.
             res.render('register', {errors: errors3});
           }
         }
@@ -93,8 +108,9 @@ router.post('/login', function(req, res){
         }
         else{
             if(result[0].password === password){
+              req.session.username = username;
               req.flash('success_msg','You are now logged in');
-              res.redirect('/'); // after login go to logged in
+              res.redirect('/logged_in'); // after login go to logged in
             }
             else{
               let errors1 = [{ param: '', msg: 'You have entered an invalid username or password', value: '' }];
