@@ -28,7 +28,7 @@ router.get('/logged_in', function(req, res){
     res.render('logged_in');
 
   } else {
-    req.flash('error','You dont have access to this site, please login first.');
+    req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
     res.redirect('/login');
   }
 });
@@ -40,16 +40,16 @@ router.get('/register', function(req, res){
 
 // Register Proccess
 router.post('/register', function(req, res){
-  req.checkBody('username', 'Username is required').notEmpty();
-  req.checkBody('password', 'Password is required').notEmpty();
-  req.checkBody('name', 'Name is required').notEmpty();
-  req.checkBody('surname', 'Surname is required').notEmpty();
+  req.checkBody('username', 'Συμπληρώστε το πεδίο " Όνομα χρήστη "').notEmpty();
+  req.checkBody('password', 'Συμπληρώστε το πεδίο " Κωδικός πρόσβασης "').notEmpty();
+  req.checkBody('name', 'Συμπληρώστε το πεδίο " Όνομα "').notEmpty();
+  req.checkBody('surname', 'Συμπληρώστε το πεδίο " Επώνυμο "').notEmpty();
   let errors = req.validationErrors();
   if(errors){
     res.render('register', {errors: errors});
   }
   else{
-    req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
+    req.checkBody('password2', 'Οι Κωδικοί πρόσβασης είναι διαφορετικοί').equals(req.body.password);
     let errors1 = req.validationErrors();
     if(errors1){
       res.render('register', {errors: errors1});
@@ -65,14 +65,14 @@ router.post('/register', function(req, res){
       conn.query(sql, values, function (err) {
         if (err) {
           if(err.code === 'ER_DUP_ENTRY'){
-            let errors3 = [{ param: 'username', msg: 'User already exists', value: '' }];
+            let errors3 = [{ param: 'username', msg: 'Το " Όνομα χρήστη " που επιλέξατε χρησιμοποιείται', value: '' }];
             req.session.username = username; // Keep the username in this session.
             res.render('register', {errors: errors3});
           }
         }
         else{
           console.log("New User added to database!");
-          req.flash('success_msg','You are now registered and can log in');
+          req.flash('success_msg','Η εγγραφή σας ολοκληρώθηκε με επιτυχία, μπορείτε να συνδεθείτε');
           res.redirect('/login');
         }
       });
@@ -90,8 +90,8 @@ router.post('/login', function(req, res){
   const username = req.body.username;
   const password = req.body.password;
 
-  req.checkBody('username', 'Username is required').notEmpty();
-  req.checkBody('password', 'Password is required').notEmpty();
+  req.checkBody('username', 'Συμπληρώστε το πεδίο " Όνομα χρήστη "').notEmpty();
+  req.checkBody('password', 'Συμπληρώστε το πεδίο " Κωδικός πρόσβασης "').notEmpty();
 
   let errors = req.validationErrors();
 
@@ -109,11 +109,11 @@ router.post('/login', function(req, res){
         else{
             if(result[0].password === password){
               req.session.username = username;
-              req.flash('success_msg','You are now logged in');
+              req.flash('success_msg','Επιτυχής Σύνδεση');
               res.redirect('/logged_in'); // after login go to logged in
             }
             else{
-              let errors1 = [{ param: '', msg: 'You have entered an invalid username or password', value: '' }];
+              let errors1 = [{ param: '', msg: 'Λανθασμένο " Όνομα χρήστη " ή " Κωδικό πρόσβασης "', value: '' }];
               res.render('login', {errors: errors1});
             }
         }
@@ -125,7 +125,7 @@ router.post('/login', function(req, res){
 // logout
 router.get('/logout', function(req, res){
   req.logout();
-  req.flash('success', 'You are logged out');
+  req.flash('success', 'Έγινε Αποσύνδεση');
   res.redirect('/users/login');
 });
 
