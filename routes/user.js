@@ -107,7 +107,7 @@ router.post('/login', function(req, res){
         }
         else{
             if(result.length == 0){
-              let errors1 = [{ param: '', msg: 'Λανθασμένο " Όνομα χρήστη " ή " Κωδικό πρόσβασης "', value: '' }];
+              let errors1 = [{ param: '', msg: 'Λάθος " Όνομα χρήστη " ή " Κωδικός πρόσβασης "', value: '' }];
               res.render('login', {errors: errors1});
             }
             else{
@@ -117,7 +117,7 @@ router.post('/login', function(req, res){
                 res.redirect('/logged_in'); // after login go to logged in
               }
               else{
-                let errors1 = [{ param: '', msg: 'Λανθασμένο " Όνομα χρήστη " ή " Κωδικό πρόσβασης "', value: '' }];
+                let errors1 = [{ param: '', msg: 'Λάθος " Όνομα χρήστη " ή " Κωδικός πρόσβασης "', value: '' }];
                 res.render('login', {errors: errors1});
               }
             }
