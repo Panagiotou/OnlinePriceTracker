@@ -32,6 +32,17 @@ p{
 	margin: auto;
 }
 
+.bottom{
+	position: fixed;
+	bottom: 0;
+}
+.footer{
+	position: fixed;
+	bottom: 0;
+	color: white;
+
+}
+
 
 .form{
 	position: realtive;
@@ -79,7 +90,7 @@ p{
 }
 
 .form .message a{
-	color: #2f4f91;
+	color: #022e7c;
 }
 
 .alert-error{
@@ -94,4 +105,34 @@ p{
 	background-color: #dff0d8;
 	border-color: #d6e9c6;
 	font-family: "Roboto", sans-serif;
+}
+
+
+.active {
+	background-color: #e5ca54;
+}
+
+#navbar {
+    background-color: #111;
+    position: fixed;
+    top: 0;
+    width: 98.5%;
+    display: block;
+    transition: top 0.3s;
+		margin-left: -70px;
+}
+
+#navbar a {
+    float: left;
+    display: block;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+#navbar a:hover {
+    background-color: #dbd899;
+    color: black;
 }
