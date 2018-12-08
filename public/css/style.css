@@ -21,7 +21,8 @@ body{
 	position: fixed;
 	bottom: 0;
 }
-.footer{
+
+footer{
 	position: fixed;
 	bottom: 0;
 	color: white;
@@ -79,16 +80,16 @@ body{
 }
 
 .alert-error{
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
+	color: #a94442;
+	background-color: #f2dede;
+	border-color: #ebccd1;
 	font-family: "Roboto", sans-serif;
 }
 
 .alert-success_msg{
-  color: #3c763d;
-  background-color: #dff0d8;
-  border-color: #d6e9c6;
+	color: #3c763d;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
 	font-family: "Roboto", sans-serif;
 }
 
@@ -101,14 +102,13 @@ body{
     background-color: #111;
     position: fixed;
     top: 0;
-    width: 98.5%;
+    width: 100%;
     display: block;
     transition: top 0.3s;
-		margin-left: -70px;
 }
 
 #navbar a {
-    float: left;
+		float: left;
     display: block;
     color: #f2f2f2;
     text-align: center;
