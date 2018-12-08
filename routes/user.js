@@ -94,7 +94,6 @@ router.post('/login', function(req, res){
   req.checkBody('password', 'Συμπληρώστε το πεδίο " Κωδικός πρόσβασης "').notEmpty();
 
   let errors = req.validationErrors();
-
   if(errors){
     res.render('login', {
       errors:errors
@@ -107,14 +106,20 @@ router.post('/login', function(req, res){
           throw err;
         }
         else{
-            if(result[0].password === password){
-              req.session.username = username;
-              req.flash('success_msg','Επιτυχής Σύνδεση');
-              res.redirect('/logged_in'); // after login go to logged in
-            }
-            else{
+            if(result.length == 0){
               let errors1 = [{ param: '', msg: 'Λανθασμένο " Όνομα χρήστη " ή " Κωδικό πρόσβασης "', value: '' }];
               res.render('login', {errors: errors1});
+            }
+            else{
+              if(result[0].password === password){
+                req.session.username = username;
+                req.flash('success_msg','Επιτυχής Σύνδεση');
+                res.redirect('/logged_in'); // after login go to logged in
+              }
+              else{
+                let errors1 = [{ param: '', msg: 'Λανθασμένο " Όνομα χρήστη " ή " Κωδικό πρόσβασης "', value: '' }];
+                res.render('login', {errors: errors1});
+              }
             }
         }
       });

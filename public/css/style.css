@@ -5,6 +5,11 @@ body{
 	background-position: center;
 }
 
+.left {
+  float: left;
+  width: 30%;
+	padding-top: 5%;
+}
 .login-page{
 	width: 360px;
 	padding: 10% 0 0;
@@ -31,7 +36,7 @@ footer{
 
 
 .form{
-	position: realtive;
+	position: relative;
 	z-index: 1;
 	background: rgba(186, 155, 125, 0.48);
 	max-width: 360px;
@@ -82,8 +87,9 @@ footer{
 .alert-error{
 	color: #a94442;
 	background-color: #f2dede;
-	border-color: #ebccd1;
 	font-family: "Roboto", sans-serif;
+	position: relative;
+	width: 100%;
 }
 
 .alert-success_msg{
