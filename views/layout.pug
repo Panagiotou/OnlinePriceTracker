@@ -3,23 +3,24 @@ doctype html
 //- use if your pug files have similarities to avoid copying large blocks of same code.
 html
   head
-    link(href='css/style.css', rel='stylesheet')
-
-.container
-  != messages('message', locals)
-  if errors
-    each error, i in errors
-      div(class="alert alert-error") #{error.msg}
-
-  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+    link(rel='stylesheet', href='css/style.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+    #navbar
+        a.active(href='#home')
+          i.glyphicon.glyphicon-home
+        a(href='#news') Προσφορές
+        a(href='#contact') Επικοινωνία
+        a(href='#app') OPT App
   body
 
-  #navbar
-      a.active(href='#home')
-       i.glyphicon.glyphicon-home
-      a(href='#news') Προσφορές
-      a(href='#contact') Επικοινωνία
-      a(href='#app') OPT App
+  .container
+    br
+    br
+    br
+    != messages('message', locals)
+    if errors
+      each error, i in errors
+        div(class="alert alert-error") #{error.msg}
 
   block content
   br
