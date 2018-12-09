@@ -79,6 +79,9 @@ app.use(expressValidator({
 let user = require('./routes/user');
 app.use('/', user);
 
+//Route API files
+var routes = require('./api/routes/products');
+routes(app);
 
 app.listen(8000, function(){
   console.log('Server started at http://localhost:8000/');
