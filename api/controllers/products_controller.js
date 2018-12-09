@@ -11,10 +11,10 @@ conn.connect(function(err) {
 });
 
 exports.list_products = function(req, res) {
-  var start = req.start;
-  var count = req.count;
-  var status = req.status;
-  var sort = req.sort;
+  var start = req.query.start;
+  var count = req.query.count;
+  var status = req.query.status;
+  var sort = req.query.sort;
   var statusbool = false;
   if (status == 'ALL'){
     statusbool = "false OR withdrawn=true";
@@ -23,16 +23,17 @@ exports.list_products = function(req, res) {
     statusbool = true;
   }
   var sort1 = sort.split("|");
-  var sql = `SELECT * FROM Product WHERE (id BETWEEN ${start} AND ${count}) AND (withdrawn= ${statusbool}) ORDER BY ${sort1[0]} ${sort1[1]} `;
+  var sql = `SELECT * FROM Product_api WHERE ('id' BETWEEN ${start} AND ${count}) AND ('withdrawn'= ${statusbool}) ORDER BY '${sort1[0]}' ${sort1[1]} `;
   conn.query(sql, function (err, result) {
     if (err) {
       throw err;
     }
     else {
-      console.log(result);
+      res.json(result);
     }
   });
 };
+
 exports.create_a_product = function(req, res) {
 // TODO
 };

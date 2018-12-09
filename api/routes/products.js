@@ -1,6 +1,6 @@
 module.exports = function(app) {
 	var products = require('../controllers/products_controller');
-  var baseurl="observatory/api";
+  var baseurl="/observatory/api";
 	// Products Routes
 	app.route(baseurl + '/products')
 		.get(products.list_products)
