@@ -80,8 +80,10 @@ let user = require('./routes/user');
 app.use('/', user);
 
 //Route API files
-var routes = require('./api/routes/products');
-routes(app);
+var product_routes = require('./api/routes/products');
+product_routes(app);
+var shop_routes = require('./api/routes/shops');
+shop_routes(app);
 
 app.listen(8000, function(){
   console.log('Server started at http://localhost:8000/');

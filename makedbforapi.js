@@ -22,5 +22,10 @@ if (errq) throw errq;
   console.log("Table Product_api created");
 });
 
+var sql = "CREATE TABLE IF NOT EXISTS Shop_api (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255),address VARCHAR(255), lng DOUBLE, lat DOUBLE, tags VARCHAR(255), withdrawn BOOLEAN DEFAULT false, PRIMARY KEY (id))";
+conn.query(sql, function (errq, result) {
+if (errq) throw errq;
+  console.log("Table Shop_api created");
+});
 
 conn.end();
