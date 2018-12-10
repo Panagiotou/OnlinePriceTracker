@@ -1,4 +1,5 @@
 var mysql      = require('mysql');
+var jsontoxml      = require('jsontoxml');
 var conn = mysql.createConnection({
   host     : process.env.DB_HOST,
   user     : process.env.DB_USER,
@@ -15,8 +16,16 @@ exports.list_products = function(req, res) {
   var count = req.query.count;
   var status = req.query.status;
   var sort = req.query.sort;
+  var format = req.query.format;
+  if(! format){
+    format = "json";
+  }
   var statusbool = false;
   var total = 0;
+  if ( [start, count, status, sort].includes(undefined) || [start, count, status, sort].includes(null) ){
+    res.send("400 – Bad Request");
+    return;
+  }
   if (status == 'ALL'){
     statusbool = "false OR withdrawn=true";
   }
@@ -46,7 +55,26 @@ exports.list_products = function(req, res) {
         "total": total,
         "products":result
       }
-      res.json(json_res);
+      if(format == "json"){
+        res.json(json_res);
+      }
+      else{
+        res.set('Content-Type', 'text/xml');
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<results>"
+        xml += jsontoxml({
+          "start": start,
+          "count": count,
+          "total": total});
+        xml += "<products>";
+        for (var i in result) {
+            xml +="<product>";
+            xml += jsontoxml(result[i]);
+            xml +="</product>";
+        }
+        xml += "</products>"
+        xml += "</results>"
+        res.send(xml);
+      }
     }
   });
 };
