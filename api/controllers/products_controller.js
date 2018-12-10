@@ -16,6 +16,7 @@ exports.list_products = function(req, res) {
   var status = req.query.status;
   var sort = req.query.sort;
   var statusbool = false;
+  var total = 0;
   if (status == 'ALL'){
     statusbool = "false OR withdrawn=true";
   }
@@ -23,13 +24,29 @@ exports.list_products = function(req, res) {
     statusbool = true;
   }
   var sort1 = sort.split("|");
+
+  var sql1 = `SELECT COUNT(*) AS total FROM Product_api`;
+  conn.query(sql1, function (err, result1) {
+    if (err) {
+      throw err;
+    }
+    else{
+      total = result1[0].total;
+    }
+  });
   var sql = `SELECT * FROM Product_api WHERE ('id' BETWEEN ${start} AND ${count}) AND ('withdrawn'= ${statusbool}) ORDER BY '${sort1[0]}' ${sort1[1]} `;
   conn.query(sql, function (err, result) {
     if (err) {
       throw err;
     }
     else {
-      res.json(result);
+      json_res = {
+        "start": start,
+        "count": count,
+        "total": total,
+        "products":result
+      }
+      res.json(json_res);
     }
   });
 };
