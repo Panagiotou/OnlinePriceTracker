@@ -84,7 +84,6 @@ exports.create_a_shop = function(req, res) {
 };
 
 exports.read_a_shop = function(req, res) {
-//Updated 11/12 14:01 by stef
   var format = req.query.format;
   var id = req.params.id;
   if(! format){
