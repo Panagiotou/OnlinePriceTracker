@@ -95,7 +95,7 @@ exports.read_a_shop = function(req, res) {
       throw err;
     }
     else if(result == ''){  //can't find the shop with the given id
-      res.send("400 – Bad Request");
+      res.send("404 – Not Found");
       return;
     }
     else{

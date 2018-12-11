@@ -84,7 +84,36 @@ exports.create_a_product = function(req, res) {
 };
 
 exports.read_a_product = function(req, res) {
-//TODO
+  var format = req.query.format;
+  var id = req.params.id;
+  if(! format){
+    format = "json";
+  }
+  var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
+  conn.query(sql1, function (err, result) {
+    if (err) {
+      throw err;
+    }
+    else if(result == ''){  //can't find the product with the given id
+      res.send("404 – Not Found");
+      return;
+    }
+    else{
+      json_res = result;
+      if(format == "json"){
+        res.json(json_res);
+      }
+      else{
+        res.set('Content-Type', 'text/xml');
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<results>"
+        for (var i in result) {
+          xml += jsontoxml(result[i]);
+        }
+        xml += "</results>"
+        res.send(xml);
+      }
+    }
+  });
 };
 
 exports.update_a_product = function(req, res) {
