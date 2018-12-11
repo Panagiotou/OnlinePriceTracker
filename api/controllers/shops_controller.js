@@ -84,7 +84,37 @@ exports.create_a_shop = function(req, res) {
 };
 
 exports.read_a_shop = function(req, res) {
-//TODO
+//Updated 11/12 14:01 by stef
+  var format = req.query.format;
+  var id = req.params.id;
+  if(! format){
+    format = "json";
+  }
+  var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+  conn.query(sql1, function (err, result) {
+    if (err) {
+      throw err;
+    }
+    else if(result == ''){  //can't find the shop with the given id
+      res.send("400 – Bad Request");
+      return;
+    }
+    else{
+      json_res = result;
+      if(format == "json"){
+        res.json(json_res);
+      }
+      else{
+        res.set('Content-Type', 'text/xml');
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<results>"
+        for (var i in result) {
+          xml += jsontoxml(result[i]);
+        }
+        xml += "</results>"
+        res.send(xml);
+      }
+    }
+  });
 };
 
 exports.update_a_shop = function(req, res) {
