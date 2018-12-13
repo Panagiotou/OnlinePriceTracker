@@ -160,6 +160,11 @@ exports.update_a_product = function(req, res) {
   if(! format){
     format = "json";
   }
+  if ([body.name, body.description, body.category, body.tags, body.withdrawn].includes(undefined)){
+    console.log("Then im here, how is this possible???");
+    res.send("400 – Bad Request");
+    return;
+  }
   var sql0 = `SELECT * FROM Product_api WHERE id = ${id}`;
   conn.query(sql0, function (err, result) {
     if (err) {
@@ -169,13 +174,7 @@ exports.update_a_product = function(req, res) {
       res.send("404 – Not Found");
       return;
     }
-    else{
-      if ([body.name, body.description, body.category, body.tags, body.withdrawn].includes(undefined)){
-        console.log("Then im here, how is this possible???");
-        res.send("400 – Bad Request");
-        return;
-      }
-    }
+    
   });
 
   console.log("First im here");
