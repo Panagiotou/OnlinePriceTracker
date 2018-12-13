@@ -105,11 +105,11 @@ exports.read_a_shop = function(req, res) {
       }
       else{
         res.set('Content-Type', 'text/xml');
-        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
         for (var i in result) {
           xml += jsontoxml(result[i]);
         }
-        xml += "</product>"
+        xml += "</shop>"
         res.send(xml);
       }
     }
