@@ -117,7 +117,7 @@ exports.read_a_shop = function(req, res) {
 };
 
 exports.update_a_shop = function(req, res) {
-//TODO
+//TODO 12
 };
 
 exports.partial_update_shop = function(req, res) {
