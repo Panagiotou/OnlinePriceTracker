@@ -105,7 +105,7 @@ exports.create_a_product = function(req, res) {
     else{
       json_res = result;
       if(format == "json"){
-        res.json(json_res);
+        res.json(json_res[0]);
       }
       else{
         res.set('Content-Type', 'text/xml');
@@ -138,7 +138,7 @@ exports.read_a_product = function(req, res) {
     else{
       json_res = result;
       if(format == "json"){
-        res.json(json_res);
+        res.json(json_res[0]);
       }
       else{
         res.set('Content-Type', 'text/xml');
@@ -177,37 +177,38 @@ exports.update_a_product = function(req, res) {
       }
     }
   });
-
-  var sql = `UPDATE Product_api SET name = '${body.name}', description = '${body.description}', category = '${body.category}', tags = '${body.tags}', withdrawn = ${body.withdrawn} WHERE (id = '${id}')`
-  conn.query(sql, function (err, result) {
-    if (err) {
-      throw err;
-    }
-  });
-  var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
-  conn.query(sql1, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    else if(result == ''){  //can't find the product we just updated, (If we get here something went terribly wrong)
-      return;
-    }
-    else{
-      json_res = result;
-      if(format == "json"){
-        res.json(json_res);
+  if ( ! [body.name, body.description, body.category, body.tags, body.withdrawn].includes(undefined)){
+    var sql = `UPDATE Product_api SET name = '${body.name}', description = '${body.description}', category = '${body.category}', tags = '${body.tags}', withdrawn = ${body.withdrawn} WHERE (id = '${id}')`
+    conn.query(sql, function (err, result) {
+      if (err) {
+        throw err;
+      }
+    });
+    var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
+    conn.query(sql1, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      else if(result == ''){  //can't find the product we just updated, (If we get here something went terribly wrong)
+        return;
       }
       else{
-        res.set('Content-Type', 'text/xml');
-        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
-        for (var i in result) {
-          xml += jsontoxml(result[i]);
+        json_res = result;
+        if(format == "json"){
+          res.json(json_res[0]);
         }
-        xml += "</product>"
-        res.send(xml);
+        else{
+          res.set('Content-Type', 'text/xml');
+          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
+          for (var i in result) {
+            xml += jsontoxml(result[i]);
+          }
+          xml += "</product>"
+          res.send(xml);
+        }
       }
-    }
-  });
+    });
+  }
 };
 
 exports.partial_update_product = function(req, res) {
@@ -226,51 +227,54 @@ exports.partial_update_product = function(req, res) {
       res.send("404 – Not Found");
       return;
     }
-  });
-
-  if (body.length != 1){
-    res.send("400 – Bad Request");
-    return;
-  }
-
-
-
-  var key = Object.keys(body)[0];
-  var value = body[key];
-  var sql = `UPDATE Product_api SET ${key} = '${value}' WHERE (id = '${id}')`
-  conn.query(sql, function (err) {
-    if (err) {
-      throw err;
-    }
-    else{  //can't find the product with the given id
-      res.send("404 – Not Found");
-      return;
+    else{
+        if (Object.keys(body).length != 1){
+          res.send("400 – Bad Request");
+          return;
+        }
     }
   });
-  var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
-  conn.query(sql1, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    else if(result == ''){  //can't find the product we just updated, (If we get here something went terribly wrong)
+
+  if(Object.keys(body).length == 1){
+    var key = Object.keys(body)[0];
+    var value = body[key];
+    if (! ['name', 'description', 'category', 'tags', 'withdrawn'].includes(key)){
+      res.send("400 – Bad Request");
       return;
     }
     else{
-      json_res = result;
-      if(format == "json"){
-        res.json(json_res);
-      }
-      else{
-        res.set('Content-Type', 'text/xml');
-        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
-        for (var i in result) {
-          xml += jsontoxml(result[i]);
+      var sql = `UPDATE Product_api SET ${key} = '${value}' WHERE (id = ${id})`
+      conn.query(sql, function (err) {
+        if (err) {
+          throw err;
         }
-        xml += "</product>"
-        res.send(xml);
-      }
+      });
+      var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
+      conn.query(sql1, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        else if(result == ''){  //can't find the product we just updated, (If we get here something went terribly wrong)
+          return;
+        }
+        else{
+          json_res = result;
+          if(format == "json"){
+            res.json(json_res[0]);
+          }
+          else{
+            res.set('Content-Type', 'text/xml');
+            var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
+            for (var i in result) {
+              xml += jsontoxml(result[i]);
+            }
+            xml += "</product>"
+            res.send(xml);
+          }
+        }
+      });
     }
-  });
+  }
   };
 
 exports.delete_a_product = function(req, res) {
