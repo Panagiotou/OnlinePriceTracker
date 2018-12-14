@@ -57,12 +57,14 @@ footer{
 	font-size: 14px;
 }
 
+
 .form button{
+	border-radius: 4px;
 	font-family: "Roboto", sans-serif;
 	text-transform: uppercase;
 	outline: 0;
 	background: #3a8d99;
-	width: 100%;
+	width: 60%;
 	border: 0;
 	padding: 15px;
 	color: #FFFFFF;
@@ -127,3 +129,46 @@ footer{
     background-color: #dbd899;
     color: black;
 }
+
+.sidenav {
+  height: 80%;
+  width: 160px;
+  position: fixed;
+  top:10%;
+  z-index: 1;
+  left: 0;
+  background-color: rgba(191, 155, 63, 0.29);
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.sidenav a {
+  padding: 9px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #fff;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #9BBF3F;
+}
+
+input[target="m"]{
+	font-family: "Roboto", sans-serif;
+	outline:1;
+	background: #dae1ed;
+	width: 90%;
+	border: 0;
+	margin: 10px 5px;
+	padding: 12px ;
+	box-sizing: border-box;
+	font-size: 14px;
+}
+input[target="m"] a:active{
+	color: #dae1ed
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
