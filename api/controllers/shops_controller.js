@@ -80,7 +80,50 @@ exports.list_shops = function(req, res) {
 };
 
 exports.create_a_shop = function(req, res) {
-// TODO
+  var format = req.query.format;
+  var body = req.body;
+  if(! format){
+    format = "json";
+  }
+  if(body.withdrawn == 'true' || body.withdrawn == '1'){ //make the string input a boolean value
+    var w = true;
+  }
+  else if(body.withdrawn == 'false' || body.withdrawn == '0'){
+    var w = false;
+  }
+  var sql = "INSERT INTO Shop_api (name, address, lng, lat, tags, withdrawn) VALUES (?,?,?,?,?,?)";
+  var values = [body.name, body.address, parseFloat(body.lng), parseFloat(body.lat), body.tags , w];
+  conn.query(sql, values, function (err) {
+    if (err) {
+      res.send("400 – Bad Request");
+      return;
+    }
+  });
+  var sql1 = `SELECT * FROM Shop_api WHERE (id = (SELECT MAX(id) FROM Shop_api)) AND (name = '${body.name}')`
+  conn.query(sql1, function (err, result) {
+    if (err) {
+      throw err;
+    }
+    else if(result == ''){  //can't find the shop we just added, (If we get here something went terribly wrong)
+      res.send("400 – Bad Request");
+      return;
+    }
+    else{
+      json_res = result;
+      if(format == "json"){
+        res.json(json_res);
+      }
+      else{
+        res.set('Content-Type', 'text/xml');
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
+        for (var i in result) {
+          xml += jsontoxml(result[i]);
+        }
+        xml += "</shop>"
+        res.send(xml);
+      }
+    }
+  });
 };
 
 exports.read_a_shop = function(req, res) {
@@ -105,11 +148,11 @@ exports.read_a_shop = function(req, res) {
       }
       else{
         res.set('Content-Type', 'text/xml');
-        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
+        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
         for (var i in result) {
           xml += jsontoxml(result[i]);
         }
-        xml += "</product>"
+        xml += "</shop>"
         res.send(xml);
       }
     }
@@ -117,7 +160,7 @@ exports.read_a_shop = function(req, res) {
 };
 
 exports.update_a_shop = function(req, res) {
-//TODO 12
+//TODO
 };
 
 exports.partial_update_shop = function(req, res) {
