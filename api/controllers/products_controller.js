@@ -174,7 +174,6 @@ exports.update_a_product = function(req, res) {
       res.send("404 – Not Found");
       return;
     }
-    
   });
 
   console.log("First im here");
