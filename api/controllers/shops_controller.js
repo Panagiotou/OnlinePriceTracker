@@ -85,10 +85,10 @@ exports.create_a_shop = function(req, res) {
   if(! format){
     format = "json";
   }
-  if(body.withdrawn == 'true' || body.withdrawn == '1'){
+  if(body.withdrawn == 'true' || body.withdrawn == '1'){ //make the string input a boolean value
     var w = true;
   }
-  else{
+  else if(body.withdrawn == 'false' || body.withdrawn == '0'){
     var w = false;
   }
   var sql = "INSERT INTO Shop_api (name, address, lng, lat, tags, withdrawn) VALUES (?,?,?,?,?,?)";
