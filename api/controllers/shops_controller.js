@@ -111,7 +111,7 @@ exports.create_a_shop = function(req, res) {
     else{
       json_res = result;
       if(format == "json"){
-        res.json(json_res);
+        res.json(json_res[0]);
       }
       else{
         res.set('Content-Type', 'text/xml');
@@ -144,7 +144,7 @@ exports.read_a_shop = function(req, res) {
     else{
       json_res = result;
       if(format == "json"){
-        res.json(json_res);
+        res.json(json_res[0]);
       }
       else{
         res.set('Content-Type', 'text/xml');
@@ -166,10 +166,10 @@ exports.update_a_shop = function(req, res) {
   if(! format){
     format = "json";
   }
-  if ([body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
-    res.send("400 – Bad Request");
-    return;
-  }
+  //if ([body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
+  //  res.send("400 – Bad Request");
+  //  return;
+  //}
   var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
   conn.query(sql0, function (err, result) {
     if (err) {
@@ -179,38 +179,45 @@ exports.update_a_shop = function(req, res) {
       res.send("404 – Not Found");
       return;
     }
-  });
-
-  var sql = `UPDATE Shop_api SET name = '${body.name}', address = '${body.address}', lng = '${parseFloat(body.lng)}', lat = '${parseFloat(body.lat)}', tags = '${body.tags}', withdrawn = ${body.withdrawn} WHERE (id = '${id}')`
-  conn.query(sql, function (err, result) {
-    if (err) {
-      throw err;
-    }
-  });
-  var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-  conn.query(sql1, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    else if(result == ''){  //can't find the shop we just updated, (If we get here something went terribly wrong)
-      return;
-    }
     else{
-      json_res = result;
-      if(format == "json"){
-        res.json(json_res);
+      if ([body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
+        res.send("400 – Bad Request");
+        return;
+      }
+    }
+  });
+  if(! [body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
+    var sql = `UPDATE Shop_api SET name = '${body.name}', address = '${body.address}', lng = '${parseFloat(body.lng)}', lat = '${parseFloat(body.lat)}', tags = '${body.tags}', withdrawn = ${body.withdrawn} WHERE (id = '${id}')`
+    conn.query(sql, function (err, result) {
+      if (err) {
+        throw err;
+      }
+    });
+  var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+    conn.query(sql1, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      else if(result == ''){  //can't find the shop we just updated, (If we get here something went terribly wrong)
+        return;
       }
       else{
-        res.set('Content-Type', 'text/xml');
-        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
-        for (var i in result) {
-          xml += jsontoxml(result[i]);
+        json_res = result;
+        if(format == "json"){
+          res.json(json_res[0]);
         }
-        xml += "</shop>"
-        res.send(xml);
+        else{
+          res.set('Content-Type', 'text/xml');
+          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
+          for (var i in result) {
+            xml += jsontoxml(result[i]);
+          }
+          xml += "</shop>"
+          res.send(xml);
+        }
       }
-    }
-  });
+    });
+  }
 };
 
 exports.partial_update_shop = function(req, res) {
@@ -229,51 +236,54 @@ exports.partial_update_shop = function(req, res) {
       res.send("404 – Not Found");
       return;
     }
-  });
-
-  if (Object.keys(body).length != 1){
-    res.send("400 – Bad Request");
-    return;
-  }
-
-  var key = Object.keys(body)[0];
-  var value = body[key];
-  var sql = `UPDATE Shop_api SET ${key} = '${value}' WHERE id = ${id}`
-  console.log(sql);
-  conn.query(sql, function (err) {
-    if (err) {
-      throw err;
-    }
-    else{  //can't find the shop with the given id
-      console.log("here");
-      res.send("404 – Not Found");
-      return;
+    else{
+      if (Object.keys(body).length != 1){
+        res.send("400 – Bad Request");
+        return;
+      }
     }
   });
-  var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-  conn.query(sql1, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    else if(result == ''){  //can't find the shop we just updated, (If we get here something went terribly wrong)
+
+  if(Object.keys(body).length == 1){
+    var key = Object.keys(body)[0];
+    var value = body[key];
+    if (! ['name', 'address', 'lng', 'lat', 'tags', 'withdrawn'].includes(key)){
+      res.send("400 – Bad Request");
       return;
     }
     else{
-      json_res = result;
-      if(format == "json"){
-        res.json(json_res);
-      }
-      else{
-        res.set('Content-Type', 'text/xml');
-        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
-        for (var i in result) {
-          xml += jsontoxml(result[i]);
+      var sql = `UPDATE Shop_api SET ${key} = '${value}' WHERE (id = ${id})`
+      conn.query(sql, function (err) {
+        if (err) {
+          throw err;
         }
-        xml += "</shop>"
-        res.send(xml);
-      }
+      });
+      var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+      conn.query(sql1, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        else if(result == ''){  //can't find the shop we just updated, (If we get here something went terribly wrong)
+          return;
+        }
+        else{
+          json_res = result;
+          if(format == "json"){
+            res.json(json_res[0]);
+          }
+          else{
+            res.set('Content-Type', 'text/xml');
+            var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
+            for (var i in result) {
+              xml += jsontoxml(result[i]);
+            }
+            xml += "</shop>"
+            res.send(xml);
+          }
+        }
+      });
     }
-  });
+  }
 };
 
 exports.delete_a_shop = function(req, res) {
