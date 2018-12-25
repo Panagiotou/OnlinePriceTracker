@@ -91,7 +91,8 @@ app.listen(8000, function(){
 
 //Home route
 app.get('/', function(req, res){
-  res.render('home');
+  res.render('home', {Product: [{name:'Zαγόρι',description:'Φυσικό μεταλλικό νερό', category:'νερο', tags:'νερο'}]});
+
 });
 
 conn.end();

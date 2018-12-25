@@ -3,14 +3,14 @@ doctype html
 //- use if your pug files have similarities to avoid copying large blocks of same code.
 html
   head
-    link(rel='stylesheet', href='css/style.css')
+    link(rel='stylesheet', href='css/logreg.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
     #navbar
         a.active(href='/')
           i.glyphicon.glyphicon-home
         a(href='#news') Προσφορές
         a(href='#contact') Επικοινωνία
-        a(href='#app') OPT App
+
   body
     .left
         != messages('message', locals)

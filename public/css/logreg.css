@@ -1,0 +1,13 @@
+@import url("style.css");
+
+.login-page{
+	width: 360px;
+	padding: 10% 0 0;
+	margin: auto;
+}
+
+.register-page{
+	width: 360px;
+	padding: 5% 0 0;
+	margin: auto;
+}
