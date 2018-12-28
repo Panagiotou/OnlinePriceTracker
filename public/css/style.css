@@ -1,8 +1,9 @@
 body{
 	background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.4)),url(../static/this.jpg);
 	height: 100vh;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 	background-size: cover;
-	background-position: center;
 }
 
 .left {
@@ -10,17 +11,7 @@ body{
   width: 30%;
 	padding-top: 5%;
 }
-.login-page{
-	width: 360px;
-	padding: 10% 0 0;
-	margin: auto;
-}
 
-.register-page{
-	width: 360px;
-	padding: 5% 0 0;
-	margin: auto;
-}
 
 .bottom{
 	position: fixed;
@@ -85,6 +76,8 @@ footer{
 .form .message a{
 	color: #022e7c;
 }
+
+
 
 .alert-error{
 	color: #a94442;
@@ -151,7 +144,7 @@ footer{
 }
 
 .sidenav a:hover {
-  color: #9BBF3F;
+  color: #e5ca54;
 }
 
 input[target="m"]{

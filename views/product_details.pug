@@ -1,0 +1,53 @@
+extends layout
+
+block content
+  form(action='/product_details')
+    title Details
+      .details-page
+
+        link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+
+        body
+
+
+        #parent
+
+          if Product
+            each prod, i in Product
+              div(class="display_products")
+                div  Όνομα Προϊόντος: #{prod.name}
+                div  Περιγραφή: #{prod.description}
+                a(href='product_details') Προβολή λεπτομερειών
+
+
+
+          if Product
+            each prod, i in Product
+              div(class="display_products")
+                div  Όνομα Προϊόντος: #{prod.name}
+                div  Περιγραφή: #{prod.description}
+
+                #wide Wide (rest of width)
+                #narrow Narrow (200px)
+
+        .right1
+            if Product
+              each prod, i in Product
+                div(class="display_products")
+                  div  Όνομα Προϊόντος: #{prod.name}
+                  div  Περιγραφή: #{prod.description}
+            if Product
+              each prod, i in Product
+                  div(class="display_products")
+                  div  Όνομα Προϊόντος: #{prod.name}
+                  div  Περιγραφή: #{prod.description}
+
+
+        #navbar
+            a.active(href='#home')
+             i.glyphicon.glyphicon-home
+            a(href='#news') Προσφορές
+            a(href='#contact') Επικοινωνία
+            
+            a(href='login', style='float:right') Σύνδεση
+            a(href='register', style='float:right') Εγγραφή
