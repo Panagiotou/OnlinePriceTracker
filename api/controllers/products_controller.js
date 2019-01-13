@@ -1,4 +1,4 @@
-var mysql      = require('mysql');
+﻿var mysql      = require('mysql');
 var jsontoxml      = require('jsontoxml');
 var conn = mysql.createConnection({
   host     : process.env.DB_HOST,
@@ -371,5 +371,76 @@ exports.partial_update_product = async(req, res) =>{
   };
 
 exports.delete_a_product = function(req, res) {
-//TODO
+  var format = req.query.format;
+  var id = req.params.id;
+  if(! format){
+    format = "json";
+  }
+
+  var sql0 = `SELECT * FROM Product_api WHERE id = ${id}`;
+  conn.query(sql0, function (err, result) {
+    if (err) {
+      throw err;
+    }
+    else if(result == ''){  //can't find the product with the given id
+      res.send("404 – Not Found");
+      return;
+    }
+  });
+  if (user_type == 'Volunteer'){  // FIXME (how is user type recognized?)
+    var sql = `UPDATE Product_api SET 'withdrawn'=true WHERE (id = '${id}')`
+    conn.query(sql, function (err, result) {
+      if (err) {
+        throw err;
+      }
+    });
+    var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
+    conn.query(sql1, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      else if(result == ''){  //can't find the product whose withdrawn state we just updated, (If we get here something went terribly wrong)
+        return;
+      }
+      else{
+        json_res = result;
+        if(format == "json"){
+          res.json({"message":"OK"});
+        }
+        else{
+          res.set('Content-Type', 'text/xml');
+          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
+          res.send(xml);
+        }
+      }
+    });
+  }
+  else {  // user type is Administrator
+    var sql = `DELETE FROM Product_api WHERE (id = '${id}')`
+    conn.query(sql, function (err, result) {
+      if (err) {
+        throw err;
+      }
+    });
+    var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
+    conn.query(sql1, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      else if(result != ''){  //can find the product we just deleted, (If we get here something went terribly wrong)
+        return;
+      }
+      else{
+        json_res = result;
+        if(format == "json"){
+          res.json({"message":"OK"});
+        }
+        else{
+          res.set('Content-Type', 'text/xml');
+          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
+          res.send(xml);
+        }
+      }
+    });
+  }
 };
