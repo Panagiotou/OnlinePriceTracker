@@ -15,8 +15,13 @@ conn.connect(function(err) {
     console.log('Database connection established !');
 });
 
+var sql = "CREATE TABLE IF NOT EXISTS User_api (username VARCHAR(255) UNIQUE, password VARCHAR(255), authentication_token VARCHAR(255) DEFAULT '')";
+conn.query(sql, function (errq, result) {
+if (errq) throw errq;
+  console.log("Table User_api created");
+});
 
-var sql = "CREATE TABLE IF NOT EXISTS Product_api (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255),description VARCHAR(255), category VARCHAR(255),tags VARCHAR(255), withdrawn BOOLEAN DEFAULT false, PRIMARY KEY (id))";
+var sql = "CREATE TABLE IF NOT EXISTS Product_api (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(255),description VARCHAR(255), category VARCHAR(255),tags VARCHAR(255), withdrawn BOOLEAN DEFAULT false, PRIMARY KEY (id), username VARCHAR(255), FOREIGN KEY(username) REFERENCES User_api(username))";
 conn.query(sql, function (errq, result) {
 if (errq) throw errq;
   console.log("Table Product_api created");
@@ -27,5 +32,7 @@ conn.query(sql, function (errq, result) {
 if (errq) throw errq;
   console.log("Table Shop_api created");
 });
+
+
 
 conn.end();

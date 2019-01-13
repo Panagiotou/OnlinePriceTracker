@@ -80,6 +80,10 @@ let user = require('./routes/user');
 app.use('/', user);
 
 //Route API files
+var login_route = require('./api/routes/login');
+login_route(app);
+var logout_route = require('./api/routes/logout');
+logout_route(app);
 var product_routes = require('./api/routes/products');
 product_routes(app);
 var shop_routes = require('./api/routes/shops');
