@@ -1,4 +1,4 @@
-var mysql      = require('mysql');
+﻿var mysql      = require('mysql');
 var jsontoxml      = require('jsontoxml');
 var conn = mysql.createConnection({
   host     : process.env.DB_HOST,
@@ -287,5 +287,75 @@ exports.partial_update_shop = function(req, res) {
 };
 
 exports.delete_a_shop = function(req, res) {
-//TODO
+  var format = req.query.format;
+  var id = req.params.id;
+  if(! format){
+    format = "json";
+  }
+  var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+  conn.query(sql0, function (err, result) {
+    if (err) {
+      throw err;
+    }
+    else if(result == ''){  //can't find the shop with the given id
+      res.send("404 – Not Found");
+      return;
+    }
+  });
+  if (user_type == 'Volunteer'){  // FIXME (how is user type recognized?)
+    var sql = `UPDATE Shop_api SET 'withdrawn'=true WHERE (id = '${id}')`
+    conn.query(sql, function (err, result) {
+      if (err) {
+        throw err;
+      }
+    });
+    var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+    conn.query(sql1, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      else if(result == ''){  //can't find the shop whose withdrawn state we just updated, (If we get here something went terribly wrong)
+        return;
+      }
+      else{
+        json_res = result;
+        if(format == "json"){
+          res.json({"message":"OK"});
+        }
+        else{
+          res.set('Content-Type', 'text/xml');
+          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
+          res.send(xml);
+        }
+      }
+    });
+  }
+  else {  // user type is Administrator
+    var sql = `DELETE FROM Shop_api WHERE (id = '${id}')`
+    conn.query(sql, function (err, result) {
+      if (err) {
+        throw err;
+      }
+    });
+    var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+    conn.query(sql1, function (err, result) {
+      if (err) {
+        throw err;
+      }
+      else if(result != ''){  //can find the shop we just deleted, (If we get here something went terribly wrong)
+        return;
+      }
+      else{
+        json_res = result;
+        if(format == "json"){
+          res.json({"message":"OK"});
+        }
+        else{
+          res.set('Content-Type', 'text/xml');
+          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
+          res.send(xml);
+        }
+      }
+    });
+  }
 };
