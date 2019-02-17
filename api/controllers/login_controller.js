@@ -30,7 +30,7 @@ exports.login_user = function(req, res) {
   });
 
   var sql = `SELECT password FROM User_api WHERE (username = '${body.username}') `;
-  
+
   conn.query(sql, function (err, result) {
     if (err) {
       throw err;
@@ -43,11 +43,11 @@ exports.login_user = function(req, res) {
       if(result[0].password == body.password){
         // authentication succesfull, generate authentication token and put it into database
         if(format == "json"){
-          res.json({"authentication token": random_string_length8});
+          res.json({"authentication_token": random_string_length8});
         }
         else{
           res.set('Content-Type', 'text/xml');
-          var xml = `<authentication token> ${random_string_length8} </authentication token>`;
+          var xml = `<authentication_token> ${random_string_length8} </authentication_token>`;
           res.send(xml);
         }
       }
@@ -56,5 +56,4 @@ exports.login_user = function(req, res) {
       }
     }
   });
-
 }
