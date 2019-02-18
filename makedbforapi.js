@@ -33,6 +33,12 @@ if (errq) throw errq;
   console.log("Table Shop_api created");
 });
 
+var sql = "CREATE TABLE IF NOT EXISTS Price_api (id INT NOT NULL AUTO_INCREMENT, price DOUBLE, dateFrom VARCHAR(255), dateTo VARCHAR(255), productId INT, shopId INT, PRIMARY KEY (id), FOREIGN KEY(productId) REFERENCES Product_api(id), FOREIGN KEY(shopId) REFERENCES Shop_api(id))";
+conn.query(sql, function (errq, result) {
+if (errq) throw errq;
+  console.log("Table Price_api created");
+});
+
 
 
 conn.end();
