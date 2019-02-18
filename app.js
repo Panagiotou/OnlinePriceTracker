@@ -88,6 +88,8 @@ var product_routes = require('./api/routes/products');
 product_routes(app);
 var shop_routes = require('./api/routes/shops');
 shop_routes(app);
+var price_routes = require('./api/routes/prices');
+price_routes(app);
 
 
 app.listen(8765, function(){

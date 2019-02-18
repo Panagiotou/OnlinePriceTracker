@@ -18,8 +18,22 @@ exports.logout_user = async (req, res) =>{
     format = "json";
   }
   var authentication = req.headers['x-observatory-auth'];
-  if ( [authentication].includes(undefined) || [authentication].includes(null) ){
-    res.send("400 – Bad Request");
+  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+    await new Promise((resolve, reject) => {
+      conn.query(sql0, function (err, result) {
+        if (err) {
+          throw(err);
+        }
+        else{
+         user = result[0];
+         resolve();
+        }
+      });
+    });
+  }
+  else{
+    res.send("403 – Forbidden");
     return;
   }
 

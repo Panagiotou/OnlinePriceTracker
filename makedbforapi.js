@@ -33,12 +33,18 @@ if (errq) throw errq;
   console.log("Table Shop_api created");
 });
 
-var sql = "CREATE TABLE IF NOT EXISTS Price_api (id INT NOT NULL AUTO_INCREMENT, price DOUBLE, dateFrom VARCHAR(255), dateTo VARCHAR(255), productId INT, shopId INT, PRIMARY KEY (id), FOREIGN KEY(productId) REFERENCES Product_api(id), FOREIGN KEY(shopId) REFERENCES Shop_api(id))";
+var sql = "CREATE TABLE IF NOT EXISTS Price_api (id INT NOT NULL AUTO_INCREMENT, price DOUBLE NOT NULL, dateFrom date NOT NULL, dateTo date NOT NULL, productId INT NOT NULL, shopId INT NOT NULL, PRIMARY KEY (id), FOREIGN KEY(productId) REFERENCES Product_api(id), FOREIGN KEY(shopId) REFERENCES Shop_api(id), CONSTRAINT Start_Finish CHECK ( dateFrom < dateTo))";
 conn.query(sql, function (errq, result) {
 if (errq) throw errq;
   console.log("Table Price_api created");
 });
 
+// Create admin user
+var sql = "INSERT INTO User_api (username, password, authentication_token) VALUES ('admin', 'admin', 'admin')";
+conn.query(sql, function (errq) {
+if (errq) throw errq;
+    console.log("Admin User Created");
+});
 
 
 conn.end();

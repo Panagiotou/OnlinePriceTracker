@@ -79,12 +79,33 @@ exports.list_shops = function(req, res) {
   });
 };
 
-exports.create_a_shop = function(req, res) {
+exports.create_a_shop = async(req, res) =>{
   var format = req.query.format;
   var body = req.body;
   if(! format){
     format = "json";
   }
+
+  var authentication = req.headers['x-observatory-auth'];
+  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+    await new Promise((resolve, reject) => {
+      conn.query(sql0, function (err, result) {
+        if (err) {
+          throw(err);
+        }
+        else{
+         user = result[0];
+         resolve();
+        }
+      });
+    });
+  }
+  else{
+    res.send("403 – Forbidden");
+    return;
+  }
+
   if(body.withdrawn == 'true' || body.withdrawn == '1'){ //make the string input a boolean value
     var w = true;
   }
@@ -159,13 +180,34 @@ exports.read_a_shop = function(req, res) {
   });
 };
 
-exports.update_a_shop = function(req, res) {
+exports.update_a_shop = async(req, res) =>{
   var format = req.query.format;
   var body = req.body;
   var id = req.params.id;
   if(! format){
     format = "json";
   }
+
+  var authentication = req.headers['x-observatory-auth'];
+  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+    await new Promise((resolve, reject) => {
+      conn.query(sql0, function (err, result) {
+        if (err) {
+          throw(err);
+        }
+        else{
+         user = result[0];
+         resolve();
+        }
+      });
+    });
+  }
+  else{
+    res.send("403 – Forbidden");
+    return;
+  }
+
   //if ([body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
   //  res.send("400 – Bad Request");
   //  return;
@@ -220,13 +262,34 @@ exports.update_a_shop = function(req, res) {
   }
 };
 
-exports.partial_update_shop = function(req, res) {
+exports.partial_update_shop = async(req, res) =>{
   var format = req.query.format;
   var body = req.body;
   var id = req.params.id;
   if(! format){
     format = "json";
   }
+
+  var authentication = req.headers['x-observatory-auth'];
+  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+    await new Promise((resolve, reject) => {
+      conn.query(sql0, function (err, result) {
+        if (err) {
+          throw(err);
+        }
+        else{
+         user = result[0];
+         resolve();
+        }
+      });
+    });
+  }
+  else{
+    res.send("403 – Forbidden");
+    return;
+  }
+
   var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
   conn.query(sql0, function (err, result) {
     if (err) {
@@ -286,12 +349,33 @@ exports.partial_update_shop = function(req, res) {
   }
 };
 
-exports.delete_a_shop = function(req, res) {
+exports.delete_a_shop = async(req, res) =>{
   var format = req.query.format;
   var id = req.params.id;
   if(! format){
     format = "json";
   }
+
+  var authentication = req.headers['x-observatory-auth'];
+  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+    await new Promise((resolve, reject) => {
+      conn.query(sql0, function (err, result) {
+        if (err) {
+          throw(err);
+        }
+        else{
+         user = result[0];
+         resolve();
+        }
+      });
+    });
+  }
+  else{
+    res.send("403 – Forbidden");
+    return;
+  }
+
   var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
   conn.query(sql0, function (err, result) {
     if (err) {
@@ -303,10 +387,14 @@ exports.delete_a_shop = function(req, res) {
     }
   });
   if (user_type == 'Volunteer'){  // FIXME (how is user type recognized?)
-    var sql = `UPDATE Shop_api SET 'withdrawn'=true WHERE (id = '${id}')`
+    var sql = `UPDATE Shop_api SET withdrawn = 1 WHERE (id = '${id}')`
     conn.query(sql, function (err, result) {
       if (err) {
         throw err;
+      }
+      else if(result == ''){  //can't find the product with the given id
+        res.send("404 – Not Found");
+        return;
       }
     });
     var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;

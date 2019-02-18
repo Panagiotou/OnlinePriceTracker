@@ -23,35 +23,89 @@ function test_login_post(callback){
     body: {'username': 'username', 'password': 'password'},
     json: true
   }, async(error, response, body) => {
-    await new Promise((resolve, reject) => {
       var sql = `SELECT authentication_token FROM User_api WHERE (username = 'username' && password = 'password') `;
       inDB = '';
       conn.query(sql, function (err, result) {
         if (err) {
           throw err;
         }
+        else if(result == ''){
+          console.log("False");
+        }
         else{
           inDB = result[0].authentication_token;
-          resolve();
+          if(  body['authentication_token'] == inDB){
+            console.log("True");
+          }
+          else{
+            console.log("False");
+          }
         }
+        callback();
       });
     });
-      if(  body['authentication_token'] == inDB){
-        console.log("True");
-      }
-      else{
-        console.log("False");
-      }
-      callback();
-  });
 }
 
 function test_logout_post(callback){
   // Test /logout POST
   console.log("Testing /logout POST ... ");
-  // TODO
+  var request = require('request');
+  request({
+    url: baseurl + '/logout',
+    method: 'POST',
+    headers: {'X-OBSERVATORY-AUTH': 'authentication_token'},
+    json: true
+  }, async(error, response, body) => {
+      var sql = `SELECT * FROM User_api WHERE (authentication_token = 'authentication_token') `;
+      conn.query(sql, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        else if(result == ''){
+          console.log("True");
+        }
+        else{
+          console.log("False");
+        }
+        callback();
+      });
+    });
+}
 
-  callback();
+function create_test_user(callback){
+  // Create a test user
+  var sql0 = "SELECT * FROM User_api WHERE username = 'username'";
+  conn.query(sql0, function (errq, result) {
+      if (errq){
+        throw errq;
+      }
+      else{
+        if(result == ''){
+          var sql = "INSERT INTO User_api (username, password, authentication_token) VALUES ('username', 'password', 'authentication_token')";
+          conn.query(sql, function (errq) {
+              if (errq){ throw errq;}
+              console.log("Test User with values (username = 'username', password = 'password', authentication_token = 'authentication_token') Created");
+          });
+        }
+        else{
+          console.log("Test User with values (username = 'username', password = 'password', authentication_token = 'authentication_token') Created");
+        }
+        callback();
+      }
+  });
+}
+
+function update_test_user(callback){
+  // Create a test user
+  var sql0 = "UPDATE User_api SET authentication_token = 'authentication_token' WHERE username = 'username'";
+  conn.query(sql0, function (errq, result) {
+      if (errq){
+        throw errq;
+      }
+      else{
+        callback();
+      }
+  });
 }
 
 function test_products_get(callback){
@@ -78,9 +132,9 @@ function test_products_id_get(callback){
   callback();
 }
 
-function test_products_id_post(callback){
+function test_products_id_put(callback){
   // Test /products/:id POST
-  console.log("Testing /products/:id POST ... ");
+  console.log("Testing /products/:id PUT ... ");
   // TODO
 
   callback();
@@ -105,14 +159,18 @@ function test_products_id_delete(callback){
   // This is the last function so we do process.exit() at the end
 }
 
-test_login_post(function(){
+create_test_user(function(){
   test_logout_post(function(){
-    test_products_get(function(){
-      test_products_post(function(){
-        test_products_id_get(function(){
-          test_products_id_post(function(){
-            test_products_id_patch(function(){
-              test_products_id_delete(function(){
+    test_login_post(function(){
+      update_test_user(function(){
+        test_products_post(function(){
+          test_products_get(function(){
+            test_products_id_get(function(){
+              test_products_id_put(function(){
+                test_products_id_patch(function(){
+                  test_products_id_delete(function(){
+                  });
+                });
               });
             });
           });

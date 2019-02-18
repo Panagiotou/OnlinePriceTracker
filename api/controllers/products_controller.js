@@ -24,6 +24,7 @@ exports.list_products = function(req, res) {
   var total = 0;
   if ( [start, count, status, sort].includes(undefined) || [start, count, status, sort].includes(null) ){
     res.send("400 – Bad Request");
+    res.end();
     return;
   }
   if (status == 'ALL'){
@@ -57,6 +58,7 @@ exports.list_products = function(req, res) {
       }
       if(format == "json"){
         res.json(json_res);
+        res.end();
       }
       else{
         res.set('Content-Type', 'text/xml');
@@ -74,6 +76,7 @@ exports.list_products = function(req, res) {
         xml += "</products>"
         xml += "</results>"
         res.send(xml);
+        res.end();
       }
     }
   });
@@ -101,11 +104,17 @@ exports.create_a_product = async(req, res) => {
       });
     });
   }
+  else{
+    res.send("403 – Forbidden");
+    res.end();
+    return;
+  }
   // if at this point user is undefined, we dont have correct authentication
-  if([user].includes(undefined)){
+  if(([user].includes(undefined)) || ([authentication].includes(undefined) || [authentication].includes(null)) ){
     // if user is undefined, the authentication token given, does not correspond to any user
     // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
     res.send("403 – Forbidden");
+    res.end();
     return;
   }
   var sql = "INSERT INTO Product_api (name, description, category, tags, username) VALUES (?,?,?,?,?)";
@@ -113,6 +122,7 @@ exports.create_a_product = async(req, res) => {
   conn.query(sql, values, function (err) {
     if (err) {
       res.send("400 – Bad Request");
+      res.end();
       return;
     }
   });
@@ -123,12 +133,14 @@ exports.create_a_product = async(req, res) => {
     }
     else if(result == ''){  //can't find the product we just added, (If we get here something went terribly wrong)
       res.send("400 – Bad Request");
+      res.end();
       return;
     }
     else{
       json_res = result;
       if(format == "json"){
         res.json(json_res[0]);
+        res.end();
       }
       else{
         res.set('Content-Type', 'text/xml');
@@ -138,6 +150,7 @@ exports.create_a_product = async(req, res) => {
         }
         xml += "</product>"
         res.send(xml);
+        res.end();
       }
     }
   });
@@ -156,12 +169,14 @@ exports.read_a_product = function(req, res) {
     }
     else if(result == ''){  //can't find the product with the given id
       res.send("404 – Not Found");
+      res.end();
       return;
     }
     else{
       json_res = result;
       if(format == "json"){
         res.json(json_res[0]);
+        res.end();
       }
       else{
         res.set('Content-Type', 'text/xml');
@@ -171,6 +186,7 @@ exports.read_a_product = function(req, res) {
         }
         xml += "</product>"
         res.send(xml);
+        res.end();
       }
     }
   });
@@ -184,89 +200,103 @@ exports.update_a_product = async (req, res) =>{
     format = "json";
   }
 
-  var authentication = req.headers['x-observatory-auth'];
-  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
-    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
-    await new Promise((resolve, reject) => {
-      conn.query(sql0, function (err, result) {
-        if (err) {
-          throw(err);
-        }
-        else{
-         user = result[0];
-         resolve();
-        }
-      });
-    });
-  }
-  // if at this point user is undefined, we dont have correct authentication
-  if([user].includes(undefined)){
-    // if user is undefined, the authentication token given, does not correspond to any user
-    // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
-    res.send("403 – Forbidden");
-    return;
-  }
-
-  var sq = `SELECT * FROM Product_api WHERE (id = ${id}) AND (username = '${user.username}')`;
-  conn.query(sq, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    else if(result == ''){  //can't find the product with the given id
-      // Σε περίπτωση που ένας διαπιστευμένος χρήστης δεν έχει τη δικαιοδοσία να εκτελέσει μια ενέργεια, θα πρέπει να επιστρέφεται το 401 Not Authorized
-      res.send("401 – Not Authorized");
-      return;
-    }
-  });
-
   var sql0 = `SELECT * FROM Product_api WHERE id = ${id}`;
-  conn.query(sql0, function (err, result) {
+  conn.query(sql0, async (err, result) =>{
     if (err) {
       throw err;
     }
     else if(result == ''){  //can't find the product with the given id
       res.send("404 – Not Found");
+      res.end();
       return;
     }
     else{
       if ([body.name, body.description, body.category, body.tags, body.withdrawn].includes(undefined)){
         res.send("400 – Bad Request");
-        return;
-      }
-    }
-  });
-  if ( ! [body.name, body.description, body.category, body.tags, body.withdrawn].includes(undefined)){
-    var sql = `UPDATE Product_api SET name = '${body.name}', description = '${body.description}', category = '${body.category}', tags = '${body.tags}', withdrawn = ${body.withdrawn} WHERE (id = '${id}')`
-    conn.query(sql, function (err, result) {
-      if (err) {
-        throw err;
-      }
-    });
-    var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
-    conn.query(sql1, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      else if(result == ''){  //can't find the product we just updated, (If we get here something went terribly wrong)
+        res.end();
         return;
       }
       else{
-        json_res = result;
-        if(format == "json"){
-          res.json(json_res[0]);
+        var authentication = req.headers['x-observatory-auth'];
+        if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+          var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+          await new Promise((resolve, reject) => {
+            conn.query(sql0, function (err, result) {
+              if (err) {
+                throw(err);
+              }
+              else{
+               user = result[0];
+               resolve();
+              }
+            });
+          });
         }
         else{
-          res.set('Content-Type', 'text/xml');
-          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
-          for (var i in result) {
-            xml += jsontoxml(result[i]);
-          }
-          xml += "</product>"
-          res.send(xml);
+          res.send("403 – Forbidden");
+          res.end();
+          return;
         }
+        // if at this point user is undefined, we dont have correct authentication
+        if([user].includes(undefined)){
+          // if user is undefined, the authentication token given, does not correspond to any user
+          // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
+          res.send("403 – Forbidden");
+          res.end();
+          return;
+        }
+
+        var sq = `SELECT * FROM Product_api WHERE (id = ${id}) AND ((username = '${user.username}') OR (username = 'admin'))`;
+        conn.query(sq, function (err, result) {
+          if (err) {
+            throw err;
+          }
+          else if(result == ''){  //can't find the product with the given id
+            // Σε περίπτωση που ένας διαπιστευμένος χρήστης δεν έχει τη δικαιοδοσία να εκτελέσει μια ενέργεια, θα πρέπει να επιστρέφεται το 401 Not Authorized
+            res.send("401 – Not Authorized");
+            res.end();
+            return;
+          }
+        });
+        if ( ! [body.name, body.description, body.category, body.tags, body.withdrawn].includes(undefined)){
+          var sql = `UPDATE Product_api SET name = '${body.name}', description = '${body.description}', category = '${body.category}', tags = '${body.tags}', withdrawn = ${body.withdrawn} WHERE (id = '${id}')`
+          conn.query(sql, function (err, result) {
+            if (err) {
+              throw err;
+            }
+          });
+          var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
+          conn.query(sql1, function (err, result) {
+            if (err) {
+              throw err;
+            }
+            else if(result == ''){  //can't find the product we just updated, (If we get here something went terribly wrong)
+              return;
+            }
+            else{
+              json_res = result;
+              if(format == "json"){
+                res.json(json_res[0]);
+                res.end();
+              }
+              else{
+                res.set('Content-Type', 'text/xml');
+                var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
+                for (var i in result) {
+                  xml += jsontoxml(result[i]);
+                }
+                xml += "</product>"
+                res.send(xml);
+                res.end();
+              }
+            }
+          });
+        }
+
       }
-    });
-  }
+    }
+  });
+
 };
 
 exports.partial_update_product = async(req, res) =>{
@@ -276,171 +306,230 @@ exports.partial_update_product = async(req, res) =>{
   if(! format){
     format = "json";
   }
-  var authentication = req.headers['x-observatory-auth'];
-  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
-    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
-    await new Promise((resolve, reject) => {
-      conn.query(sql0, function (err, result) {
-        if (err) {
-          throw(err);
-        }
-        else{
-         user = result[0];
-         resolve();
-        }
-      });
-    });
-  }
-  // if at this point user is undefined, we dont have correct authentication
-  if([user].includes(undefined)){
-    // if user is undefined, the authentication token given, does not correspond to any user
-    // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
-    res.send("403 – Forbidden");
-    return;
-  }
-
-  var sq = `SELECT * FROM Product_api WHERE (id = ${id}) AND (username = '${user.username}')`;
-  conn.query(sq, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    else if(result == ''){  //can't find the product with the given id
-      // Σε περίπτωση που ένας διαπιστευμένος χρήστης δεν έχει τη δικαιοδοσία να εκτελέσει μια ενέργεια, θα πρέπει να επιστρέφεται το 401 Not Authorized
-      res.send("401 – Not Authorized");
-      return;
-    }
-  });
-
   var sql0 = `SELECT * FROM Product_api WHERE id = ${id}`;
-  conn.query(sql0, function (err, result) {
+  conn.query(sql0, async (err, result) =>{
     if (err) {
       throw err;
     }
     else if(result == ''){  //can't find the product with the given id
       res.send("404 – Not Found");
+      res.end();
       return;
     }
     else{
         if (Object.keys(body).length != 1){
           res.send("400 – Bad Request");
+          res.end();
           return;
+        }
+        else{
+          var authentication = req.headers['x-observatory-auth'];
+          if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+            var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+            await new Promise((resolve, reject) => {
+              conn.query(sql0, function (err, result) {
+                if (err) {
+                  throw(err);
+                }
+                else{
+                 user = result[0];
+                 resolve();
+                }
+              });
+            });
+          }
+          else{
+            res.send("403 – Forbidden");
+            res.end();
+            return;
+          }
+          // if at this point user is undefined, we dont have correct authentication
+          if([user].includes(undefined)){
+            // if user is undefined, the authentication token given, does not correspond to any user
+            // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
+            res.send("403 – Forbidden");
+            res.end();
+            return;
+          }
+
+          var sq = `SELECT * FROM Product_api WHERE (id = ${id}) AND ((username = '${user.username}') OR (username = 'admin'))`;
+          conn.query(sq, async (err, result) =>{
+            if (err) {
+              throw err;
+            }
+            else if(result == ''){  //can't find the product with the given id
+              // Σε περίπτωση που ένας διαπιστευμένος χρήστης δεν έχει τη δικαιοδοσία να εκτελέσει μια ενέργεια, θα πρέπει να επιστρέφεται το 401 Not Authorized
+              res.send("401 – Not Authorized");
+              res.end();
+              return;
+            }
+            else{
+
+            }
+          });
+
+
+
+          if(Object.keys(body).length == 1){
+            var key = Object.keys(body)[0];
+            var value = body[key];
+            if (! ['name', 'description', 'category', 'tags', 'withdrawn'].includes(key)){
+              res.send("400 – Bad Request");
+              res.end();
+              return;
+            }
+            else{
+              var sql = `UPDATE Product_api SET ${key} = '${value}' WHERE (id = ${id})`
+              conn.query(sql, function (err) {
+                if (err) {
+                  throw err;
+                }
+              });
+              var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
+              conn.query(sql1, function (err, result) {
+                if (err) {
+                  throw err;
+                }
+                else if(result == ''){  //can't find the product we just updated, (If we get here something went terribly wrong)
+                  return;
+                }
+                else{
+                  json_res = result;
+                  if(format == "json"){
+                    res.json(json_res[0]);
+                    res.end();
+                  }
+                  else{
+                    res.set('Content-Type', 'text/xml');
+                    var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
+                    for (var i in result) {
+                      xml += jsontoxml(result[i]);
+                    }
+                    xml += "</product>"
+                    res.send(xml);
+                    res.end();
+                  }
+                }
+              });
+            }
+          }
         }
     }
   });
 
-  if(Object.keys(body).length == 1){
-    var key = Object.keys(body)[0];
-    var value = body[key];
-    if (! ['name', 'description', 'category', 'tags', 'withdrawn'].includes(key)){
-      res.send("400 – Bad Request");
-      return;
-    }
-    else{
-      var sql = `UPDATE Product_api SET ${key} = '${value}' WHERE (id = ${id})`
-      conn.query(sql, function (err) {
-        if (err) {
-          throw err;
-        }
-      });
-      var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
-      conn.query(sql1, function (err, result) {
-        if (err) {
-          throw err;
-        }
-        else if(result == ''){  //can't find the product we just updated, (If we get here something went terribly wrong)
-          return;
-        }
-        else{
-          json_res = result;
-          if(format == "json"){
-            res.json(json_res[0]);
-          }
-          else{
-            res.set('Content-Type', 'text/xml');
-            var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
-            for (var i in result) {
-              xml += jsontoxml(result[i]);
-            }
-            xml += "</product>"
-            res.send(xml);
-          }
-        }
-      });
-    }
-  }
+
   };
 
-exports.delete_a_product = function(req, res) {
+exports.delete_a_product = async(req, res) =>{
   var format = req.query.format;
   var id = req.params.id;
   if(! format){
     format = "json";
   }
 
+
   var sql0 = `SELECT * FROM Product_api WHERE id = ${id}`;
-  conn.query(sql0, function (err, result) {
+  conn.query(sql0, async (err, result) =>{
     if (err) {
       throw err;
     }
     else if(result == ''){  //can't find the product with the given id
       res.send("404 – Not Found");
-      return;
+      res.end();
+      return
+    }
+    else{
+      var authentication = req.headers['x-observatory-auth'];
+      if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+        var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+        await new Promise((resolve, reject) => {
+          conn.query(sql0, function (err, result) {
+            if (err) {
+              throw(err);
+            }
+            else{
+             user = result[0];
+             resolve();
+            }
+          });
+        });
+      }
+      else{
+        res.send("403 – Forbidden");
+        res.end();
+        return;
+      }
+
+
+      if([user].includes(undefined)){
+        // if user is undefined, the authentication token given, does not correspond to any user
+        // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
+        res.send("403 – Forbidden");
+        res.end();
+        return;
+      }
+      else if (user.username != 'admin'){
+        var sql = `UPDATE Product_api SET withdrawn=1 WHERE (id = ${id}) && (username = ${user.username})`
+        conn.query(sql, function (err, result) {
+          if (err) {
+            throw err;
+          }
+        });
+        var sql1 = `SELECT * FROM Product_api WHERE (id = ${id})  && (username = ${user.username})`;
+        conn.query(sql1, function (err, result) {
+          if (err) {
+            throw err;
+          }
+          else if(result == ''){  //can't find the product whose withdrawn state we just updated, (If we get here something went terribly wrong)
+            return;
+          }
+          else{
+            json_res = result;
+            if(format == "json"){
+              res.json({"message":"OK"});
+              res.end();
+            }
+            else{
+              res.set('Content-Type', 'text/xml');
+              var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
+              res.send(xml);
+              res.end();
+            }
+          }
+        });
+      }
+      else {  // user type is Administrator
+        var sql = `DELETE FROM Product_api WHERE (id = ${id})`
+        conn.query(sql, function (err, result) {
+          if (err) {
+            throw err;
+          }
+        });
+        var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
+        conn.query(sql1, function (err, result) {
+          if (err) {
+            throw err;
+          }
+          else if(result != ''){  //can find the product we just deleted, (If we get here something went terribly wrong)
+            return;
+          }
+          else{
+            json_res = result;
+            if(format == "json"){
+              res.json({"message":"OK"});
+              res.end();
+            }
+            else{
+              res.set('Content-Type', 'text/xml');
+              var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
+              res.send(xml);
+              res.end();
+            }
+          }
+        });
+      }
     }
   });
-  if (user_type == 'Volunteer'){  // FIXME (how is user type recognized?)
-    var sql = `UPDATE Product_api SET 'withdrawn'=true WHERE (id = '${id}')`
-    conn.query(sql, function (err, result) {
-      if (err) {
-        throw err;
-      }
-    });
-    var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
-    conn.query(sql1, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      else if(result == ''){  //can't find the product whose withdrawn state we just updated, (If we get here something went terribly wrong)
-        return;
-      }
-      else{
-        json_res = result;
-        if(format == "json"){
-          res.json({"message":"OK"});
-        }
-        else{
-          res.set('Content-Type', 'text/xml');
-          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
-          res.send(xml);
-        }
-      }
-    });
-  }
-  else {  // user type is Administrator
-    var sql = `DELETE FROM Product_api WHERE (id = '${id}')`
-    conn.query(sql, function (err, result) {
-      if (err) {
-        throw err;
-      }
-    });
-    var sql1 = `SELECT * FROM Product_api WHERE id = ${id}`;
-    conn.query(sql1, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      else if(result != ''){  //can find the product we just deleted, (If we get here something went terribly wrong)
-        return;
-      }
-      else{
-        json_res = result;
-        if(format == "json"){
-          res.json({"message":"OK"});
-        }
-        else{
-          res.set('Content-Type', 'text/xml');
-          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
-          res.send(xml);
-        }
-      }
-    });
-  }
+
+
 };
