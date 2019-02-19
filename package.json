@@ -4,7 +4,7 @@
   "description": "Online Price Tracker",
   "main": "app.js",
   "scripts": {
-    "test": "node testAPIproducts",
+    "test": "node testAPIshops",
     "install": "npm install -g express dotenv mysql express-session passport express-validator connect-flash express-messages pug nodemon body-parser jsontoxml request",
     "update": "npm update -g",
     "start": "node app"
