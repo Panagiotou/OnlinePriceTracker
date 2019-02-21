@@ -13,7 +13,7 @@ nodeenv env
 
 # Activate new environment:
 
-. env/bin/activate
+source env/bin/activate
 
 
 # Deactivate environment:
