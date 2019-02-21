@@ -40,6 +40,7 @@ router.get('/register', function(req, res){
 
 // Register Proccess
 router.post('/register', function(req, res){
+  console.log("ewiwojfojwe")
   req.checkBody('username', 'Συμπληρώστε το πεδίο " Όνομα χρήστη "').notEmpty();
   req.checkBody('password', 'Συμπληρώστε το πεδίο " Κωδικός πρόσβασης "').notEmpty();
   req.checkBody('name', 'Συμπληρώστε το πεδίο " Όνομα "').notEmpty();
@@ -60,7 +61,7 @@ router.post('/register', function(req, res){
       const password2 = req.body.password2;
       const name = req.body.name
       const surname = req.body.surname
-      var sql = "INSERT INTO User (username, password, name, surname) VALUES (?,?,?,?)";
+      var sql = "INSERT INTO User_api (username, password, name, surname) VALUES (?,?,?,?)";
       var values = [username, password, name, surname];
       conn.query(sql, values, function (err) {
         if (err) {
@@ -100,7 +101,7 @@ router.post('/login', function(req, res){
     });
   }
   else {
-      var sql = "SELECT password FROM User WHERE username = ?"
+      var sql = "SELECT password FROM User_api WHERE username = ?"
       conn.query(sql, username, function (err, result) {
         if (err) {
           throw err;

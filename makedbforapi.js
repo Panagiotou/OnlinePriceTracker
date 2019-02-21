@@ -15,7 +15,7 @@ conn.connect(function(err) {
     console.log('Database connection established !');
 });
 
-var sql = "CREATE TABLE IF NOT EXISTS User_api (username VARCHAR(255) UNIQUE, password VARCHAR(255), authentication_token VARCHAR(255) DEFAULT '')";
+var sql = "CREATE TABLE IF NOT EXISTS User_api (username VARCHAR(255) UNIQUE, password VARCHAR(255), authentication_token VARCHAR(255) DEFAULT '', name VARCHAR(255) NOT NULL, surname VARCHAR(255))";
 conn.query(sql, function (errq, result) {
 if (errq) throw errq;
   console.log("Table User_api created");
@@ -40,7 +40,7 @@ if (errq) throw errq;
 });
 
 // Create admin user
-var sql = "INSERT INTO User_api (username, password, authentication_token) VALUES ('admin', 'admin', 'admin')";
+var sql = "INSERT INTO User_api (username, password, authentication_token, name, surname) VALUES ('admin', 'admin', 'admin', 'admin', 'admin')";
 conn.query(sql, function (errq) {
 if (errq) throw errq;
     console.log("Admin User Created");
