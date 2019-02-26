@@ -17,6 +17,18 @@ exports.list_shops = function(req, res) {
   var status = req.query.status;
   var sort = req.query.sort;
   var format = req.query.format;
+  if(! start){
+    start = 0;
+  }
+  if(! count){
+    count = 20;
+  }
+  if(! status){
+    status = "ACTIVE";
+  }
+  if(! sort){
+    sort = "id|DESC";
+  }
   if(! format){
     format = "json";
   }
@@ -33,6 +45,7 @@ exports.list_shops = function(req, res) {
   else if (status == 'WITHDRAWN'){
     statusbool = true;
   }
+
   var sort1 = sort.split("|");
 
   var sql1 = `SELECT COUNT(*) AS total FROM Shop_api`;
@@ -117,8 +130,6 @@ exports.create_a_shop = async(req, res) =>{
     res.end();
     return;
   }
-
-
   var sql = "INSERT INTO Shop_api (name, address, lng, lat, tags) VALUES (?,?,?,?,?)";
   var values = [body.name, body.address, parseFloat(body.lng), parseFloat(body.lat), body.tags];
   conn.query(sql, values, function (err) {
@@ -142,6 +153,7 @@ exports.create_a_shop = async(req, res) =>{
           json_res = result;
           if(format == "json"){
             res.json(json_res[0]);
+            res.end();
           }
           else{
             res.set('Content-Type', 'text/xml');
@@ -151,6 +163,7 @@ exports.create_a_shop = async(req, res) =>{
             }
             xml += "</shop>"
             res.send(xml);
+            res.end();
           }
         }
       });
@@ -239,7 +252,27 @@ exports.update_a_shop = async(req, res) =>{
           res.end();
           return;
         }
+        // if at this point user is undefined, we dont have correct authentication
+        //if([user].includes(undefined)){
+          // if user is undefined, the authentication token given, does not correspond to any user
+          // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
+          //res.send("403 – Forbidden");
+          //res.end();
+          //return;
+        //}
 
+        //var sq = `SELECT * FROM Product_api WHERE (id = ${id}) AND ((username = '${user.username}') OR (username = 'admin'))`;
+        //conn.query(sq, function (err, result) {
+          //if (err) {
+            //throw err;
+          //}
+          //else if(result == ''){  //can't find the product with the given id
+            // Σε περίπτωση που ένας διαπιστευμένος χρήστης δεν έχει τη δικαιοδοσία να εκτελέσει μια ενέργεια, θα πρέπει να επιστρέφεται το 401 Not Authorized
+            //res.send("401 – Not Authorized");
+            //res.end();
+            //return;
+          //}
+        //});
         if(! [body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
           var sql = `UPDATE Shop_api SET name = '${body.name}', address = '${body.address}', lng = '${parseFloat(body.lng)}', lat = '${parseFloat(body.lat)}', tags = '${body.tags}', withdrawn = ${body.withdrawn} WHERE (id = '${id}')`
           conn.query(sql, function (err, result) {
@@ -259,6 +292,7 @@ exports.update_a_shop = async(req, res) =>{
               json_res = result;
               if(format == "json"){
                 res.json(json_res[0]);
+                res.end();
               }
               else{
                 res.set('Content-Type', 'text/xml');
@@ -268,6 +302,7 @@ exports.update_a_shop = async(req, res) =>{
                 }
                 xml += "</shop>"
                 res.send(xml);
+                res.end();
               }
             }
           });
@@ -286,47 +321,76 @@ exports.partial_update_shop = async(req, res) =>{
   if(! format){
     format = "json";
   }
-
-  var authentication = req.headers['x-observatory-auth'];
-  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
-    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
-    await new Promise((resolve, reject) => {
-      conn.query(sql0, function (err, result) {
-        if (err) {
-          throw(err);
-        }
-        else{
-         user = result[0];
-         resolve();
-        }
-      });
-    });
-  }
-  else{
-    res.send("403 – Forbidden");
-    return;
-  }
-
   var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-  conn.query(sql0, function (err, result) {
+  conn.query(sql0, function (err, result) =>{
     if (err) {
       throw err;
     }
     else if(result == ''){  //can't find the shop with the given id
       res.send("404 – Not Found");
+      res.end();
       return;
     }
     else{
       if (Object.keys(body).length != 1){
         res.send("400 – Bad Request");
+        res.end();
         return;
       }
       else{
+        var authentication = req.headers['x-observatory-auth'];
+        if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+          var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+          await new Promise((resolve, reject) => {
+            conn.query(sql0, function (err, result) {
+              if (err) {
+                throw(err);
+              }
+              else{
+               user = result[0];
+               resolve();
+              }
+            });
+          });
+        }
+        else{
+          res.send("403 – Forbidden");
+          res.end();
+          return;
+        }
+        // if at this point user is undefined, we dont have correct authentication
+        if([user].includes(undefined)){
+          // if user is undefined, the authentication token given, does not correspond to any user
+          // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
+          res.send("403 – Forbidden");
+          res.end();
+          return;
+        }
+
+        var sq = `SELECT * FROM Product_api WHERE (id = ${id}) AND ((username = '${user.username}') OR (username = 'admin'))`;
+        conn.query(sq, async (err, result) =>{
+          if (err) {
+            throw err;
+          }
+          else if(result == ''){  //can't find the product with the given id
+            // Σε περίπτωση που ένας διαπιστευμένος χρήστης δεν έχει τη δικαιοδοσία να εκτελέσει μια ενέργεια, θα πρέπει να επιστρέφεται το 401 Not Authorized
+            res.send("401 – Not Authorized");
+            res.end();
+            return;
+          }
+          else{
+
+          }
+        });
+
+
+
         if(Object.keys(body).length == 1){
           var key = Object.keys(body)[0];
           var value = body[key];
           if (! ['name', 'address', 'lng', 'lat', 'tags', 'withdrawn'].includes(key)){
             res.send("400 – Bad Request");
+            res.end();
             return;
           }
           else{
@@ -348,6 +412,7 @@ exports.partial_update_shop = async(req, res) =>{
                 json_res = result;
                 if(format == "json"){
                   res.json(json_res[0]);
+                  res.end();
                 }
                 else{
                   res.set('Content-Type', 'text/xml');
@@ -357,6 +422,7 @@ exports.partial_update_shop = async(req, res) =>{
                   }
                   xml += "</shop>"
                   res.send(xml);
+                  res.end();
                 }
               }
             });
@@ -375,6 +441,7 @@ exports.delete_a_shop = async(req, res) =>{
   if(! format){
     format = "json";
   }
+
 
   var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
   conn.query(sql0, async (err, result) => {
@@ -403,6 +470,7 @@ exports.delete_a_shop = async(req, res) =>{
       }
       else{
         res.send("403 – Forbidden");
+        res.end();
         return;
       }
 
