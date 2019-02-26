@@ -108,20 +108,47 @@ function update_test_user(callback){
   });
 }
 
+function test_products_post(callback){
+  // Test /products POST
+  console.log("Testing /products POST ... ");
+  var request = require('request');
+  request({
+    url: baseurl + '/products',
+    method: 'POST',
+    headers: {'X-OBSERVATORY-AUTH': 'authentication_token'},
+    body: {'name': 'name', 'description': 'description', 'category': 'category', 'tags': 'tags'},
+    json: true
+  }, async(error, response, body) => {
+    var expected = {
+        "name": "name",
+        "description": "description",
+        "category": "category",
+        "tags": "tags",
+      }
+    var got = body;
+    if(expected.name == got.name && expected.description == got.description && expected.category == got.category && expected.tags == got.tags){
+      console.log("True");
+    }
+    else{
+      console.log("False");
+    }
+    callback();
+    });
+}
+
 function test_products_get(callback){
   // Test /products GET
   console.log("Testing /products GET ... ");
   // TODO
-
-  callback();
-}
-
-function test_products_post(callback){
-  // Test /products POST
-  console.log("Testing /products POST ... ");
-  // TODO
-
-  callback();
+  var request = require('request');
+  request({
+    url: baseurl + '/products',
+    method: 'GET',
+    query:{"start": "0", "count": "1"},
+    json: true
+  }, async(error, response, body) => {
+    console.log(body);
+  });
 }
 
 function test_products_id_get(callback){

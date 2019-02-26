@@ -17,6 +17,18 @@ exports.list_products = function(req, res) {
   var status = req.query.status;
   var sort = req.query.sort;
   var format = req.query.format;
+  if(! start){
+    start = 0;
+  }
+  if(! count){
+    count = 20;
+  }
+  if(! status){
+    status = "ACTIVE";
+  }
+  if(! sort){
+    sort = "id|DESC";
+  }
   if(! format){
     format = "json";
   }
@@ -33,6 +45,7 @@ exports.list_products = function(req, res) {
   else if (status == 'WITHDRAWN'){
     statusbool = true;
   }
+
   var sort1 = sort.split("|");
 
   var sql1 = `SELECT COUNT(*) AS total FROM Product_api`;
@@ -125,33 +138,35 @@ exports.create_a_product = async(req, res) => {
       res.end();
       return;
     }
-  });
-  var sql1 = `SELECT * FROM Product_api WHERE (id = (SELECT MAX(id) FROM Product_api)) AND (name = '${body.name}')`
-  conn.query(sql1, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    else if(result == ''){  //can't find the product we just added, (If we get here something went terribly wrong)
-      res.send("400 – Bad Request");
-      res.end();
-      return;
-    }
     else{
-      json_res = result;
-      if(format == "json"){
-        res.json(json_res[0]);
-        res.end();
-      }
-      else{
-        res.set('Content-Type', 'text/xml');
-        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
-        for (var i in result) {
-          xml += jsontoxml(result[i]);
+      var sql1 = `SELECT * FROM Product_api WHERE (id = (SELECT MAX(id) FROM Product_api)) AND (name = '${body.name}')`
+      conn.query(sql1, function (err, result) {
+        if (err) {
+          throw err;
         }
-        xml += "</product>"
-        res.send(xml);
-        res.end();
-      }
+        else if(result == ''){  //can't find the product we just added, (If we get here something went terribly wrong)
+          res.send("400 – Bad Request");
+          res.end();
+          return;
+        }
+        else{
+          json_res = result;
+          if(format == "json"){
+            res.json(json_res[0]);
+            res.end();
+          }
+          else{
+            res.set('Content-Type', 'text/xml');
+            var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<product>"
+            for (var i in result) {
+              xml += jsontoxml(result[i]);
+            }
+            xml += "</product>"
+            res.send(xml);
+            res.end();
+          }
+        }
+      });
     }
   });
 };
