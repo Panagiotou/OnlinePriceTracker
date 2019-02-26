@@ -17,6 +17,18 @@ exports.list_shops = function(req, res) {
   var status = req.query.status;
   var sort = req.query.sort;
   var format = req.query.format;
+  if(! start){
+    start = 0;
+  }
+  if(! count){
+    count = 20;
+  }
+  if(! status){
+    status = "ACTIVE";
+  }
+  if(! sort){
+    sort = "id|DESC";
+  }
   if(! format){
     format = "json";
   }
@@ -24,6 +36,7 @@ exports.list_shops = function(req, res) {
   var total = 0;
   if ( [start, count, status, sort].includes(undefined) || [start, count, status, sort].includes(null) ){
     res.send("400 – Bad Request");
+    res.end();
     return;
   }
   if (status == 'ALL'){
@@ -32,6 +45,7 @@ exports.list_shops = function(req, res) {
   else if (status == 'WITHDRAWN'){
     statusbool = true;
   }
+
   var sort1 = sort.split("|");
 
   var sql1 = `SELECT COUNT(*) AS total FROM Shop_api`;
@@ -57,6 +71,7 @@ exports.list_shops = function(req, res) {
       }
       if(format == "json"){
         res.json(json_res);
+        res.end();
       }
       else{
         res.set('Content-Type', 'text/xml');
@@ -74,6 +89,7 @@ exports.list_shops = function(req, res) {
         xml += "</shops>"
         xml += "</results>"
         res.send(xml);
+        res.end();
       }
     }
   });
@@ -106,45 +122,54 @@ exports.create_a_shop = async(req, res) =>{
     return;
   }
 
-  if(body.withdrawn == 'true' || body.withdrawn == '1'){ //make the string input a boolean value
-    var w = true;
+  // if at this point user is undefined, we dont have correct authentication
+  if(([user].includes(undefined)) || ([authentication].includes(undefined) || [authentication].includes(null)) ){
+    // if user is undefined, the authentication token given, does not correspond to any user
+    // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
+    res.send("403 – Forbidden");
+    res.end();
+    return;
   }
-  else if(body.withdrawn == 'false' || body.withdrawn == '0'){
-    var w = false;
-  }
-  var sql = "INSERT INTO Shop_api (name, address, lng, lat, tags, withdrawn) VALUES (?,?,?,?,?,?)";
-  var values = [body.name, body.address, parseFloat(body.lng), parseFloat(body.lat), body.tags , w];
+  var sql = "INSERT INTO Shop_api (name, address, lng, lat, tags) VALUES (?,?,?,?,?)";
+  var values = [body.name, body.address, parseFloat(body.lng), parseFloat(body.lat), body.tags];
   conn.query(sql, values, function (err) {
     if (err) {
       res.send("400 – Bad Request");
-      return;
-    }
-  });
-  var sql1 = `SELECT * FROM Shop_api WHERE (id = (SELECT MAX(id) FROM Shop_api)) AND (name = '${body.name}')`
-  conn.query(sql1, function (err, result) {
-    if (err) {
-      throw err;
-    }
-    else if(result == ''){  //can't find the shop we just added, (If we get here something went terribly wrong)
-      res.send("400 – Bad Request");
+      res.end();
       return;
     }
     else{
-      json_res = result;
-      if(format == "json"){
-        res.json(json_res[0]);
-      }
-      else{
-        res.set('Content-Type', 'text/xml');
-        var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
-        for (var i in result) {
-          xml += jsontoxml(result[i]);
+      var sql1 = `SELECT * FROM Shop_api WHERE (id = (SELECT MAX(id) FROM Shop_api)) AND (name = '${body.name}')`
+      conn.query(sql1, function (err, result) {
+        if (err) {
+          throw err;
         }
-        xml += "</shop>"
-        res.send(xml);
-      }
+        else if(result == ''){  //can't find the shop we just added, (If we get here something went terribly wrong)
+          res.send("400 – Bad Request");
+          res.end();
+          return;
+        }
+        else{
+          json_res = result;
+          if(format == "json"){
+            res.json(json_res[0]);
+            res.end();
+          }
+          else{
+            res.set('Content-Type', 'text/xml');
+            var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
+            for (var i in result) {
+              xml += jsontoxml(result[i]);
+            }
+            xml += "</shop>"
+            res.send(xml);
+            res.end();
+          }
+        }
+      });
     }
   });
+
 };
 
 exports.read_a_shop = function(req, res) {
@@ -160,6 +185,7 @@ exports.read_a_shop = function(req, res) {
     }
     else if(result == ''){  //can't find the shop with the given id
       res.send("404 – Not Found");
+      res.end();
       return;
     }
     else{
@@ -175,6 +201,7 @@ exports.read_a_shop = function(req, res) {
         }
         xml += "</shop>"
         res.send(xml);
+        res.end();
       }
     }
   });
@@ -188,78 +215,103 @@ exports.update_a_shop = async(req, res) =>{
     format = "json";
   }
 
-  var authentication = req.headers['x-observatory-auth'];
-  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
-    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
-    await new Promise((resolve, reject) => {
-      conn.query(sql0, function (err, result) {
-        if (err) {
-          throw(err);
-        }
-        else{
-         user = result[0];
-         resolve();
-        }
-      });
-    });
-  }
-  else{
-    res.send("403 – Forbidden");
-    return;
-  }
-
-  //if ([body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
-  //  res.send("400 – Bad Request");
-  //  return;
-  //}
   var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-  conn.query(sql0, function (err, result) {
+  conn.query(sql0, async (err, result) =>{
     if (err) {
       throw err;
     }
     else if(result == ''){  //can't find the shop with the given id
       res.send("404 – Not Found");
+      res.end();
       return;
     }
     else{
       if ([body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
         res.send("400 – Bad Request");
-        return;
-      }
-    }
-  });
-  if(! [body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
-    var sql = `UPDATE Shop_api SET name = '${body.name}', address = '${body.address}', lng = '${parseFloat(body.lng)}', lat = '${parseFloat(body.lat)}', tags = '${body.tags}', withdrawn = ${body.withdrawn} WHERE (id = '${id}')`
-    conn.query(sql, function (err, result) {
-      if (err) {
-        throw err;
-      }
-    });
-  var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-    conn.query(sql1, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      else if(result == ''){  //can't find the shop we just updated, (If we get here something went terribly wrong)
+        res.end();
         return;
       }
       else{
-        json_res = result;
-        if(format == "json"){
-          res.json(json_res[0]);
+        var authentication = req.headers['x-observatory-auth'];
+        if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+          var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+          await new Promise((resolve, reject) => {
+            conn.query(sql0, function (err, result) {
+              if (err) {
+                throw(err);
+              }
+              else{
+               user = result[0];
+               resolve();
+              }
+            });
+          });
         }
         else{
-          res.set('Content-Type', 'text/xml');
-          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
-          for (var i in result) {
-            xml += jsontoxml(result[i]);
-          }
-          xml += "</shop>"
-          res.send(xml);
+          res.send("403 – Forbidden");
+          res.end();
+          return;
+        }
+        // if at this point user is undefined, we dont have correct authentication
+        //if([user].includes(undefined)){
+          // if user is undefined, the authentication token given, does not correspond to any user
+          // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
+          //res.send("403 – Forbidden");
+          //res.end();
+          //return;
+        //}
+
+        //var sq = `SELECT * FROM Product_api WHERE (id = ${id}) AND ((username = '${user.username}') OR (username = 'admin'))`;
+        //conn.query(sq, function (err, result) {
+          //if (err) {
+            //throw err;
+          //}
+          //else if(result == ''){  //can't find the product with the given id
+            // Σε περίπτωση που ένας διαπιστευμένος χρήστης δεν έχει τη δικαιοδοσία να εκτελέσει μια ενέργεια, θα πρέπει να επιστρέφεται το 401 Not Authorized
+            //res.send("401 – Not Authorized");
+            //res.end();
+            //return;
+          //}
+        //});
+        if(! [body.name, body.address, body.lng, body.lat, body.tags, body.withdrawn].includes(undefined)){
+          var sql = `UPDATE Shop_api SET name = '${body.name}', address = '${body.address}', lng = '${parseFloat(body.lng)}', lat = '${parseFloat(body.lat)}', tags = '${body.tags}', withdrawn = ${body.withdrawn} WHERE (id = '${id}')`
+          conn.query(sql, function (err, result) {
+            if (err) {
+              throw err;
+            }
+          });
+        var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+          conn.query(sql1, function (err, result) {
+            if (err) {
+              throw err;
+            }
+            else if(result == ''){  //can't find the shop we just updated, (If we get here something went terribly wrong)
+              return;
+            }
+            else{
+              json_res = result;
+              if(format == "json"){
+                res.json(json_res[0]);
+                res.end();
+              }
+              else{
+                res.set('Content-Type', 'text/xml');
+                var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
+                for (var i in result) {
+                  xml += jsontoxml(result[i]);
+                }
+                xml += "</shop>"
+                res.send(xml);
+                res.end();
+              }
+            }
+          });
         }
       }
-    });
-  }
+    }
+  });
+
+
 };
 
 exports.partial_update_shop = async(req, res) =>{
@@ -269,84 +321,118 @@ exports.partial_update_shop = async(req, res) =>{
   if(! format){
     format = "json";
   }
-
-  var authentication = req.headers['x-observatory-auth'];
-  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
-    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
-    await new Promise((resolve, reject) => {
-      conn.query(sql0, function (err, result) {
-        if (err) {
-          throw(err);
-        }
-        else{
-         user = result[0];
-         resolve();
-        }
-      });
-    });
-  }
-  else{
-    res.send("403 – Forbidden");
-    return;
-  }
-
   var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-  conn.query(sql0, function (err, result) {
+  conn.query(sql0, function (err, result) =>{
     if (err) {
       throw err;
     }
     else if(result == ''){  //can't find the shop with the given id
       res.send("404 – Not Found");
+      res.end();
       return;
     }
     else{
       if (Object.keys(body).length != 1){
         res.send("400 – Bad Request");
+        res.end();
         return;
+      }
+      else{
+        var authentication = req.headers['x-observatory-auth'];
+        if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+          var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+          await new Promise((resolve, reject) => {
+            conn.query(sql0, function (err, result) {
+              if (err) {
+                throw(err);
+              }
+              else{
+               user = result[0];
+               resolve();
+              }
+            });
+          });
+        }
+        else{
+          res.send("403 – Forbidden");
+          res.end();
+          return;
+        }
+        // if at this point user is undefined, we dont have correct authentication
+        if([user].includes(undefined)){
+          // if user is undefined, the authentication token given, does not correspond to any user
+          // Σε περίπτωση που ένας μη διαπιστευμένος χρήστης δεν επιτρέπεται να εκτελέσει μια ενέργεια θα πρέπει να επιστρέφεται το 403 – Forbidden
+          res.send("403 – Forbidden");
+          res.end();
+          return;
+        }
+
+        var sq = `SELECT * FROM Product_api WHERE (id = ${id}) AND ((username = '${user.username}') OR (username = 'admin'))`;
+        conn.query(sq, async (err, result) =>{
+          if (err) {
+            throw err;
+          }
+          else if(result == ''){  //can't find the product with the given id
+            // Σε περίπτωση που ένας διαπιστευμένος χρήστης δεν έχει τη δικαιοδοσία να εκτελέσει μια ενέργεια, θα πρέπει να επιστρέφεται το 401 Not Authorized
+            res.send("401 – Not Authorized");
+            res.end();
+            return;
+          }
+          else{
+
+          }
+        });
+
+
+
+        if(Object.keys(body).length == 1){
+          var key = Object.keys(body)[0];
+          var value = body[key];
+          if (! ['name', 'address', 'lng', 'lat', 'tags', 'withdrawn'].includes(key)){
+            res.send("400 – Bad Request");
+            res.end();
+            return;
+          }
+          else{
+            var sql = `UPDATE Shop_api SET ${key} = '${value}' WHERE (id = ${id})`
+            conn.query(sql, function (err) {
+              if (err) {
+                throw err;
+              }
+            });
+            var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+            conn.query(sql1, function (err, result) {
+              if (err) {
+                throw err;
+              }
+              else if(result == ''){  //can't find the shop we just updated, (If we get here something went terribly wrong)
+                return;
+              }
+              else{
+                json_res = result;
+                if(format == "json"){
+                  res.json(json_res[0]);
+                  res.end();
+                }
+                else{
+                  res.set('Content-Type', 'text/xml');
+                  var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
+                  for (var i in result) {
+                    xml += jsontoxml(result[i]);
+                  }
+                  xml += "</shop>"
+                  res.send(xml);
+                  res.end();
+                }
+              }
+            });
+          }
+        }
       }
     }
   });
 
-  if(Object.keys(body).length == 1){
-    var key = Object.keys(body)[0];
-    var value = body[key];
-    if (! ['name', 'address', 'lng', 'lat', 'tags', 'withdrawn'].includes(key)){
-      res.send("400 – Bad Request");
-      return;
-    }
-    else{
-      var sql = `UPDATE Shop_api SET ${key} = '${value}' WHERE (id = ${id})`
-      conn.query(sql, function (err) {
-        if (err) {
-          throw err;
-        }
-      });
-      var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-      conn.query(sql1, function (err, result) {
-        if (err) {
-          throw err;
-        }
-        else if(result == ''){  //can't find the shop we just updated, (If we get here something went terribly wrong)
-          return;
-        }
-        else{
-          json_res = result;
-          if(format == "json"){
-            res.json(json_res[0]);
-          }
-          else{
-            res.set('Content-Type', 'text/xml');
-            var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<shop>"
-            for (var i in result) {
-              xml += jsontoxml(result[i]);
-            }
-            xml += "</shop>"
-            res.send(xml);
-          }
-        }
-      });
-    }
-  }
+
 };
 
 exports.delete_a_shop = async(req, res) =>{
@@ -356,28 +442,9 @@ exports.delete_a_shop = async(req, res) =>{
     format = "json";
   }
 
-  var authentication = req.headers['x-observatory-auth'];
-  if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
-    var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
-    await new Promise((resolve, reject) => {
-      conn.query(sql0, function (err, result) {
-        if (err) {
-          throw(err);
-        }
-        else{
-         user = result[0];
-         resolve();
-        }
-      });
-    });
-  }
-  else{
-    res.send("403 – Forbidden");
-    return;
-  }
 
   var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-  conn.query(sql0, function (err, result) {
+  conn.query(sql0, async (err, result) => {
     if (err) {
       throw err;
     }
@@ -385,65 +452,91 @@ exports.delete_a_shop = async(req, res) =>{
       res.send("404 – Not Found");
       return;
     }
+    else{
+      var authentication = req.headers['x-observatory-auth'];
+      if (! ([authentication].includes(undefined) || [authentication].includes(null)) ){
+        var sql0 = `SELECT * FROM User_api WHERE authentication_token = '${authentication}'`;
+        await new Promise((resolve, reject) => {
+          conn.query(sql0, function (err, result) {
+            if (err) {
+              throw(err);
+            }
+            else{
+             user = result[0];
+             resolve();
+            }
+          });
+        });
+      }
+      else{
+        res.send("403 – Forbidden");
+        res.end();
+        return;
+      }
+
+
+      if (user_type == 'Volunteer'){  // FIXME (how is user type recognized?)
+        var sql = `UPDATE Shop_api SET withdrawn = 1 WHERE (id = '${id}')`
+        conn.query(sql, function (err, result) {
+          if (err) {
+            throw err;
+          }
+          else if(result == ''){  //can't find the product with the given id
+            res.send("404 – Not Found");
+            return;
+          }
+        });
+        var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+        conn.query(sql1, function (err, result) {
+          if (err) {
+            throw err;
+          }
+          else if(result == ''){  //can't find the shop whose withdrawn state we just updated, (If we get here something went terribly wrong)
+            return;
+          }
+          else{
+            json_res = result;
+            if(format == "json"){
+              res.json({"message":"OK"});
+            }
+            else{
+              res.set('Content-Type', 'text/xml');
+              var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
+              res.send(xml);
+            }
+          }
+        });
+      }
+      else {  // user type is Administrator
+        var sql = `DELETE FROM Shop_api WHERE (id = '${id}')`
+        conn.query(sql, function (err, result) {
+          if (err) {
+            throw err;
+          }
+        });
+        var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
+        conn.query(sql1, function (err, result) {
+          if (err) {
+            throw err;
+          }
+          else if(result != ''){  //can find the shop we just deleted, (If we get here something went terribly wrong)
+            return;
+          }
+          else{
+            json_res = result;
+            if(format == "json"){
+              res.json({"message":"OK"});
+            }
+            else{
+              res.set('Content-Type', 'text/xml');
+              var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
+              res.send(xml);
+            }
+          }
+        });
+      }
+    }
   });
-  if (user_type == 'Volunteer'){  // FIXME (how is user type recognized?)
-    var sql = `UPDATE Shop_api SET withdrawn = 1 WHERE (id = '${id}')`
-    conn.query(sql, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      else if(result == ''){  //can't find the product with the given id
-        res.send("404 – Not Found");
-        return;
-      }
-    });
-    var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-    conn.query(sql1, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      else if(result == ''){  //can't find the shop whose withdrawn state we just updated, (If we get here something went terribly wrong)
-        return;
-      }
-      else{
-        json_res = result;
-        if(format == "json"){
-          res.json({"message":"OK"});
-        }
-        else{
-          res.set('Content-Type', 'text/xml');
-          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
-          res.send(xml);
-        }
-      }
-    });
-  }
-  else {  // user type is Administrator
-    var sql = `DELETE FROM Shop_api WHERE (id = '${id}')`
-    conn.query(sql, function (err, result) {
-      if (err) {
-        throw err;
-      }
-    });
-    var sql1 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-    conn.query(sql1, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      else if(result != ''){  //can find the shop we just deleted, (If we get here something went terribly wrong)
-        return;
-      }
-      else{
-        json_res = result;
-        if(format == "json"){
-          res.json({"message":"OK"});
-        }
-        else{
-          res.set('Content-Type', 'text/xml');
-          var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<message>OK</message>";
-          res.send(xml);
-        }
-      }
-    });
-  }
+
+
 };

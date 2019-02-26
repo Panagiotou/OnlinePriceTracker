@@ -34,7 +34,7 @@
 οποία μπορούν να υλοποιηθούν σε γλώσσα Java (το back-end υποσύστημα) ή/και JavaScript (για
 το front-end ή/και το back-end υποσύστημα). :heavy_check_mark:
   - (Απάντηση:)
- Χρησιμοποιείται JavaScript στο front-end και το back-end. Στο front-end χρησιμοποιείται η Pug αντί για HTML, διότι είναι πιο συμβατή με  την JavaScript. 
+ Χρησιμοποιείται JavaScript στο front-end και το back-end. Στο front-end χρησιμοποιείται η Pug αντί για HTML, διότι είναι πιο συμβατή με  την JavaScript.
 
 2. Η γλώσσα των χρηστικών διεπαφών και των δεδομένων της πλατφόρμας θα πρέπει να είναι η
 ελληνική. :heavy_check_mark:
