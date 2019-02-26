@@ -40,7 +40,6 @@ router.get('/register', function(req, res){
 
 // Register Proccess
 router.post('/register', function(req, res){
-  console.log("ewiwojfojwe")
   req.checkBody('username', 'Συμπληρώστε το πεδίο " Όνομα χρήστη "').notEmpty();
   req.checkBody('password', 'Συμπληρώστε το πεδίο " Κωδικός πρόσβασης "').notEmpty();
   req.checkBody('name', 'Συμπληρώστε το πεδίο " Όνομα "').notEmpty();
