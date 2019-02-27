@@ -322,7 +322,7 @@ exports.partial_update_shop = async(req, res) =>{
     format = "json";
   }
   var sql0 = `SELECT * FROM Shop_api WHERE id = ${id}`;
-  conn.query(sql0, function (err, result) =>{
+  conn.query(sql0, async (err, result) =>{
     if (err) {
       throw err;
     }

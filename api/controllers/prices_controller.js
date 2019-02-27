@@ -48,11 +48,21 @@ exports.list_prices = async(req, res) => {
       res.send("400 – Bad Request");
       return;
   }
+  var today = new Date();
+  var dd = today.getDate();
+  var mm = today.getMonth() + 1; //January is 0!
+  var yyyy = today.getFullYear();
+  dateToday = yyyy + "-" + mm + "-" + dd;
+  //Default values
   stringShops = "true";
   stringTags = "true";
   stringProducts = "true";
-  stringDates = "true";
+  stringDates = `(dateFrom = '${dateToday}')
+  AND (dateTo = '${dateToday}')`;
   stringGeo = "true";
+  stringDistance = "true";
+  valueDistance = "null";
+  //
   if(shops){
     stringShops = " shopID in (";
     listShops = shops.replace("[", "").replace("]", "").split(",");
@@ -79,7 +89,14 @@ exports.list_prices = async(req, res) => {
   }
 
   if(geoDist && geoLat && geoLng){
-    stringGeo = ``
+     valueDistance= `   6378.137 * acos (
+           cos ( radians(Shop_api.lng) )
+           * cos( radians( ${geoLat} ) )
+           * cos( radians( ${geoLng} ) - radians(Shop_api.lat) )
+           + sin ( radians(Shop_api.lng) )
+           * sin( radians( ${geoLat} ) )
+         )`
+     stringDistance = `shopDist  < ${geoDist}`
   }
 
   var sql1 = `SELECT COUNT(*) AS total FROM Price_api`;
@@ -92,8 +109,12 @@ exports.list_prices = async(req, res) => {
     }
   });
 
+  var sort1 = sort.split("|");
+
   sql =
-  `SELECT price, productId, Product_api.name AS productName, Product_api.tags AS productTags, shopId, Shop_api.name AS shopName , Shop_api.tags AS shopTags, Shop_api.address AS shopAddress
+  `SELECT price, Price_api.id, Price_api.dateFrom AS date, productId, Product_api.name AS productName, Product_api.tags AS productTags, shopId,
+   Shop_api.name AS shopName , Shop_api.tags AS shopTags, Shop_api.address AS shopAddress,
+   ${valueDistance} AS shopDist
   FROM Price_api
   JOIN Product_api
     ON Price_api.productId = Product_api.id
@@ -104,12 +125,28 @@ exports.list_prices = async(req, res) => {
   AND (${stringShops})
   AND (${stringProducts})
   AND (${stringTags})
+  HAVING
+  (${stringDistance})
+  ORDER BY '${sort1[0]}' ${sort1[1]}
   ;`
     conn.query(sql, async (err, result) =>{
       if (err) {
         throw(err);
       }
       else{
+        var newresult = [];
+        await new Promise((resolve, reject) => {
+          for(i=Math.max(start, 0); i<Math.min(count, result.length); i++){
+            dbFrom = new Date(result[i].date.toISOString().split('T')[0]);
+            nextFrom = new Date(dbFrom);
+            nextFrom.setDate(dbFrom.getDate()+1);
+            result[i].date = nextFrom.toISOString().split('T')[0];
+            newresult.push(result[i]);
+          }
+          result = newresult;
+          resolve();
+        });
+
         if(tags){
           arraytags = tags.replace("[", "").replace("]", "").split(",");
           await new Promise((resolve, reject) => {
