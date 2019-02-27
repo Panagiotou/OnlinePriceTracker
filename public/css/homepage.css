@@ -89,13 +89,13 @@
   /* Just so it's visible */
 }
 
-.display_products{
+.display_prices{
 	color: #000;
 	font-family: "Roboto", sans-serif;
 	position: relative;
 	width: 100%;
 }
-.display_products a{
+.display_prices a{
 	color: #12448B;
 }
 
@@ -104,8 +104,3 @@
 	padding: 5% 0 0;
 	margin: auto;
 }
-
-div.image {
-	width:25%;
-   content:url(https://www.thanopoulos.gr/110355/fusiko-metalliko-nero-500ml-zagori.jpg);
-}​

@@ -1,6 +1,5 @@
 doctype html
 
-//- use if your pug files have similarities to avoid copying large blocks of same code.
 html
   head
     link(rel='stylesheet', href='css/homepage.css')
@@ -21,7 +20,6 @@ block content
         each prod, i in Product
           #narrow
             div(class="display_products")
-              .image
               div(class="display_products")
                 div  Όνομα Προϊόντος: #{prod.name}
                 div  Περιγραφή: #{prod.description}
@@ -30,7 +28,7 @@ block content
 
   #navbar
       a.active(href='#home')
-      i.glyphicon.glyphicon-home
+        i.glyphicon.glyphicon-home
       a(href='#upload') Ανεβάστε Τιμή
       a(href='#contact') Επικοινωνία
       a(href='login', style='float:right') Σύνδεση
