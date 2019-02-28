@@ -47,10 +47,38 @@
 }
 
 #narrow {
-  margin-left: 1%;
+  margin-left: 25%;
+  margin-right: 20%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  box-shadow: inset 0 0 0 3000px rgba(255,255,255,0.8);
+  font-size: 120%;
+  padding-top: 0.5%;
+  padding-left: 1%;
+  padding-bottom: 1%;
+  padding-right: 1%;
+  border-radius: 8px;
+
 
 
   /* Just so it's visible */
+}
+
+button{
+  border-radius: 2px;
+}
+
+#myform {
+  float: right;
+  background-color: white;
+  color: black;
+  font-size: 80%;
+
+
+}
+
+#myform :hover {
+  color: #e5ca54;
 }
 
 /*#narrow {
@@ -103,4 +131,43 @@
 	width: 360px;
 	padding: 5% 0 0;
 	margin: auto;
+}
+
+#distance{
+  margin-top: 4%;
+  margin-left: 3%;
+  font-family: "Roboto", sans-serif;
+	outline:1;
+	background: #dae1ed;
+	width: 90%;
+	border: 0;
+	padding: 5% ;
+	box-sizing: border-box;
+	font-size: 100%;
+}
+
+#dateFrom, #dateTo{
+  margin-top: 4%;
+  margin-left: 3%;
+  font-family: "Roboto", sans-serif;
+	outline:1;
+	background: #dae1ed;
+	width: 90%;
+	border: 0;
+	padding: 3% ;
+	box-sizing: border-box;
+	font-size: 100%;
+}
+
+label{
+  margin-top: 4%;
+  margin-left: 3%;
+  color: white;
+}
+
+label#label1{
+  font-size:x-large;
+  margin-top: 4%;
+  margin-left: 12%;
+  color: white;
 }
