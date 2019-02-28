@@ -14,7 +14,6 @@ block content
   body
 
 
-  #parent
 
       if Product
         each prod, i in Product
@@ -23,7 +22,8 @@ block content
               div(class="display_products")
                 div  Όνομα Προϊόντος: #{prod.name}
                 div  Περιγραφή: #{prod.description}
-                a(href='product_details') Προβολή λεπτομερειών
+                  form#myform(action='/product_details', method='POST')
+                    button(name='subject', type='submit', value='/product_details') Προβολή περισσότερων
 
 
   #navbar
@@ -35,9 +35,17 @@ block content
       a(href='register', style='float:right') Εγγραφή
 
   .sidenav
-        input(type='text', target="m",  placeholder='Αναζήτηση..')
-        a(href='#about') Κατηγορίες
-        a(href='#services') Κατάστημα
+        label#label1 Αναζήτηση
+        input(type='text', target="m",  placeholder='Αναζήτηση..') 
+        input#distance(type='number', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
+        label Ημερομηνία (από):
+        input#dateFrom(type='date', name='dateFrom')
+        label Ημερομηνία (μέχρι):
+        input#dateTo(type='date', name='dateTo')
+      
+
+
+      
 
 
         script.
@@ -51,3 +59,5 @@ block content
           }
           prevScrollpos = currentScrollPos;
           }
+          
+      
