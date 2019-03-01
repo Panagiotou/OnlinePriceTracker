@@ -135,26 +135,26 @@ button{
 
 #distance{
   margin-top: 4%;
-  margin-left: 3%;
+  margin-left: 10%;
   font-family: "Roboto", sans-serif;
 	outline:1;
 	background: #dae1ed;
-	width: 90%;
+	width: 80%;
 	border: 0;
-	padding: 5% ;
+	padding: 2% ;
 	box-sizing: border-box;
 	font-size: 100%;
 }
 
-#dateFrom, #dateTo,#productname, #tags{
+#dateFrom, #dateTo,#productname, #tags,#category{
   margin-top: 4%;
-  margin-left: 3%;
+  margin-left: 10%;
   font-family: "Roboto", sans-serif;
 	outline:1;
 	background: #dae1ed;
-	width: 90%;
+	width: 80%;
 	border: 0;
-	padding: 3% ;
+	padding: 2% ;
 	box-sizing: border-box;
 	font-size: 100%;
 }
@@ -167,15 +167,20 @@ label{
 
 label#label1{
   font-size:x-large;
-  margin-top: 4%;
+  margin-top: 1%;
   margin-left: 12%;
   color: white;
 }
 
 #subb{
-  margin-top: 4%;
+  margin-top: 10%;
+  margin-left: 25%;
+  background-color: white;
+  color: black;
 }
 
 #shop_select, #sort{
-  color: black;
+  color: #3a3a3a;
+  margin-top: 4%;
+  margin-left: 10%;
 }

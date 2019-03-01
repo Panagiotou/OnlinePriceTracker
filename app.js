@@ -4,10 +4,14 @@ const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const path = require('path');
 const bodyParser = require('body-parser');
+var fs = require('fs')
+var https = require('https')
 
 const app = express();
 
 require('dotenv').config() // require passwords and usernames etc from .env file
+
+
 
 //Load View Engine
 app.set('views', path.join(__dirname, 'views'));
@@ -96,6 +100,12 @@ price_routes(app);
 app.listen(8765, function(){
   console.log('Server started at http://localhost:8765/');
 });
+//https:
+/*var certOptions = {
+  key: fs.readFileSync(path.resolve('server.key')),
+  cert: fs.readFileSync(path.resolve('server.crt'))
+}
+var server = https.createServer(certOptions, app).listen(8765)*/
 
 //Home route
 app.get('/', async (req, res) =>{
