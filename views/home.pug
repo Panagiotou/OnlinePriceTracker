@@ -43,13 +43,26 @@ block content
                               a(href='register', style='float:right') Εγγραφή
           
   .sidenav
+    div
+      form(action='/search_results')
         label#label1 Αναζήτηση
-        input(type='text', target="m",  placeholder='Αναζήτηση..') 
-        input#distance(type='number', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
+        input#productname(type='text',  placeholder='Όνομα προϊόντος..') 
+        input#distance(type='number', value='distance', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
         label Ημερομηνία (από):
-        input#dateFrom(type='date', name='dateFrom')
+        input#dateFrom(type='date',value='dateFrom', name='dateFrom')
         label Ημερομηνία (μέχρι):
-        input#dateTo(type='date', name='dateTo')
+        input#dateTo(type='date',value='dateTo', name='dateTo')
+        label(for='shop_select') Κατάστημα
+          select#shop_select(name='shop_select', value='shop_select')
+            if Shop
+              each sh, i in Shop
+                option(value='sh_name')  #{sh.name}
+        label(for='sort') Ταξινόμηση
+            select#sort(name='sort', value='sort')
+                option(value='ASC')  Τιμή αύξουσα
+                option(value='DESC')  Τιμή φθίνουσα
+        input#tags(type='text', placeholder='Κατηγορία..')
+        input#subb(type='submit', value='Submit')
       
 
 
