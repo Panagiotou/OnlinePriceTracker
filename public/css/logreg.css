@@ -8,6 +8,16 @@
 
 .register-page{
 	width: 360px;
-	padding: 5% 0 0;
+	padding: 10% 0 0;
 	margin: auto;
+}
+
+#det{
+
+	position: relative;
+	z-index: 1;
+	background: rgba(255, 255, 255, 0.56);
+	max-width: 100%;
+	padding: 45px;
+	text-align: center;
 }

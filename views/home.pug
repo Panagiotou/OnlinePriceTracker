@@ -52,17 +52,20 @@ block content
         input#dateFrom(type='date',value='dateFrom', name='dateFrom')
         label Ημερομηνία (μέχρι):
         input#dateTo(type='date',value='dateTo', name='dateTo')
+
+        input#category(type='text', placeholder='Κατηγορία..')
+        input#tags(type='text', placeholder='Tags..')  
         label(for='shop_select') Κατάστημα
           select#shop_select(name='shop_select', value='shop_select')
+            option(value='')  --- 
             if Shop
               each sh, i in Shop
-                option(value='sh_name')  #{sh.name}
+                option(value='sh_name')  #{sh.name}        
         label(for='sort') Ταξινόμηση
             select#sort(name='sort', value='sort')
                 option(value='ASC')  Τιμή αύξουσα
                 option(value='DESC')  Τιμή φθίνουσα
-        input#tags(type='text', placeholder='Κατηγορία..')
-        input#subb(type='submit', value='Submit')
+        input#subb(type='submit', value='Αναζήτηση')
       
 
 
