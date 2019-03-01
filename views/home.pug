@@ -1,6 +1,5 @@
 doctype html
 
-//- use if your pug files have similarities to avoid copying large blocks of same code.
 html
   head
     link(rel='stylesheet', href='css/homepage.css')
@@ -15,31 +14,38 @@ block content
   body
 
 
-  #parent
 
       if Product
         each prod, i in Product
           #narrow
             div(class="display_products")
-              .image
               div(class="display_products")
                 div  Όνομα Προϊόντος: #{prod.name}
                 div  Περιγραφή: #{prod.description}
-                a(href='product_details') Προβολή λεπτομερειών
+                  form#myform(action='/product_details', method='POST')
+                    button(name='subject', type='submit', value='/product_details') Προβολή περισσότερων
 
 
   #navbar
       a.active(href='#home')
-      i.glyphicon.glyphicon-home
+        i.glyphicon.glyphicon-home
       a(href='#upload') Ανεβάστε Τιμή
       a(href='#contact') Επικοινωνία
       a(href='login', style='float:right') Σύνδεση
       a(href='register', style='float:right') Εγγραφή
 
   .sidenav
-        input(type='text', target="m",  placeholder='Αναζήτηση..')
-        a(href='#about') Κατηγορίες
-        a(href='#services') Κατάστημα
+        label#label1 Αναζήτηση
+        input(type='text', target="m",  placeholder='Αναζήτηση..') 
+        input#distance(type='number', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
+        label Ημερομηνία (από):
+        input#dateFrom(type='date', name='dateFrom')
+        label Ημερομηνία (μέχρι):
+        input#dateTo(type='date', name='dateTo')
+      
+
+
+      
 
 
         script.
@@ -53,3 +59,5 @@ block content
           }
           prevScrollpos = currentScrollPos;
           }
+          
+      

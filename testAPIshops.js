@@ -108,14 +108,6 @@ function update_test_user(callback){
   });
 }
 
-function test_shops_get(callback){
-  // Test /products GET
-  console.log("Testing /test_shops_post GET ... ");
-  // TODO
-
-  callback();
-}
-
 function test_shops_post(callback){
   // Test /shops POST
   console.log("Testing /shops POST ... ");
@@ -145,10 +137,25 @@ function test_shops_post(callback){
       });
   }
 
+function test_shops_get(callback){
+  // Test /products GET
+  console.log("Testing /test_shops_post GET ... ");
+  // TODO
+  var request = require('request');
+  request({
+    url: baseurl + '/shops',
+    method: 'GET',
+    query:{"start": "0", "count": "1"},
+    json: true
+  }, async(error, response, body) => {
+    console.log(body);
+  });
+}
+
 function test_shops_id_get(callback){
   // Test /shops/:id GET
   console.log("Testing /shops/:id GET ... ");
-  // TODO
+  //TODO
 
   callback();
 }
