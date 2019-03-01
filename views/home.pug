@@ -28,14 +28,14 @@ block content
   #navbar  
                       a.active(href='#home')
                         i.glyphicon.glyphicon-home
-                      a(href='#upload') Ανεβάστε Τιμή
+                     
                       a(href='#contact') Επικοινωνία
                       if boollogin
                         if username=="admin" 
                              a(href='#delete_product') Διαγραφή Προιόντος
                              a(href='#contact') someMore...         
                         
-                       
+                        a(href='#upload') Ανεβάστε Τιμή
                         a(href='logout', style='float:right') logout
                         a(style='float:right') #{username}
                       else
@@ -44,7 +44,7 @@ block content
           
   .sidenav
     div
-      form(action='/search_results')
+      form(action='/products',method = 'POST')
         label#label1 Αναζήτηση
         input#productname(type='text',  placeholder='Όνομα προϊόντος..') 
         input#distance(type='number', value='distance', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
