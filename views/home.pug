@@ -22,20 +22,20 @@ block content
               div(class="display_products")
                 div  Όνομα Προϊόντος: #{prod.name}
                 div  Περιγραφή: #{prod.description}
-                  form#myform(action='/product_details', method='POST')
+                  form#myform(action='/products/product_details', method='POST')
                     button(name='subject', type='submit', value=prod.id) Προβολή περισσότερων
    
   #navbar  
-                      a.active(href='#home')
+                      a.active(href='/')
                         i.glyphicon.glyphicon-home
                      
                       a(href='#contact') Επικοινωνία
                       if boollogin
                         if username=="admin" 
-                             a(href='#delete_product') Διαγραφή Προιόντος
-                             a(href='#contact') someMore...         
+                             a(href='/products/products_delete') Διαγραφή Προιόντος         
                         
-                        a(href='#upload') Ανεβάστε Τιμή
+                        a(href='/products/myproducts') Τα Προιόντα μου
+                        a(href='/products/products_add') Προσθήκη Προιόντος
                         a(href='logout', style='float:right') logout
                         a(style='float:right') #{username}
                       else

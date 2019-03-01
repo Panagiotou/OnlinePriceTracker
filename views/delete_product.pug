@@ -1,9 +1,10 @@
-extends layout
+extends layout2
 
 block content
     form(action='/products/products_delete', method='POST')
-      title Registration
+      title DELETE
       .register-page
         .form
-          input(type='text', placeholder='Όνομα Προιόντος', name='id_in')
-          button Εγγραφη
+          p Συμπληρώστε το ID του Προιόντος που θέλετε να διαγράψετε 
+          input(type='text', placeholder='ID Προιόντος', name='id_in')
+          button Διαγραφή 

@@ -1,10 +1,11 @@
-extends layout
+extends layout2
 
 block content
     form(action='/products/products_add', method='POST')
-      title Registration
+      title ADD Product
       .register-page
         .form
+          p Προσθέστε τα στοιχεία!
           input(type='text', placeholder='Όνομα Προιόντος', name='name_in')
           input(type='text', placeholder='Περιγραφή Προιόντος', name='description_in')
           input(type='text', placeholder='Κατηγορία Προιόντος', name='category_in')

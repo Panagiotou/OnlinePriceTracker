@@ -1,0 +1,16 @@
+extends layout2
+
+block content
+    
+      title Details
+      .register-page
+        .form
+         if prod
+          each prodi,i in prod
+                p  ID Προϊόντος: #{prodi.id}
+                p  Όνομα Προϊόντος: #{prodi.name}
+                p  Περιγραφή: #{prodi.description}
+                p  Κατηγορία Προιόντος : #{prodi.category}
+                p  Tags Προιόντος : #{prodi.tags}
+              
+         

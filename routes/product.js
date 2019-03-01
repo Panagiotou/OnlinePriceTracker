@@ -44,6 +44,7 @@ router.get('/',function(req , res){
           throw err;
         }
         else{
+        	//console.log(result);
         	res.render('home',{Product : result, boollogin : flag123, username : c_username});
         }
 	
@@ -56,28 +57,40 @@ router.get('/',function(req , res){
 //Post Homepage?
 
 router.post('/',function(req,res){
+         var c_username='';
+	 var flag123 = false;
+	 if (req.session && req.session.username) {
+    		// Check if session exists and if username exists
+   		 c_username = req.session.username;
+		flag123 = true;	
+  	}
 	var  start_in = req.body.start_in;
 	var count_in = req.body.count_in;
-	var geoDist_in = req.body.geoDist;
-	var geoLng_in = req.body.geoLng_in;
-	var geoLat_in = req.body.geoLat_in;
-	var dateFrom_in = req.body.dateFrom_in;
-	var dateTo_in = req.body.dateTo_in;
-	var shops_in = req.body.shops_in;
+	var geoDist_in = req.body.distance;
+	//var geoLng_in = req.body.geoLng_in;
+	//var geoLat_in = req.body.geoLat_in;
+	var dateFrom_in = req.body.dateFrom;
+	var dateTo_in = req.body.dateTo;
+	var shops_in = req.body.shops_select;
 	var tags_in = req.body.tags_in;
 	var sort_in = req.body.sort_in;
-	var selected_product = req.body.selected ;
-	var search_button = req.body.search_button;
+	var product_name = req.body.productname ;
+	var search_button;
+	var test_var ='';
 	//Test set
+	console.log(geoDist_in);
 	search_button = 1;
 	if(search_button == 1){
 		//Above are the possibly filters? based on the make a get query 
 		//Get request using the api
 	 	//test variables for date lets hope it works
-	 	var cDate  =new Date();
-	 	var tDate = new Date(2019,3,4,0,0,0,0);
+	 	//var cDate  =new Date();
+	 	//var tDate = new Date(2019,3,4,0,0,0,0);
 	     	
 	     	var Request = require("request");
+		//37.9929 23.7274
+		var test_lng = 37.9929;
+		var test_lat = 23.7274;
 		
 		let request_options = {
 			url : "http://localhost:8765/observatory/api/prices",
@@ -85,11 +98,11 @@ router.post('/',function(req,res){
 			qs: {
 				start : '',
 				count : '',
-				geoDist :'',
-				geoLng :'',
-				geoLat :'',
-				dateFrom:cDate,
-				dateTo:tDate,
+				geoDist :geoDist_in,
+				geoLng :test_lng,
+				geoLat :test_lat,
+				dateFrom:'',
+				dateTo:'',
 				shops:'',
 				products:'',
 				tags:'',
@@ -108,12 +121,48 @@ router.post('/',function(req,res){
 		var count_out=request_out.count; 
 		var total_out=request_out.total;
 		var prices_out = request_out.prices;
+		var temp=0;
+		var fresult =[]; 	
+		//var result = {
+  		//	[name]			
+		//}
+		console.log(prices_out);
 		console.log(prices_out.length);
+		for(var iterator of prices_out) {
+			 //var result = new Object;
+			 //result.name = iterator.productName;
+			 var result;
+			 var sqlt = `SELECT * FROM Product_api WHERE id =  ${iterator.productId}`;
+      	      		 conn.query(sqlt, function (err, result) {
+        			if (err) {
+          				throw err;
+        			}
+        			else{
+        			 fresult.push(result);
+        			 console.log(fresult);
+        			 
+        			}
+			});
+			 //result.description = "temp";
+    			 //result.id = iterator.productId;
+       			 //console.log(result.name);
+       			 temp++;
+    		}
+    		while(temp<=prices_out.length){
+    		 	if(temp==prices_out.lenght){
+    		 	res.render('home',{Product : fresult, boollogin : flag123, username : c_username });
+    		 	temp++;
+    		 	}
+    		}
+    		console.log(fresult.length);
+		
 		//How the hell does this work to return actual info is beyond me
   		    });			
 		//Render same page with new filters
 		//productlist should contain all info needed to render
-      		res.render('products',{productlist : result,testi :testvariable}); 
+      		//res.render('home',{productlist : result,testi :testvariable});
+      		//result contains a Product_api table , boollogin , username 
+		//res.render('home',{Product : result, boollogin : flag123, username : c_username });
 	}
 	else {
 	
@@ -143,9 +192,14 @@ router.post('/',function(req,res){
 router.get('/products_add',function(req , res){
 	
 // After loggin, this will change router file
+  var c_username='';
+  var flag123 = false;
+	 
   if (req.session && req.session.username) {
+        c_username = req.session.username;
+	flag123 = true;
     // Check if session exists and if username exists
-    res.render('add_product');
+    	res.render('add_product', { boollogin : flag123, username : c_username });
 
   } else {
     req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
@@ -156,9 +210,12 @@ router.get('/products_add',function(req , res){
 
 //products add post
 router.post('/products_add',function(req , res){
-	
+	 var c_username='';
+	 var flag123 = false;
 	// After loggin, this will change router file
 	if (req.session && req.session.username) {
+	var c_username=req.session.username;
+	 var flag123 = true;
 	// Check if session exists and if username exists
 	req.checkBody('name_in', 'Συμπληρώστε το πεδίο " Όνομα Προιόντος "').notEmpty();
 	req.checkBody('description_in', 'Συμπληρώστε το πεδίο " Περιγραφή Προιόντος "').notEmpty();
@@ -167,7 +224,7 @@ router.post('/products_add',function(req , res){
 	//Possibly add shop name??
   	let errors = req.validationErrors();
   	if(errors){
-    		res.render('add_product', {errors: errors});
+    		res.render('add_product', {errors: errors, boollogin : flag123, username : c_username});
   	}
   	else{
   		var name_in = req.body.name_in;
@@ -184,7 +241,7 @@ router.post('/products_add',function(req , res){
 		else{
 			//Succesfull add display message?
 			req.flash('success_msg','Η προσθήκη σας ολοκληρώθηκε με επιτυχία.');
-          		res.redirect('/logged_in');
+          		res.redirect('/products/myproducts');
 		}
 		});
 	}	     
@@ -198,11 +255,14 @@ router.post('/products_add',function(req , res){
 
 //products delete get
 router.get('/products_delete',function(req , res){
-	
+	var c_username='';
+	 var flag123 = false;
 // After loggin, this will change router file
   if (req.session && req.session.username =='admin') {
+   	var c_username=req.session.username;
+	 var flag123 = true;
     // Check if session exists and if username exists
-    res.render('delete_product');
+    res.render('delete_product',{boollogin : flag123, username : c_username});
 
   } else {
     req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
@@ -213,15 +273,19 @@ router.get('/products_delete',function(req , res){
 
 //products delete post
 router.post('/products_delete',function(req , res){
-	
+	var c_username='';
+	 var flag123 = false;
 	// After loggin, this will change router file
 	if (req.session && req.session.username =='admin') {
+	
+	var c_username=req.session.username;
+	 var flag123 = true;
 	// Check if session exists and if username exists
 	req.checkBody('id_in', 'Συμπληρώστε το πεδίο "ID Προιόντος "').notEmpty();
 	//Possibly add shop name??
   	let errors = req.validationErrors();
   	if(errors){
-    		res.render('delete_product', {errors: errors});
+    		res.render('delete_product', {errors: errors,boollogin : flag123, username : c_username});
   	}
   	else{
   		var id_in = req.body.id_in;
@@ -234,7 +298,7 @@ router.post('/products_delete',function(req , res){
 		else{
 			//Succesfull add display message?
 			req.flash('success_msg','Η διαγραφή σας ολοκληρώθηκε με επιτυχία.');
-          		res.redirect('/logged_in');
+          		res.redirect('/products/myproducts');
 		}
 		});
 	}	     
@@ -248,11 +312,15 @@ router.post('/products_delete',function(req , res){
 
 //products update get
 router.get('/products_update',function(req , res){
-	
+	var c_username='';
+	 var flag123 = false;
 // After loggin, this will change router file
   if (req.session && req.session.username ) {
+    var c_username=req.session.username;
+	 var flag123 = true;
+    console.log(req.body.subject);
     // Check if session exists and if username exists
-    res.render('update_product');
+    res.render('update_product',{idp : req.body.subject,boollogin : flag123, username : c_username});
 
   } else {
     req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
@@ -264,14 +332,18 @@ router.get('/products_update',function(req , res){
 //products update post
 router.post('/products_update',function(req , res){
 	var flags=0;
+	var c_username='';
+	 var flag123 = false;
 	// After loggin, this will change router file
 	if (req.session && req.session.username ) {
+	var c_username=req.session.username;
+	 var flag123 = true;
 	// Check if session exists and if username exists
 	req.checkBody('id_in', 'Συμπληρώστε το πεδίο "ID Προιόντος "').notEmpty();
 	//Possibly add shop name??
   	let errors = req.validationErrors();
   	if(errors){
-    		res.render('update_product', {errors: errors});
+    		res.render('update_product', {errors: errors ,boollogin : flag123, username : c_username });
   	}
   	else{
   		var id_in = req.body.id_in;
@@ -326,9 +398,10 @@ router.post('/products_update',function(req , res){
 			});
   		}
 		//Succesfull add display message?
+  		//res.redirect('../products');
 		
 		req.flash('success_msg','Η ανανέωση σας ολοκληρώθηκε με επιτυχία.');
-  		res.redirect('../logged_in');
+		res.redirect('/products/myproducts');
 		
 		
 		
@@ -342,10 +415,76 @@ router.post('/products_update',function(req , res){
 
 });
 
+router.get('/myproducts',function(req , res){
+	
+// After loggin, this will change router file
+   var c_username='';
+	 var flag123 = false;
+	if (req.session && req.session.username) {
+    		// Check if session exists and if username exists
+   		 c_username = req.session.username;
+		flag123 = true;	
+    	var sql = "SELECT * FROM Product_api WHERE username = ? "
+      	      conn.query(sql,req.session.username ,function (err, result) {
+        if (err) {
+          throw err;
+        }
+        else{
+        	//console.log(result);
+        	res.render('myproducts_products',{Product : result, boollogin : flag123, username : c_username});
+        }
+	
+	      //Send data to front end to render
+	      //productlist should contain all info needed to render
+	      //res.render('products',{productlist : result,testi :testvariable});
+	});
+
+  } else {
+    req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
+    res.redirect('../login');
+  }
+
+});
 
 
+// Display products details
+router.post('/product_details',function(req , res){
+	 var c_username='';
+	 var flag123 = false;
+	 if (req.session && req.session.username) {
+    		// Check if session exists and if username exists
+   		 c_username = req.session.username;
+		flag123 = true;	
+  	}
+	var product_id = (req.body.subject);
+	var product1;
+	console.log(product_id);
+	var sql = `SELECT * FROM Product_api WHERE id = ${product_id}`;
+      	      conn.query(sql, function (err, result) {
+        if (err) {
+          conlose.log("edo skaei");
+          throw err;
+        }
+        else{
+        	console.log(result);
+        	res.render('product_details_products',{prod : result, boollogin : flag123, username : c_username });
+        }
+	
+	      //Send data to front end to render
+	      //productlist should contain all info needed to render
+	      //res.render('products',{productlist : result,testi :testvariable});
+	});
+});
 
-
+// logout
+router.get('/logout', function(req, res){
+  //req.logout();
+  //req.session = null;
+  //req.logout();
+  delete req.session.username;
+  req.flash('success', 'Έγινε Αποσύνδεση');
+  res.redirect('/login');
+});
 
 module.exports = router;
 

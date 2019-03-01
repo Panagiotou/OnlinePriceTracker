@@ -1,0 +1,16 @@
+extends layout2
+
+block content
+      title My Products
+      .register-page
+        .form
+          p Τα Προιόντα σας
+          if Product
+           each prod, i in Product
+            #narrow
+             div(class="display_products")
+               div(class="display_products")
+                div  Όνομα Προϊόντος: #{prod.name}
+                div  Περιγραφή: #{prod.description}
+                form#myform(action='/products/products_update', method='GET')
+                    button(name='subject', type='submit', value=prod.id) Update
