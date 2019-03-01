@@ -61,6 +61,7 @@ router.post('/register', function(req, res){
       const name = req.body.name
       const surname = req.body.surname
       var sql = "INSERT INTO User_api (username, password, name, surname) VALUES (?,?,?,?)";
+      console.log("step 1");
       var values = [username, password, name, surname];
       conn.query(sql, values, function (err) {
         if (err) {
@@ -133,5 +134,33 @@ router.get('/logout', function(req, res){
   req.flash('success', 'Έγινε Αποσύνδεση');
   res.redirect('/users/login');
 });
+
+
+// Display products details
+router.post('/product_details',function(req , res){
+	var product_id = (req.body.subject);
+	var product1;
+	console.log(product_id);
+	var sql = `SELECT * FROM Product_api WHERE id = ${product_id}`;
+      	      conn.query(sql, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        else{
+        	res.render('home',{Product : result});
+        }
+	
+	      //Send data to front end to render
+	      //productlist should contain all info needed to render
+	      //res.render('products',{productlist : result,testi :testvariable});
+	});
+});
+
+
+
+
+
+
+
 
 module.exports = router;
