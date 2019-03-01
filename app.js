@@ -78,7 +78,8 @@ app.use(expressValidator({
 // Route Files
 let user = require('./routes/user');
 app.use('/', user);
-
+let product = require('./routes/product');
+app.use('/products',product);
 //Route API files
 var login_route = require('./api/routes/login');
 login_route(app);

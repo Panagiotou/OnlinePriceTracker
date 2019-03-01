@@ -25,7 +25,8 @@ conn.connect(function(err) {
 router.get('/logged_in', function(req, res){
   if (req.session && req.session.username) {
     // Check if session exists and if username exists
-    res.render('logged_in');
+    var username = req.session.username;
+    res.render('logged_in',{username : username});
 
   } else {
     req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
@@ -42,7 +43,7 @@ router.get('/register', function(req, res){
 router.post('/register', function(req, res){
   req.checkBody('username', 'Συμπληρώστε το πεδίο " Όνομα χρήστη "').notEmpty();
   req.checkBody('password', 'Συμπληρώστε το πεδίο " Κωδικός πρόσβασης "').notEmpty();
-  req.checkBody('name', 'Συμπληρώστε το πεδίο " Όνομα "').notEmpty();
+  req.checkBody('namea', 'Συμπληρώστε το πεδίο " Όνομα "').notEmpty();
   req.checkBody('surname', 'Συμπληρώστε το πεδίο " Επώνυμο "').notEmpty();
   let errors = req.validationErrors();
   if(errors){
@@ -58,10 +59,11 @@ router.post('/register', function(req, res){
       const username = req.body.username;
       const password = req.body.password;
       const password2 = req.body.password2;
-      const name = req.body.name
+      const namea = req.body.namea
       const surname = req.body.surname
-      var sql = "INSERT INTO User_api (username, password, name, surname) VALUES (?,?,?,?)";
-      var values = [username, password, name, surname];
+      var sql = "INSERT INTO User_api (username, password,authentication_token ) VALUES (?,?,?)";
+      //name , surname dont exist in DB ? add them to values too
+      var values = [username, password, ''];
       conn.query(sql, values, function (err) {
         if (err) {
           if(err.code === 'ER_DUP_ENTRY'){
@@ -69,6 +71,7 @@ router.post('/register', function(req, res){
             req.session.username = username; // Keep the username in this session.
             res.render('register', {errors: errors3});
           }
+          throw err;
         }
         else{
           console.log("New User added to database!");
@@ -133,5 +136,33 @@ router.get('/logout', function(req, res){
   req.flash('success', 'Έγινε Αποσύνδεση');
   res.redirect('/users/login');
 });
+
+
+// Display products details
+router.post('/product_details',function(req , res){
+	var product_id = (req.body.subject);
+	var product1;
+	console.log(product_id);
+	var sql = `SELECT * FROM Product_api WHERE id = ${product_id}`;
+      	      conn.query(sql, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        else{
+        	res.render('home',{Product : result});
+        }
+	
+	      //Send data to front end to render
+	      //productlist should contain all info needed to render
+	      //res.render('products',{productlist : result,testi :testvariable});
+	});
+});
+
+
+
+
+
+
+
 
 module.exports = router;

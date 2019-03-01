@@ -1,0 +1,14 @@
+extends layout
+
+
+block content
+		form(action='/products', method='POST')
+			title Products
+			.product-page
+				.form
+					if productlist
+						each prod in productlist
+							div Dokimastiko : #{prod.name}
+    
+            
+        

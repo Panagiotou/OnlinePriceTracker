@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    form(action='/products/products_delete', method='POST')
+      title Registration
+      .register-page
+        .form
+          input(type='text', placeholder='Όνομα Προιόντος', name='id_in')
+          button Εγγραφη

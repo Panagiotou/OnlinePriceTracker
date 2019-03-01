@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    form(action='/products/products_add', method='POST')
+      title Registration
+      .register-page
+        .form
+          input(type='text', placeholder='Όνομα Προιόντος', name='name_in')
+          input(type='text', placeholder='Περιγραφή Προιόντος', name='description_in')
+          input(type='text', placeholder='Κατηγορία Προιόντος', name='category_in')
+          input(type='text', placeholder='Tags Προιόντος ', name='tags_in')
+          button Εγγραφη
+

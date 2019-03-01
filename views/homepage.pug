@@ -1,0 +1,62 @@
+doctype html
+
+html
+  head
+    link(rel='stylesheet', href='css/homepage.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+
+block content
+  title Home
+  br
+  footer
+      p(class="bottom") Copyright &copy; Online Price Tracker 2018
+
+  body
+
+
+
+      if Product
+        each prod, i in Product
+          #narrow
+            div(class="display_products")
+              div(class="display_products")
+                div  Όνομα Προϊόντος: #{prod.name}
+                div  Περιγραφή: #{prod.description}
+                  form#myform(action='/product_details', method='POST')
+                    button(name='subject', type='submit', value = '2 ') Προβολή περισσότερων
+
+
+  #navbar
+      a.active(href='#home')
+        i.glyphicon.glyphicon-home
+      a(href='#upload') Ανεβάστε Τιμή
+      a(href='#contact') Επικοινωνία
+      a(href='login', style='float:right') Σύνδεση
+      a(href='register', style='float:right') Εγγραφή
+
+  .sidenav
+        label#label1 Αναζήτηση
+        input(type='text', target="m",  placeholder='Αναζήτηση..') 
+        input#distance(type='number', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
+        label Ημερομηνία (από):
+        input#dateFrom(type='date', name='dateFrom')
+        label Ημερομηνία (μέχρι):
+        input#dateTo(type='date', name='dateTo')
+      
+
+
+      
+
+
+        script.
+          var prevScrollpos = window.pageYOffset;
+          window.onscroll = function() {
+          var currentScrollPos = window.pageYOffset;
+          if (prevScrollpos > currentScrollPos) {
+          document.getElementById("navbar").style.top = "0";
+          } else {
+          document.getElementById("navbar").style.top = "-50px";
+          }
+          prevScrollpos = currentScrollPos;
+          }
+
