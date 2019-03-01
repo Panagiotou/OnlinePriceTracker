@@ -138,9 +138,12 @@ router.post('/login', function(req, res){
 
 // logout
 router.get('/logout', function(req, res){
-  req.logout();
+  //req.logout();
+  //req.session = null;
+  //req.logout();
+  delete req.session.username;
   req.flash('success', 'Έγινε Αποσύνδεση');
-  res.redirect('/users/login');
+  res.redirect('/login');
 });
 
 

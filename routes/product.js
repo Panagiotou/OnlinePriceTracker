@@ -28,9 +28,9 @@ conn.connect(function(err) {
 
 //products changed
 router.get('/',function(req , res){
-	var c_username='';
+	 var c_username='';
 	 var flag123 = false;
-	 if (req.session && req.session.username) {
+	if (req.session && req.session.username) {
     		// Check if session exists and if username exists
    		 c_username = req.session.username;
 		flag123 = true;	
