@@ -26,7 +26,7 @@ router.get('/logged_in', function(req, res){
   if (req.session && req.session.username) {
     // Check if session exists and if username exists
     var username = req.session.username;
-    res.render('logged_in',{username : username});
+    res.render('/logged_in',{username : username});
 
   } else {
     req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
@@ -61,15 +61,15 @@ router.post('/register', function(req, res){
       const password2 = req.body.password2;
       const namea = req.body.namea
       const surname = req.body.surname
-<<<<<<< HEAD
+
       var sql = "INSERT INTO User_api (username, password,authentication_token ) VALUES (?,?,?)";
       //name , surname dont exist in DB ? add them to values too
       var values = [username, password, ''];
-=======
+
       var sql = "INSERT INTO User_api (username, password, name, surname) VALUES (?,?,?,?)";
       console.log("step 1");
       var values = [username, password, name, surname];
->>>>>>> 6576306838e082a37fea1058e4a14b053f3acd6d
+
       conn.query(sql, values, function (err) {
         if (err) {
           if(err.code === 'ER_DUP_ENTRY'){
@@ -123,7 +123,7 @@ router.post('/login', function(req, res){
               if(result[0].password === password){
                 req.session.username = username;
                 req.flash('success_msg','Επιτυχής Σύνδεση');
-                res.redirect('/logged_in'); // after login go to logged in
+                res.redirect('/products'); // after login go to logged in
               }
               else{
                 let errors1 = [{ param: '', msg: 'Λάθος " Όνομα χρήστη " ή " Κωδικός πρόσβασης "', value: '' }];
@@ -146,16 +146,24 @@ router.get('/logout', function(req, res){
 
 // Display products details
 router.post('/product_details',function(req , res){
+	 var c_username='';
+	 var flag123 = false;
+	 if (req.session && req.session.username) {
+    		// Check if session exists and if username exists
+   		 c_username = req.session.username;
+		flag123 = true;	
+  	}
 	var product_id = (req.body.subject);
 	var product1;
 	console.log(product_id);
 	var sql = `SELECT * FROM Product_api WHERE id = ${product_id}`;
       	      conn.query(sql, function (err, result) {
         if (err) {
+          conlose.log("edo skaei");
           throw err;
         }
         else{
-        	res.render('home',{Product : result});
+        	res.render('home',{Product : result, boollogin : flag123, username : c_username });
         }
 	
 	      //Send data to front end to render

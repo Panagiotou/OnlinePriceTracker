@@ -111,5 +111,6 @@ app.get('/', async (req, res) =>{
       }
     });
   });
-  res.render('home', {Product: productList});
+  res.redirect('/products');
+  //res.render('home', {Product: productList});
 });

@@ -30,7 +30,7 @@ footer{
 	position: relative;
 	z-index: 1;
 	background: rgba(186, 155, 125, 0.48);
-	max-width: 50%;
+	max-width: 100%;
 	margin: 0 auto 100px;
 	padding: 45px;
 	text-align: center;

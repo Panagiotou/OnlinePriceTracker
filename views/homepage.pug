@@ -23,7 +23,7 @@ block content
                 div  Όνομα Προϊόντος: #{prod.name}
                 div  Περιγραφή: #{prod.description}
                   form#myform(action='/product_details', method='POST')
-                    button(name='subject', type='submit', value = '2 ') Προβολή περισσότερων
+                    button(name='subject', type='submit', value = prod.id) Προβολή περισσότερων
 
 
   #navbar

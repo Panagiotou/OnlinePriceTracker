@@ -28,6 +28,13 @@ conn.connect(function(err) {
 
 //products changed
 router.get('/',function(req , res){
+	var c_username='';
+	 var flag123 = false;
+	 if (req.session && req.session.username) {
+    		// Check if session exists and if username exists
+   		 c_username = req.session.username;
+		flag123 = true;	
+  	}
 	let result;
 	var testvariable=1;
 	var product1;
@@ -37,7 +44,7 @@ router.get('/',function(req , res){
           throw err;
         }
         else{
-        	res.render('homepage',{Product : result});
+        	res.render('home',{Product : result, boollogin : flag123, username : c_username});
         }
 	
 	      //Send data to front end to render
