@@ -14,10 +14,12 @@ html
                         if username=="admin" 
                              a(href='/products/products_delete') Διαγραφή Προιόντος         
                         
-                        a(href='/products/myproducts') Τα Προιόντα μου
                         a(href='/products/products_add') Προσθήκη Προιόντος
                         a(href='logout', style='float:right') logout
-                        a(style='float:right') #{username}
+                        .dropdown
+                         button.dropbtn #{username}
+                         .dropdown-content
+                           a(href='/products/myproducts') Τα Προιόντα μου
                       else
                               a(href='login', style='float:right') Σύνδεση
                               a(href='register', style='float:right') Εγγραφή

@@ -29,7 +29,7 @@ footer{
 .form{
 	position: relative;
 	z-index: 1;
-	background: rgba(186, 155, 125, 0.48);
+	background: rgba(0, 0, 0, 0.73);
 	max-width: 100%;
 	margin: 0 auto 100px;
 	padding: 45px;
@@ -46,6 +46,7 @@ footer{
 	padding: 15px;
 	box-sizing: border-box;
 	font-size: 14px;
+	border-radius: 4px;
 }
 
 
@@ -54,17 +55,17 @@ footer{
 	font-family: "Roboto", sans-serif;
 	text-transform: uppercase;
 	outline: 0;
-	background: #3a8d99;
+	background: #e5ca54;
 	width: 60%;
 	border: 0;
 	padding: 15px;
-	color: #FFFFFF;
+	color: #111;
 	font-size: 14px;
 	cursor: pointer;
 }
 
 .form button:hover,.form button:active{
-	background: #4667a0;
+	background: #efd981;
 }
 
 .form .message{
@@ -74,26 +75,32 @@ footer{
 }
 
 .form .message a{
-	color: #022e7c;
+	color:  #efd981;
 }
 
 
 
 .alert-error{
-	color: #a94442;
-	background-color: #f2dede;
+	color: black;
+	background-color: rgba(239, 217, 129, 0.8);
 	font-family: "Roboto", sans-serif;
 	position: relative;
 	width: 100%;
 }
 
 .alert-success_msg{
-	color: #3c763d;
-	background-color: #dff0d8;
+	color: black;
+	background-color: rgba(239, 217, 129, 0.8);
 	border-color: #d6e9c6;
 	font-family: "Roboto", sans-serif;
 }
 
+.alert-success{
+	color: black;
+	background-color: rgba(239, 217, 129, 0.8);
+	border-color: #d6e9c6;
+	font-family: "Roboto", sans-serif;
+}
 
 .active {
 	background-color: #e5ca54;

@@ -125,7 +125,7 @@ router.post('/login', function(req, res){
             else{
               if(result[0].password === password){
                 req.session.username = username;
-                req.flash('success_msg','Επιτυχής Σύνδεση');
+                //req.flash('success_msg','Επιτυχής Σύνδεση');
                 res.redirect('/products'); // after login go to logged in
               }
               else{
@@ -145,7 +145,7 @@ router.get('/logout', function(req, res){
   //req.session = null;
   //req.logout();
   delete req.session.username;
-  req.flash('success', 'Έγινε Αποσύνδεση');
+  req.flash('success_msg', 'Έγινε Αποσύνδεση');
   res.redirect('/login');
 });
 

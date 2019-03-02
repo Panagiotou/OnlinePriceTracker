@@ -157,6 +157,7 @@ button{
 	padding: 2% ;
 	box-sizing: border-box;
 	font-size: 100%;
+  border-radius: 4px;
 }
 
 label{
@@ -174,13 +175,67 @@ label#label1{
 
 #subb{
   margin-top: 10%;
-  margin-left: 25%;
-  background-color: white;
+  margin-left: 20%;
+  background-color: #f4d942;
   color: black;
+  border-radius: 4px;
+  padding: 4% 8%;
+  font-size:100%;
 }
 
 #shop_select, #sort{
   color: #3a3a3a;
   margin-top: 4%;
   margin-left: 10%;
+  border-radius: 4px;
+}
+
+
+
+
+.dropbtn {
+  background-color: #111;
+  color: white;
+  padding: 15px;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+
+}
+
+.dropbtn:hover {
+    background-color: #dbd899;
+    color: black;
+}
+
+.dropdown {
+  float: right;
+  display: block;
+  color: #111;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #111;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #dbd899}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #dbd899;
 }

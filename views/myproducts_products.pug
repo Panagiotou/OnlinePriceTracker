@@ -4,13 +4,13 @@ block content
       title My Products
       .register-page
         .form
-          p Τα Προιόντα σας
+          p(style= 'color: white; font-size: 24px') Τα Προιόντα σας
           if Product
            each prod, i in Product
             #narrow
              div(class="display_products")
                div(class="display_products")
-                div  Όνομα Προϊόντος: #{prod.name}
-                div  Περιγραφή: #{prod.description}
+                div(style= 'color: white; font-size: 17px; float: left; margin-top: 10%')  Όνομα Προϊόντος: #{prod.name}
+                div(style= 'color: white; font-size: 17px; float: left; margin-bottom: 10%')  Περιγραφή: #{prod.description}
                 form#myform(action='/products/products_updatep',method='POST')
-                    button(name='subject', type='submit', value=prod.id) Update
+                    button(name='subject', type='submit', value=prod.id) Μεταβολή

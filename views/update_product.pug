@@ -1,16 +1,17 @@
 extends layout2
 
 block content
-    form(action='/products/products_update', method='POST')
-      title Update
-      .register-page
-        .form
-          p Tο ID του Προιόντος σας #{idp}
+  form(action='/products/products_update', method='POST')
+    title Update
+    .register-page
+      .form
+          p(style= 'color: white; font-size: 18px') Tο ID του Προιόντος σας #{idp}
     
-          p Συμπληρώστε τα στοιχεία του Προιόντος που θέλετε να μεταβάλετε
+          p(style= 'color: white; font-size: 18px') Συμπληρώστε τα στοιχεία του Προιόντος που θέλετε να μεταβάλετε
           input(type='text', placeholder='Όνομα Προιόντος', name='name_in')
           input(type='text', placeholder='Περιγραφή Προιόντος', name='description_in')
           input(type='text', placeholder='Κατηγορία Προιόντος', name='category_in')
           input(type='text', placeholder='Tags Προιόντος ', name='tags_in')
-          button Μεταβολή τώρα!
+          input(type='hidden', name='id_in', value=idp)
+          button Μεταβολή
          
