@@ -19,7 +19,7 @@
   * [Windows Installation](docs/windows_installation.md)
   * [Fill](docs/FillDatabase.md) the database with test data
   * Project [structure](docs/structure.md)
-  * Follow this [guide](https://medium.freecodecamp.org/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec?fbclid=IwAR1cVY89PyQ_STo3sZvxcBcDroJDDFLLgCCNMTxBzar09s9gBiPPvtkee6U) for the self-signed certificate.  
+  * Follow this [guide](https://medium.freecodecamp.org/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec?fbclid=IwAR1cVY89PyQ_STo3sZvxcBcDroJDDFLLgCCNMTxBzar09s9gBiPPvtkee6U) for the self-signed certificate.  Open Chrome > Settings > Advanced > Manage certificates > Authorities > Import the .pem file. Restart Chrome.
 
 # Deadlines:
   * Πρώτο παραδοτέο ως Δευτέρα 26/11/2018 [εδώ](https://courses.softlab.ntua.gr/softeng/2018b/project.html) .
