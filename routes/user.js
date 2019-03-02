@@ -77,7 +77,10 @@ router.post('/register', function(req, res){
             req.session.username = username; // Keep the username in this session.
             res.render('register', {errors: errors3});
           }
-          throw err;
+          else {
+            throw err;
+          }
+
         }
         else{
           console.log("New User added to database!");
