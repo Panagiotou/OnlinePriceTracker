@@ -12,5 +12,5 @@ block content
                div(class="display_products")
                 div  Όνομα Προϊόντος: #{prod.name}
                 div  Περιγραφή: #{prod.description}
-                form#myform(action='/products/products_update', method='GET')
+                form#myform(action='/products/products_updatep',method='POST')
                     button(name='subject', type='submit', value=prod.id) Update

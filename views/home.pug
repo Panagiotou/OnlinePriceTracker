@@ -20,10 +20,11 @@ block content
           #narrow
             div(class="display_products")
               div(class="display_products")
-                div  Όνομα Προϊόντος: #{prod.name}
-                div  Περιγραφή: #{prod.description}
+                div  Όνομα Προϊόντος: #{prod.productName}
+                div  Τιμή: #{prod.price}
+                div Μαγαζί: #{prod.shopName}
                   form#myform(action='/products/product_details', method='POST')
-                    button(name='subject', type='submit', value=prod.id) Προβολή περισσότερων
+                    button(name='subject', type='submit', value=prod.productId) Προβολή περισσότερων
    
   #navbar  
                       a.active(href='/')
@@ -46,25 +47,25 @@ block content
     div
       form(action='/products',method = 'POST')
         label#label1 Αναζήτηση
-        input#productname(type='text',  placeholder='Όνομα προϊόντος..') 
+        input#productname(type='text',  placeholder='Όνομα προϊόντος..',name='productname') 
         input#distance(type='number', value='distance', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
         label Ημερομηνία (από):
         input#dateFrom(type='date',value='dateFrom', name='dateFrom')
         label Ημερομηνία (μέχρι):
         input#dateTo(type='date',value='dateTo', name='dateTo')
 
-        input#category(type='text', placeholder='Κατηγορία..')
-        input#tags(type='text', placeholder='Tags..')  
+        
+        input#tags(type='text', placeholder='Tags..', name='tags')  
         label(for='shop_select') Κατάστημα
           select#shop_select(name='shop_select', value='shop_select')
             option(value='')  --- 
             if Shop
               each sh, i in Shop
-                option(value='sh_name')  #{sh.name}        
+                option(value=sh.id)  #{sh.name}        
         label(for='sort') Ταξινόμηση
             select#sort(name='sort', value='sort')
-                option(value='ASC')  Τιμή αύξουσα
-                option(value='DESC')  Τιμή φθίνουσα
+                option(value='price|ASC')  Τιμή αύξουσα
+                option(value='price|DESC')  Τιμή φθίνουσα
         input#subb(type='submit', value='Αναζήτηση')
       
 

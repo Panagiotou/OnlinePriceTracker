@@ -22,12 +22,48 @@ conn.connect(function(err) {
 });
 
 
-
+function testfunc(product_name,telo){
+	var listProducts;
+	var telos=[];
+	listProducts = product_name.split(",");	       	
+   	for(i=0; i<listProducts.length; i++){
+   	console.log(listProducts[i])
+  	var resultb;
+	//sql to get all products ids
+	var sql1234 = "SELECT id FROM Product_api WHERE name = ?"
+      	conn.query(sql1234,listProducts[i],async (err, resultb)=> {
+        if (err) {
+           throw err;
+        }
+       	else{
+       	await new Promise((resolve, reject) => {
+       	
+        //resultb holds all ids of this product name
+        	for(var iterator of resultb) {
+        		telos.push(iterator.id);		        			
+        	}
+    	resolve();
+        });
+    	}	
+	});
+	}
+	return telos;
+}
 
 
 
 //products changed
 router.get('/',function(req , res){
+	var resulta;
+	//sql to get all shop names,ids
+	var sql123 = "SELECT * FROM Shop_api "
+      conn.query(sql123,  function (err, resulta) {
+        if (err) {
+          throw err;
+        }
+        else{
+		
+		
 	 var c_username='';
 	 var flag123 = false;
 	if (req.session && req.session.username) {
@@ -35,28 +71,63 @@ router.get('/',function(req , res){
    		 c_username = req.session.username;
 		flag123 = true;	
   	}
-	let result;
-	var testvariable=1;
-	var product1;
-	var sql = "SELECT * FROM Product_api "
-      	      conn.query(sql, function (err, result) {
-        if (err) {
-          throw err;
-        }
-        else{
-        	//console.log(result);
-        	res.render('home',{Product : result, boollogin : flag123, username : c_username});
-        }
-	
+	var Request = require("request");
+        //this remains
+        let request_options = {
+			url : "http://localhost:8765/observatory/api/prices",
+			method : 'GET',
+			qs: {
+				start : '',
+				count : '',
+				geoDist :'',
+				geoLng :'',
+				geoLat :'',
+				dateFrom:'',
+				dateTo:'',
+				shops:'',
+				products:'',
+				tags:'',
+				sort:''
+        	     	}       	
+        	}
+      		
+      		Request(request_options,(error,response,body) => {
+		if(error){
+			return console.dir(error);
+		}
+		else{
+			let request_out = JSON.parse(body); 
+			var start_out=request_out.start;
+			var count_out=request_out.count; 
+			var total_out=request_out.total;
+			var prices_out = request_out.prices;
+			var temp=0;
+			var fresult =[]; 		
+			console.log(prices_out);
+			console.log(prices_out.length);
+			res.render('home',{Product : prices_out,Shop : resulta ,boollogin : flag123, username : c_username});
+	      }
 	      //Send data to front end to render
 	      //productlist should contain all info needed to render
 	      //res.render('products',{productlist : result,testi :testvariable});
 	});
+}
+});
 });
 
 //Post Homepage?
 
 router.post('/',function(req,res){
+
+	var resulta;
+	//sql to get all shop names,ids
+	var sql123 = "SELECT * FROM Shop_api "
+      conn.query(sql123,  function (err, resulta) {
+        if (err) {
+          throw err;
+        }
+        else{
+  
          var c_username='';
 	 var flag123 = false;
 	 if (req.session && req.session.username) {
@@ -64,6 +135,7 @@ router.post('/',function(req,res){
    		 c_username = req.session.username;
 		flag123 = true;	
   	}
+  	var tags_in = req.body.tags;
 	var  start_in = req.body.start_in;
 	var count_in = req.body.count_in;
 	var geoDist_in = req.body.distance;
@@ -71,14 +143,18 @@ router.post('/',function(req,res){
 	//var geoLat_in = req.body.geoLat_in;
 	var dateFrom_in = req.body.dateFrom;
 	var dateTo_in = req.body.dateTo;
-	var shops_in = req.body.shops_select;
-	var tags_in = req.body.tags_in;
-	var sort_in = req.body.sort_in;
+	var shops_in = req.body.shop_select;
+	var sort_in = req.body.sort;
 	var product_name = req.body.productname ;
 	var search_button;
 	var test_var ='';
-	//Test set
-	console.log(geoDist_in);
+	var final_product_id=[];
+	//find product_names from ids
+	if(product_name){
+		//final_product_id =  testfunc(product_name); 
+		
+	}
+	console.log(final_product_id);	
 	search_button = 1;
 	if(search_button == 1){
 		//Above are the possibly filters? based on the make a get query 
@@ -91,7 +167,6 @@ router.post('/',function(req,res){
 		//37.9929 23.7274
 		var test_lng = 37.9929;
 		var test_lat = 23.7274;
-		
 		let request_options = {
 			url : "http://localhost:8765/observatory/api/prices",
 			method : 'GET',
@@ -101,19 +176,22 @@ router.post('/',function(req,res){
 				geoDist :geoDist_in,
 				geoLng :test_lng,
 				geoLat :test_lat,
-				dateFrom:'',
-				dateTo:'',
-				shops:'',
-				products:'',
-				tags:'',
-				sort:''
+				dateFrom:dateFrom_in,
+				dateTo:dateTo_in,
+				shops:shops_in,
+				products:final_product_id,
+				tags:tags_in,
+				sort:sort_in
         	     	}       	
         	}
-      		
+      		console.log(final_product_id);
       		Request(request_options,(error,response,body) => {
 		if(error){
-		return console.dir(error);
+			return console.dir(error);
 		}
+		else{
+			
+		
 		//console.dir(JSON.parse(body));
 		//All viarables returned from the json object after parsing it
 		let request_out = JSON.parse(body); 
@@ -128,7 +206,7 @@ router.post('/',function(req,res){
 		//}
 		console.log(prices_out);
 		console.log(prices_out.length);
-		for(var iterator of prices_out) {
+		/*for(var iterator of prices_out) {
 			 //var result = new Object;
 			 //result.name = iterator.productName;
 			 var result;
@@ -139,8 +217,6 @@ router.post('/',function(req,res){
         			}
         			else{
         			 fresult.push(result);
-        			 console.log(fresult);
-        			 
         			}
 			});
 			 //result.description = "temp";
@@ -148,22 +224,19 @@ router.post('/',function(req,res){
        			 //console.log(result.name);
        			 temp++;
     		}
-    		while(temp<=prices_out.length){
-    		 	if(temp==prices_out.lenght){
-    		 	res.render('home',{Product : fresult, boollogin : flag123, username : c_username });
-    		 	temp++;
-    		 	}
-    		}
-    		console.log(fresult.length);
+    		*/
+    		res.render('home',{Product :prices_out,Shop : resulta, boollogin : flag123, username : c_username });
+		}
 		
-		//How the hell does this work to return actual info is beyond me
-  		    });			
+		});
+		}
+		//How the hell does this work to return actual info is beyond me	
 		//Render same page with new filters
 		//productlist should contain all info needed to render
       		//res.render('home',{productlist : result,testi :testvariable});
       		//result contains a Product_api table , boollogin , username 
 		//res.render('home',{Product : result, boollogin : flag123, username : c_username });
-	}
+	
 	else {
 	
 		//display the specified product details page
@@ -184,7 +257,9 @@ router.post('/',function(req,res){
 	      //productlist should contain all info needed to render
 	      //res.render('products',{productlist : result,testi :testvariable});
 		});
-	} 
+	}
+	}
+}); 
 });
 
 
@@ -311,7 +386,7 @@ router.post('/products_delete',function(req , res){
 });
 
 //products update get
-router.get('/products_update',function(req , res){
+router.post('/products_updatep',function(req , res){
 	var c_username='';
 	 var flag123 = false;
 // After loggin, this will change router file
@@ -319,8 +394,9 @@ router.get('/products_update',function(req , res){
     var c_username=req.session.username;
 	 var flag123 = true;
     console.log(req.body.subject);
+    
     // Check if session exists and if username exists
-    res.render('update_product',{idp : req.body.subject,boollogin : flag123, username : c_username});
+    res.render('update_product',{idp : req.body.subject, boollogin : flag123, username : c_username});
 
   } else {
     req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
@@ -332,6 +408,7 @@ router.get('/products_update',function(req , res){
 //products update post
 router.post('/products_update',function(req , res){
 	var flags=0;
+	
 	var c_username='';
 	 var flag123 = false;
 	// After loggin, this will change router file

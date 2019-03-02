@@ -57,7 +57,7 @@ exports.list_products = function(req, res) {
       total = result1[0].total;
     }
   });
-  var sql = `SELECT id,name, description, category, tags FROM Product_api WHERE ('id' BETWEEN ${start} AND ${count}) AND ('withdrawn'= ${statusbool}) ORDER BY '${sort1[0]}' ${sort1[1]} `;
+  var sql = `SELECT id,name, description, category, tags FROM Product_api WHERE ('id' BETWEEN ${start} AND ${count}) AND ('withdrawn'= ${statusbool}) ORDER BY ${sort1[0]} ${sort1[1]} `;
   conn.query(sql, function (err, result) {
     if (err) {
       throw err;

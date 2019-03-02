@@ -28,7 +28,7 @@ exports.list_prices = async(req, res) => {
   if(! format){
     format = "json";
   }
-  var sort = req.query.format;
+  //var sort = req.query.format;
   if(! sort){
     sort = "price|ASC";
   }
@@ -110,7 +110,7 @@ exports.list_prices = async(req, res) => {
   });
 
   var sort1 = sort.split("|");
-
+  
   sql =
   `SELECT price, Price_api.id, Price_api.dateFrom AS date, productId, Product_api.name AS productName, Product_api.tags AS productTags, shopId,
    Shop_api.name AS shopName , Shop_api.tags AS shopTags, Shop_api.address AS shopAddress,
@@ -127,7 +127,7 @@ exports.list_prices = async(req, res) => {
   AND (${stringTags})
   HAVING
   (${stringDistance})
-  ORDER BY '${sort1[0]}' ${sort1[1]}
+  ORDER BY ${sort1[0]} ${sort1[1]}
   ;`
     conn.query(sql, async (err, result) =>{
       if (err) {
