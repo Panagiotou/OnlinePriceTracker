@@ -92,11 +92,11 @@ router.get('/',function(req , res){
         	     	}       	
         	}
       		
-      		Request(request_options,(error,response,body) => {
-		if(error){
+      	Request(request_options,(error,response,body) => {
+	if(error){
 			return console.dir(error);
-		}
-		else{
+	}
+	else{
 			let request_out = JSON.parse(body); 
 			var start_out=request_out.start;
 			var count_out=request_out.count; 
@@ -107,9 +107,9 @@ router.get('/',function(req , res){
 			console.log(prices_out);
 			console.log(prices_out.length);
 			res.render('home',{Product : prices_out,Shop : resulta ,boollogin : flag123, username : c_username});
-	      }
+	}
 
-	let result;
+	/*let result;
 	var testvariable=1;
 	var product1;
 	var sql = "SELECT * FROM Product_api "
@@ -121,12 +121,12 @@ router.get('/',function(req , res){
         	//console.log(result);
         	res.render('home',{Product : result, boollogin : flag123, username : c_username});
         }
-
+	*/
 
 	      //Send data to front end to render
 	      //productlist should contain all info needed to render
 	      //res.render('products',{productlist : result,testi :testvariable});
-	});
+	//});
 
 	});
 }
