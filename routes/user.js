@@ -43,7 +43,7 @@ router.get('/register', function(req, res){
 router.post('/register', function(req, res){
   req.checkBody('username', 'Συμπληρώστε το πεδίο " Όνομα χρήστη "').notEmpty();
   req.checkBody('password', 'Συμπληρώστε το πεδίο " Κωδικός πρόσβασης "').notEmpty();
-  req.checkBody('namea', 'Συμπληρώστε το πεδίο " Όνομα "').notEmpty();
+  req.checkBody('name', 'Συμπληρώστε το πεδίο " Όνομα "').notEmpty();
   req.checkBody('surname', 'Συμπληρώστε το πεδίο " Επώνυμο "').notEmpty();
   let errors = req.validationErrors();
   if(errors){
@@ -59,7 +59,7 @@ router.post('/register', function(req, res){
       const username = req.body.username;
       const password = req.body.password;
       const password2 = req.body.password2;
-      const namea = req.body.namea
+      const name = req.body.name
       const surname = req.body.surname
 
       var sql = "INSERT INTO User_api (username, password,authentication_token ) VALUES (?,?,?)";
@@ -154,7 +154,7 @@ router.post('/product_details',function(req , res){
 	 if (req.session && req.session.username) {
     		// Check if session exists and if username exists
    		 c_username = req.session.username;
-		flag123 = true;	
+		flag123 = true;
   	}
 	var product_id = (req.body.subject);
 	var product1;
@@ -168,7 +168,7 @@ router.post('/product_details',function(req , res){
         else{
         	res.render('home',{Product : result, boollogin : flag123, username : c_username });
         }
-	
+
 	      //Send data to front end to render
 	      //productlist should contain all info needed to render
 	      //res.render('products',{productlist : result,testi :testvariable});

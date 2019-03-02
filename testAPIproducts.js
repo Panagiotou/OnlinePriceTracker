@@ -1,5 +1,5 @@
 var mysql      = require('mysql');
-const baseurl = "http://localhost:8765/observatory/api";
+const baseurl = "https://localhost:8765/observatory/api";
 require('dotenv').config() // require passwords and usernames etc from .env file
 
 var conn = mysql.createConnection({

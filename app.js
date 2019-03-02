@@ -97,16 +97,19 @@ var price_routes = require('./api/routes/prices');
 price_routes(app);
 
 
-app.listen(8765, function(){
+/*app.listen(8765, function(){
   console.log('Server started at http://localhost:8765/');
 });
-//https:
-/*var certOptions = {
-  key: fs.readFileSync(path.resolve('server.key')),
-  cert: fs.readFileSync(path.resolve('server.crt'))
-}
-var server = https.createServer(certOptions, app).listen(8765)*/
+*/
 
+
+//https:
+var certOptions = {
+  key: fs.readFileSync(path.resolve('Certificate/server.key')),
+  cert: fs.readFileSync(path.resolve('Certificate/server.crt'))
+}
+var server = https.createServer(certOptions, app).listen(8765)
+console.log('Server started at https://localhost:8765/');
 //Home route
 app.get('/', async (req, res) =>{
   var sql = "SELECT * FROM Product_api";
