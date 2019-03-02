@@ -12,6 +12,11 @@
 	margin: auto;
 }
 
+input{
+	border-radius: 4px;
+}
+
+
 #det{
 
 	position: relative;
@@ -20,4 +25,81 @@
 	max-width: 100%;
 	padding: 45px;
 	text-align: center;
+}
+
+.dropbtn {
+  background-color: #111;
+  color: white;
+  padding: 15px;
+  font-size: 17px;
+  border: none;
+  cursor: pointer;
+
+}
+
+.dropbtn:hover {
+    background-color: #dbd899;
+    color: black;
+}
+
+.dropdown {
+  float: right;
+  display: block;
+  color: #111;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #111;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {background-color: #dbd899}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown:hover .dropbtn {
+  background-color: #dbd899;
+}
+
+.alert{
+	color: black;
+	background-color: rgba(239, 217, 129, 0.8);
+	font-family: "Roboto", sans-serif;
+	position: relative;
+	width: 100%;
+}
+
+.alert-error{
+	color: black;
+	background-color: rgba(239, 217, 129, 0.8);
+	font-family: "Roboto", sans-serif;
+	position: relative;
+	width: 100%;
+}
+
+.alert-success_msg{
+	color: black;
+	background-color: rgba(239, 217, 129, 0.8);
+	border-color: #d6e9c6;
+	font-family: "Roboto", sans-serif;
+}
+
+.alert-success{
+	color: black;
+	background-color: rgba(239, 217, 129, 0.8);
+	border-color: #d6e9c6;
+	font-family: "Roboto", sans-serif;
 }
