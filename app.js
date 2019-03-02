@@ -7,10 +7,10 @@ const bodyParser = require('body-parser');
 var fs = require('fs')
 var https = require('https')
 
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 const app = express();
 
 require('dotenv').config() // require passwords and usernames etc from .env file
-
 
 
 //Load View Engine
