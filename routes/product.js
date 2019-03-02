@@ -69,8 +69,9 @@ router.get('/',function(req , res){
 	if (req.session && req.session.username) {
     		// Check if session exists and if username exists
    		 c_username = req.session.username;
-		flag123 = true;	
+		flag123 = true;
   	}
+
 	var Request = require("request");
         //this remains
         let request_options = {
@@ -107,6 +108,21 @@ router.get('/',function(req , res){
 			console.log(prices_out.length);
 			res.render('home',{Product : prices_out,Shop : resulta ,boollogin : flag123, username : c_username});
 	      }
+
+	let result;
+	var testvariable=1;
+	var product1;
+	var sql = "SELECT * FROM Product_api "
+      	      conn.query(sql, function (err, result) {
+        if (err) {
+          throw err;
+        }
+        else{
+        	//console.log(result);
+        	res.render('home',{Product : result, boollogin : flag123, username : c_username});
+        }
+
+
 	      //Send data to front end to render
 	      //productlist should contain all info needed to render
 	      //res.render('products',{productlist : result,testi :testvariable});
@@ -133,7 +149,7 @@ router.post('/',function(req,res){
 	 if (req.session && req.session.username) {
     		// Check if session exists and if username exists
    		 c_username = req.session.username;
-		flag123 = true;	
+		flag123 = true;
   	}
   	var tags_in = req.body.tags;
 	var  start_in = req.body.start_in;
@@ -157,18 +173,19 @@ router.post('/',function(req,res){
 	console.log(final_product_id);	
 	search_button = 1;
 	if(search_button == 1){
-		//Above are the possibly filters? based on the make a get query 
+		//Above are the possibly filters? based on the make a get query
 		//Get request using the api
 	 	//test variables for date lets hope it works
 	 	//var cDate  =new Date();
 	 	//var tDate = new Date(2019,3,4,0,0,0,0);
-	     	
+
 	     	var Request = require("request");
 		//37.9929 23.7274
 		var test_lng = 37.9929;
 		var test_lat = 23.7274;
+
 		let request_options = {
-			url : "http://localhost:8765/observatory/api/prices",
+			url : "https://localhost:8765/observatory/api/prices",
 			method : 'GET',
 			qs: {
 				start : '',
@@ -176,6 +193,7 @@ router.post('/',function(req,res){
 				geoDist :geoDist_in,
 				geoLng :test_lng,
 				geoLat :test_lat,
+
 				dateFrom:dateFrom_in,
 				dateTo:dateTo_in,
 				shops:shops_in,
@@ -185,6 +203,16 @@ router.post('/',function(req,res){
         	     	}       	
         	}
       		console.log(final_product_id);
+				dateFrom:'',
+				dateTo:'',
+				shops:'',
+				products:'',
+				tags:'',
+				sort:''
+        	     	}
+        	}
+
+
       		Request(request_options,(error,response,body) => {
 		if(error){
 			return console.dir(error);
@@ -194,15 +222,15 @@ router.post('/',function(req,res){
 		
 		//console.dir(JSON.parse(body));
 		//All viarables returned from the json object after parsing it
-		let request_out = JSON.parse(body); 
+		let request_out = JSON.parse(body);
 		var start_out=request_out.start;
-		var count_out=request_out.count; 
+		var count_out=request_out.count;
 		var total_out=request_out.total;
 		var prices_out = request_out.prices;
 		var temp=0;
-		var fresult =[]; 	
+		var fresult =[];
 		//var result = {
-  		//	[name]			
+  		//	[name]
 		//}
 		console.log(prices_out);
 		console.log(prices_out.length);
@@ -217,6 +245,11 @@ router.post('/',function(req,res){
         			}
         			else{
         			 fresult.push(result);
+<<<<<<< HEAD
+=======
+        			 console.log(fresult);
+
+>>>>>>> a83ee15bc653660c197d6e9ee177df487dbbe15e
         			}
 			});
 			 //result.description = "temp";
@@ -224,6 +257,7 @@ router.post('/',function(req,res){
        			 //console.log(result.name);
        			 temp++;
     		}
+<<<<<<< HEAD
     		*/
     		res.render('home',{Product :prices_out,Shop : resulta, boollogin : flag123, username : c_username });
 		}
@@ -231,14 +265,26 @@ router.post('/',function(req,res){
 		});
 		}
 		//How the hell does this work to return actual info is beyond me	
+
+    		while(temp<=prices_out.length){
+    		 	if(temp==prices_out.lenght){
+    		 	res.render('home',{Product : fresult, boollogin : flag123, username : c_username });
+    		 	temp++;
+    		 	}
+    		}
+    		console.log(fresult.length);
+
+		//How the hell does this work to return actual info is beyond me
+  		    });
+
 		//Render same page with new filters
 		//productlist should contain all info needed to render
       		//res.render('home',{productlist : result,testi :testvariable});
-      		//result contains a Product_api table , boollogin , username 
+      		//result contains a Product_api table , boollogin , username
 		//res.render('home',{Product : result, boollogin : flag123, username : c_username });
 	
 	else {
-	
+
 		//display the specified product details page
 		//this depends whether he sumbited through Search button or View details
 		let result1
@@ -252,24 +298,26 @@ router.post('/',function(req,res){
         		//render all details of selected product
         		res.render('products',{productlist : result,testi :testvariable});
         	}
-	
+
 	      //Send data to front end to render
 	      //productlist should contain all info needed to render
 	      //res.render('products',{productlist : result,testi :testvariable});
 		});
 	}
+
 	}
 }); 
+
 });
 
 
 //products add get
 router.get('/products_add',function(req , res){
-	
+
 // After loggin, this will change router file
   var c_username='';
   var flag123 = false;
-	 
+
   if (req.session && req.session.username) {
         c_username = req.session.username;
 	flag123 = true;
@@ -319,7 +367,7 @@ router.post('/products_add',function(req , res){
           		res.redirect('/products/myproducts');
 		}
 		});
-	}	     
+	}
 
   } else {
    req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
@@ -352,7 +400,7 @@ router.post('/products_delete',function(req , res){
 	 var flag123 = false;
 	// After loggin, this will change router file
 	if (req.session && req.session.username =='admin') {
-	
+
 	var c_username=req.session.username;
 	 var flag123 = true;
 	// Check if session exists and if username exists
@@ -376,7 +424,7 @@ router.post('/products_delete',function(req , res){
           		res.redirect('/products/myproducts');
 		}
 		});
-	}	     
+	}
 
   } else {
    req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
@@ -431,7 +479,7 @@ router.post('/products_update',function(req , res){
   			conn.query(sql1,  function (err) {
 			if (err) {
 				throw err;
-				
+
 			}
 			else{
 				flags=1;
@@ -476,14 +524,14 @@ router.post('/products_update',function(req , res){
   		}
 		//Succesfull add display message?
   		//res.redirect('../products');
-		
+
 		req.flash('success_msg','Η ανανέωση σας ολοκληρώθηκε με επιτυχία.');
 		res.redirect('/products/myproducts');
-		
-		
-		
-			
-	}	     
+
+
+
+
+	}
 
   } else {
    req.flash('error','Δεν υπάρχει πρόσβαση στον ιστότοπο, απαιτείται να γίνει "ΣΥΝΔΕΣΗ".');
@@ -493,14 +541,14 @@ router.post('/products_update',function(req , res){
 });
 
 router.get('/myproducts',function(req , res){
-	
+
 // After loggin, this will change router file
    var c_username='';
 	 var flag123 = false;
 	if (req.session && req.session.username) {
     		// Check if session exists and if username exists
    		 c_username = req.session.username;
-		flag123 = true;	
+		flag123 = true;
     	var sql = "SELECT * FROM Product_api WHERE username = ? "
       	      conn.query(sql,req.session.username ,function (err, result) {
         if (err) {
@@ -510,7 +558,7 @@ router.get('/myproducts',function(req , res){
         	//console.log(result);
         	res.render('myproducts_products',{Product : result, boollogin : flag123, username : c_username});
         }
-	
+
 	      //Send data to front end to render
 	      //productlist should contain all info needed to render
 	      //res.render('products',{productlist : result,testi :testvariable});
@@ -531,7 +579,7 @@ router.post('/product_details',function(req , res){
 	 if (req.session && req.session.username) {
     		// Check if session exists and if username exists
    		 c_username = req.session.username;
-		flag123 = true;	
+		flag123 = true;
   	}
 	var product_id = (req.body.subject);
 	var product1;
@@ -546,7 +594,7 @@ router.post('/product_details',function(req , res){
         	console.log(result);
         	res.render('product_details_products',{prod : result, boollogin : flag123, username : c_username });
         }
-	
+
 	      //Send data to front end to render
 	      //productlist should contain all info needed to render
 	      //res.render('products',{productlist : result,testi :testvariable});
@@ -564,6 +612,3 @@ router.get('/logout', function(req, res){
 });
 
 module.exports = router;
-
-
-

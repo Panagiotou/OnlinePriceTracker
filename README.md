@@ -19,7 +19,7 @@
   * [Windows Installation](docs/windows_installation.md)
   * [Fill](docs/FillDatabase.md) the database with test data
   * Project [structure](docs/structure.md)
-
+  * Follow this [guide](https://medium.freecodecamp.org/how-to-get-https-working-on-your-local-development-environment-in-5-minutes-7af615770eec?fbclid=IwAR1cVY89PyQ_STo3sZvxcBcDroJDDFLLgCCNMTxBzar09s9gBiPPvtkee6U) for the self-signed certificate.  Open Chrome > Settings > Advanced > Manage certificates > Authorities > Import the .pem file. Restart Chrome.
 
 # Deadlines:
   * Πρώτο παραδοτέο ως Δευτέρα 26/11/2018 [εδώ](https://courses.softlab.ntua.gr/softeng/2018b/project.html) .
@@ -71,7 +71,9 @@
 
 
 8. Θα πρέπει να υποστηρίζεται το πρωτόκολλο HTTPS για όλες τις σελίδες και χρηστικές ή
-προγραμματιστικές διεπαφές της πλατφόρμας μέσω self-signed certificate. :x:
+προγραμματιστικές διεπαφές της πλατφόρμας μέσω self-signed certificate. :heavy_check_mark:
+  - (Απάντηση:)
+  Επιτεύχθηκε μέσω self-signed certificate.
 
 9. Η χωρική απεικόνιση των δεδομένων θα πρέπει να γίνεται μέσω διαλειτουργικότητας της
 πλατφόρμας με μια online υπηρεσία χαρτών (π.χ. Google Maps ή αντίστοιχη) με χρήση
