@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
-
+//var https = require('https')
 require('dotenv').config() // require passwords and usernames etc from .env file
 
 // Connection to database
@@ -21,7 +21,7 @@ conn.connect(function(err) {
     if (err) throw err;
 });
 
-
+/*
 function testfunc(product_name,telo){
 	var listProducts;
 	var telos=[];
@@ -48,7 +48,7 @@ function testfunc(product_name,telo){
 	});
 	}
 	return telos;
-}
+}; */
 
 
 
@@ -75,7 +75,7 @@ router.get('/',function(req , res){
 	var Request = require("request");
         //this remains
         let request_options = {
-			url : "http://localhost:8765/observatory/api/prices",
+			url : "https://localhost:8765/observatory/api/prices",
 			method : 'GET',
 			qs: {
 				start : '',
@@ -126,6 +126,8 @@ router.get('/',function(req , res){
 	      //Send data to front end to render
 	      //productlist should contain all info needed to render
 	      //res.render('products',{productlist : result,testi :testvariable});
+	});
+
 	});
 }
 });
@@ -193,7 +195,6 @@ router.post('/',function(req,res){
 				geoDist :geoDist_in,
 				geoLng :test_lng,
 				geoLat :test_lat,
-
 				dateFrom:dateFrom_in,
 				dateTo:dateTo_in,
 				shops:shops_in,
@@ -203,15 +204,6 @@ router.post('/',function(req,res){
         	     	}       	
         	}
       		console.log(final_product_id);
-				dateFrom:'',
-				dateTo:'',
-				shops:'',
-				products:'',
-				tags:'',
-				sort:''
-        	     	}
-        	}
-
 
       		Request(request_options,(error,response,body) => {
 		if(error){
@@ -245,11 +237,10 @@ router.post('/',function(req,res){
         			}
         			else{
         			 fresult.push(result);
-<<<<<<< HEAD
-=======
+
         			 console.log(fresult);
 
->>>>>>> a83ee15bc653660c197d6e9ee177df487dbbe15e
+
         			}
 			});
 			 //result.description = "temp";
@@ -257,32 +248,32 @@ router.post('/',function(req,res){
        			 //console.log(result.name);
        			 temp++;
     		}
-<<<<<<< HEAD
+
     		*/
     		res.render('home',{Product :prices_out,Shop : resulta, boollogin : flag123, username : c_username });
 		}
 		
 		});
-		}
+		
 		//How the hell does this work to return actual info is beyond me	
-
+		/*
     		while(temp<=prices_out.length){
     		 	if(temp==prices_out.lenght){
     		 	res.render('home',{Product : fresult, boollogin : flag123, username : c_username });
     		 	temp++;
     		 	}
     		}
-    		console.log(fresult.length);
+    		console.log(fresult.length);*/
 
 		//How the hell does this work to return actual info is beyond me
-  		    });
+  		   
 
 		//Render same page with new filters
 		//productlist should contain all info needed to render
       		//res.render('home',{productlist : result,testi :testvariable});
       		//result contains a Product_api table , boollogin , username
 		//res.render('home',{Product : result, boollogin : flag123, username : c_username });
-	
+	}
 	else {
 
 		//display the specified product details page
@@ -611,4 +602,7 @@ router.get('/logout', function(req, res){
   res.redirect('/login');
 });
 
+
 module.exports = router;
+
+
