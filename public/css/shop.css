@@ -1,0 +1,35 @@
+@import url("style.css");
+
+.add-page{
+	width: 360px;
+	padding: 10% 0 0;
+	margin: auto;
+}
+
+.delete-page{
+	width: 360px;
+	padding: 10% 0 0;
+	margin: auto;
+}
+
+.update-page{
+	width: 360px;
+	padding: 10% 0 0;
+	margin: auto;
+}
+
+.details-page{
+	width: 360px;
+	padding: 5% 0 0;
+	margin: auto;
+}
+
+.display_shops{
+	color: #000;
+	font-family: "Roboto", sans-serif;
+	position: relative;
+	width: 100%;
+}
+.display_shops a{
+	color: #12448B;
+}

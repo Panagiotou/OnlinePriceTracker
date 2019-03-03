@@ -1,0 +1,50 @@
+doctype html
+
+//- use if your pug files have similarities to avoid copying large blocks of same code.
+html
+  head
+    title Update shop
+    link(rel='stylesheet', href='../css/shop.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+     
+  body 
+    #navbar
+      a.active(href='/')
+        i.glyphicon.glyphicon-home
+      a(href='#news') Προσφορές
+      a(href='#contact') Επικοινωνία
+
+    .left
+        != messages('message', locals)
+        if errors
+          each error, i in errors
+            div(class="alert alert-error") #{error.msg}
+
+    block content
+    br
+    footer
+      p(class="bottom") Copyright &copy; Online Price Tracker 2018
+
+      script.
+        var prevScrollpos = window.pageYOffset;
+        window.onscroll = function() {
+        var currentScrollPos = window.pageYOffset;
+        if (prevScrollpos > currentScrollPos) {
+        document.getElementById("navbar").style.top = "0";
+        } else {
+        document.getElementById("navbar").style.top = "-50px";
+        }
+        prevScrollpos = currentScrollPos;
+        }
+
+    block content    
+    form(action='/shops/update', method='POST')
+      .update-page
+        .form
+          input(type='text', placeholder='ID Καταστήματος', name='id')
+          input(type='text', placeholder='Νέο όνομα', name='name')
+          input(type='text', placeholder='Νέα διεύθυνση', name='address')
+          input(type='text', placeholder='Νέο γεωγραφικό μήκος', name='lng')
+          input(type='text', placeholder='Νέο γεωγραφικό πλάτος', name='lat')
+          input(type='text', placeholder='Νέα tags', name='tags')
+          button Ενημέρωση
