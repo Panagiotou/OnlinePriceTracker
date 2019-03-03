@@ -21,34 +21,52 @@ conn.connect(function(err) {
     if (err) throw err;
 });
 
-/*
-function testfunc(product_name,telo){
+
+
+
+
+async function processarr(b) {
+	var telos=[];
+	//console.log(b);
+	return new Promise(async function(resolve , reject){
+	var sql1234 = "SELECT id FROM Product_api WHERE name = ?"
+	conn.query(sql1234, b ,async (err, resultb)=> {
+	if (err) {
+		throw err;
+	}
+	else{     			
+		for (var iterator of resultb){
+				var xesto;
+				xesto = iterator.id;
+				telos.push(xesto);
+		}
+		resolve(telos);
+		
+					
+	}
+	});
+	});
+}
+
+
+
+async function testfunc (a) {
+	
 	var listProducts;
 	var telos=[];
-	listProducts = product_name.split(",");	       	
-   	for(i=0; i<listProducts.length; i++){
-   	console.log(listProducts[i])
-  	var resultb;
-	//sql to get all products ids
-	var sql1234 = "SELECT id FROM Product_api WHERE name = ?"
-      	conn.query(sql1234,listProducts[i],async (err, resultb)=> {
-        if (err) {
-           throw err;
-        }
-       	else{
-       	await new Promise((resolve, reject) => {
-       	
-        //resultb holds all ids of this product name
-        	for(var iterator of resultb) {
-        		telos.push(iterator.id);		        			
-        	}
-    	resolve();
-        });
-    	}	
-	});
+	return new Promise(async function(resolve , reject){
+	listProducts = a.split(",");	       	
+	for(i=0; i<listProducts.length; i++){
+		
+		var tempt = await processarr(listProducts[i]);
+		console.log(tempt);
+		telos= telos.concat(tempt); 
+			
 	}
-	return telos;
-}; */
+	resolve(telos);
+	 });
+	
+} 
 
 
 
@@ -57,7 +75,7 @@ router.get('/',function(req , res){
 	var resulta;
 	//sql to get all shop names,ids
 	var sql123 = "SELECT * FROM Shop_api "
-      conn.query(sql123,  function (err, resulta) {
+      		conn.query(sql123,  function (err, resulta) {
         if (err) {
           throw err;
         }
@@ -134,9 +152,22 @@ router.get('/',function(req , res){
 });
 
 //Post Homepage?
+//changed function to async
 
-router.post('/',function(req,res){
-
+router.post('/', async function(req,res,next){
+	var product_name = req.body.productname ;
+	var final_product_id = [];
+	console.log(product_name);
+	if(product_name){
+		var resultba = await testfunc(product_name);
+		console.log("END");
+		resultba = resultba.join();
+		console.log(resultba);
+		
+		final_product_id  =  resultba; 
+	}
+	//final_product_id = await testfunc(product_name);
+	
 	var resulta;
 	//sql to get all shop names,ids
 	var sql123 = "SELECT * FROM Shop_api "
@@ -157,35 +188,37 @@ router.post('/',function(req,res){
 	var  start_in = req.body.start_in;
 	var count_in = req.body.count_in;
 	var geoDist_in = req.body.distance;
+	
 	//var geoLng_in = req.body.geoLng_in;
 	//var geoLat_in = req.body.geoLat_in;
 	var dateFrom_in = req.body.dateFrom;
 	var dateTo_in = req.body.dateTo;
 	var shops_in = req.body.shop_select;
 	var sort_in = req.body.sort;
-	var product_name = req.body.productname ;
+	//var product_name = req.body.productname ;
 	var search_button;
 	var test_var ='';
-	var final_product_id=[];
 	//find product_names from ids
-	if(product_name){
+	
+		
+	
 		//final_product_id =  testfunc(product_name); 
 		
-	}
+	
 	console.log(final_product_id);	
 	search_button = 1;
 	if(search_button == 1){
 		//Above are the possibly filters? based on the make a get query
 		//Get request using the api
-	 	//test variables for date lets hope it works
-	 	//var cDate  =new Date();
-	 	//var tDate = new Date(2019,3,4,0,0,0,0);
+	 	
 
 	     	var Request = require("request");
-		//37.9929 23.7274
-		var test_lng = 37.9929;
-		var test_lat = 23.7274;
-
+		
+		
+		if (geoDist_in){
+			var test_lng = 37.9929;
+			var test_lat = 23.7274;	
+		}
 		let request_options = {
 			url : "https://localhost:8765/observatory/api/prices",
 			method : 'GET',
@@ -221,9 +254,7 @@ router.post('/',function(req,res){
 		var prices_out = request_out.prices;
 		var temp=0;
 		var fresult =[];
-		//var result = {
-  		//	[name]
-		//}
+		
 		console.log(prices_out);
 		console.log(prices_out.length);
 		/*for(var iterator of prices_out) {
@@ -295,7 +326,7 @@ router.post('/',function(req,res){
 	      //res.render('products',{productlist : result,testi :testvariable});
 		});
 	}
-
+	
 	}
 }); 
 
@@ -455,7 +486,8 @@ router.post('/products_update',function(req , res){
 	var c_username=req.session.username;
 	 var flag123 = true;
 	// Check if session exists and if username exists
-	req.checkBody('id_in', 'Συμπληρώστε το πεδίο "ID Προιόντος "').notEmpty();
+	//req.checkBody('id_in', 'Συμπληρώστε το πεδίο "ID Προιόντος "').notEmpty();
+	console.log(req.body.id_in);
 	//Possibly add shop name??
   	let errors = req.validationErrors();
   	if(errors){
@@ -600,6 +632,16 @@ router.get('/logout', function(req, res){
   delete req.session.username;
   req.flash('success', 'Έγινε Αποσύνδεση');
   res.redirect('/login');
+});
+
+router.get('/testroute',async function(req,res,next){
+	var ab = "dos,firikia";
+	console.log(ab);
+	
+	const resultba = await testfunc(ab);
+	console.log("END");
+	console.log(resultba);
+	res.redirect('../login');
 });
 
 
