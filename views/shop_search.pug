@@ -1,0 +1,95 @@
+doctype html
+
+html
+  head
+    link(rel='stylesheet', href='../css/homepage.css')
+    link(rel='stylesheet', href='../css/style.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+
+block content
+  title Home
+  br
+  footer
+      p(class="bottom") Copyright &copy; Online Price Tracker 2018
+
+  body
+
+
+
+      if shops
+        each shop, i in shops
+          #narrow
+            div(class="display_shops")
+              div(class="display_shops")
+                div  Όνομα Καταστήματος: #{shop.name}
+                div  Διεύθυνση: #{shop.address}
+                div Ετικέτες: #{shop.tags}
+                  form#myform(action='/shops/details', method='POST')
+                    button(name='subject', type='submit', value=shop.id) Προβολή περισσότερων
+   
+  #navbar  
+    a.active(href='/')
+      i.glyphicon.glyphicon-home
+        
+    if boollogin
+      if username=="admin" 
+        .dropdown(style='float:left')
+         button.dropbtn Διαγραφή
+         .dropdown-content
+           a(href='/products/products_delete') Διαγραφή Προιόντος
+           a(href='/shops/delete') Διαγραφή Καταστήματος         
+          
+      .dropdown(style='float:left')
+       button.dropbtn Προσθήκη
+       .dropdown-content
+         a(href='/shops/add') Προσθήκη Καταστήματος
+         a(href='/products/products_add') Προσθήκη Προιόντος
+             
+      .dropdown(style='float:left')
+       button.dropbtn Αναζήτηση
+       .dropdown-content
+         a(href='/products') Αναζήτηση Προιόντος
+         a(href='/shops/search') Αναζήτηση Καταστήματος
+      a(href='logout', style='float:right') logout
+      
+      .dropdown
+       button.dropbtn #{username}
+       .dropdown-content
+         a(href='/products/myproducts') Τα Προιόντα μου
+    else
+            a(href='/login', style='float:right') Σύνδεση
+            a(href='/register', style='float:right') Εγγραφή
+          
+  .sidenav
+    div
+      form(action='/shops/search',method = 'GET')
+        label#label1 Αναζήτηση
+        input#shopname(type='text',  placeholder='Όνομα καταστήματος..',name='name') 
+        input#shopname(type='text',  placeholder='Διεύθυνση καταστήματος..',name='address') 
+        input#tags(type='text', placeholder='Tags..', name='tags')  
+        label(for='shop_select') Κατάστημα
+          select#shop_select(name='shop_select', value='shop_select')
+            option(value='')  --- 
+            if shops
+              each shop, i in shops
+                option(value=shop.id)  #{shop.name}        
+        label(for='sort') Ταξινόμηση
+            select#sort(name='sort', value='sort')
+                
+        input#subb(type='submit', value='Αναζήτηση')
+      
+
+
+      
+
+
+        script.
+          var prevScrollpos = window.pageYOffset;
+          window.onscroll = function() {
+          var currentScrollPos = window.pageYOffset;
+          if (prevScrollpos > currentScrollPos) {
+          document.getElementById("navbar").style.top = "0";
+          } else {
+          document.getElementById("navbar").style.top = "-50px";
+          }
+          prevScrollpos = currentScrollPos;
