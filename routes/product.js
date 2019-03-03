@@ -35,15 +35,15 @@ async function processarr(b) {
 	if (err) {
 		throw err;
 	}
-	else{     			
+	else{
 		for (var iterator of resultb){
 				var xesto;
 				xesto = iterator.id;
 				telos.push(xesto);
 		}
 		resolve(telos);
-		
-					
+
+
 	}
 	});
 	});
@@ -52,22 +52,22 @@ async function processarr(b) {
 
 
 async function testfunc (a) {
-	
+
 	var listProducts;
 	var telos=[];
 	return new Promise(async function(resolve , reject){
-	listProducts = a.split(",");	       	
+	listProducts = a.split(",");
 	for(i=0; i<listProducts.length; i++){
-		
+
 		var tempt = await processarr(listProducts[i]);
 		console.log(tempt);
-		telos= telos.concat(tempt); 
-			
+		telos= telos.concat(tempt);
+
 	}
 	resolve(telos);
 	 });
-	
-} 
+
+}
 
 
 
@@ -164,11 +164,11 @@ router.post('/', async function(req,res,next){
 		console.log("END");
 		resultba = resultba.join();
 		console.log(resultba);
-		
-		final_product_id  =  resultba; 
+
+		final_product_id  =  resultba;
 	}
 	//final_product_id = await testfunc(product_name);
-	
+
 	var resulta;
 	//sql to get all shop names,ids
 	var sql123 = "SELECT * FROM Shop_api "
@@ -189,7 +189,7 @@ router.post('/', async function(req,res,next){
 	var  start_in = req.body.start_in;
 	var count_in = req.body.count_in;
 	var geoDist_in = req.body.distance;
-	
+
 	//var geoLng_in = req.body.geoLng_in;
 	//var geoLat_in = req.body.geoLat_in;
 	var dateFrom_in = req.body.dateFrom;
@@ -201,13 +201,13 @@ router.post('/', async function(req,res,next){
 	var test_var ='';
 	//find product_names from ids
 
-	
-		
-	
-		//final_product_id =  testfunc(product_name); 
-		
-	
-	console.log(final_product_id);	
+
+
+
+		//final_product_id =  testfunc(product_name);
+
+
+	console.log(final_product_id);
 
 	if(product_name){
 		//final_product_id =  testfunc(product_name);
@@ -219,14 +219,14 @@ router.post('/', async function(req,res,next){
 	if(search_button == 1){
 		//Above are the possibly filters? based on the make a get query
 		//Get request using the api
-	 	
+
 
 	     	var Request = require("request");
-		
-		
+
+
 		if (geoDist_in){
 			var test_lng = 37.9929;
-			var test_lat = 23.7274;	
+			var test_lat = 23.7274;
 		}
 		let request_options = {
 			url : "https://localhost:8765/observatory/api/prices",
@@ -263,7 +263,7 @@ router.post('/', async function(req,res,next){
 		var prices_out = request_out.prices;
 		var temp=0;
 		var fresult =[];
-		
+
 		console.log(prices_out);
 		console.log(prices_out.length);
 		/*for(var iterator of prices_out) {
@@ -331,7 +331,7 @@ router.post('/', async function(req,res,next){
 	      //res.render('products',{productlist : result,testi :testvariable});
 		});
 	}
-	
+
 	}
 });
 
@@ -635,14 +635,14 @@ router.get('/logout', function(req, res){
   //req.session = null;
   //req.logout();
   delete req.session.username;
-  req.flash('success', 'Έγινε Αποσύνδεση');
+  req.flash('success_msg', 'Έγινε Αποσύνδεση');
   res.redirect('/login');
 });
 
 router.get('/testroute',async function(req,res,next){
 	var ab = "dos,firikia";
 	console.log(ab);
-	
+
 	const resultba = await testfunc(ab);
 	console.log("END");
 	console.log(resultba);

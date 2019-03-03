@@ -4,6 +4,7 @@ body{
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-size: cover;
+	background-position: center center;
 }
 
 .left {
@@ -113,6 +114,7 @@ footer{
     width: 100%;
     display: block;
     transition: top 0.3s;
+		z-index: 10;
 }
 
 #navbar a {
@@ -131,8 +133,8 @@ footer{
 }
 
 .sidenav {
-  height: 80%;
-  width: 15%;
+  height: 500px;
+  width: 200px;
   position: fixed;
   top:10%;
   z-index: 1;
@@ -172,3 +174,82 @@ input[target="m"] a:active{
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
 .sidenav a {font-size: 18px;}
+
+#mySidenav {
+  height: 80%;
+  width: 200px;
+  position: fixed;
+  top:10%;
+  z-index: 1;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.73);
+  overflow-x: hidden;
+  padding-top: 2%;
+	transition: 0.5s;
+}
+
+#mySidenav a {
+  padding: 9px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 180%;
+  color: #fff;
+  display: block;
+	transition: 0.3s;
+}
+
+#mySidenav a:hover {
+  color: #e5ca54;
+}
+
+
+#mySidenav1 {
+  height: 80%;
+  width: 200px;
+  position: fixed;
+  top:10%;
+  z-index: 1;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.73);
+  overflow-x: hidden;
+  padding-top: 2%;
+	transition: 0.5s;
+}
+
+#mySidenav1 a {
+  padding: 9px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 180%;
+  color: #fff;
+  display: block;
+	transition: 0.3s;
+}
+
+#mySidenav1 a:hover {
+  color: #e5ca54;
+}
+
+#mySidenav2 {
+  height: 80%;
+  width: 200px;
+  position: fixed;
+  top:10%;
+  z-index: 1;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.73);
+  overflow-x: hidden;
+  padding-top: 2%;
+	transition: 0.5s;
+}
+
+#mySidenav2 a {
+  padding: 9px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 180%;
+  color: #fff;
+  display: block;
+	transition: 0.3s;
+}
+
+#mySidenav2 a:hover {
+  color: #e5ca54;
+}
