@@ -11,8 +11,36 @@ html
     #navbar
       a.active(href='/')
         i.glyphicon.glyphicon-home
-      a(href='#news') Προσφορές
-      a(href='#contact') Επικοινωνία
+          
+      if boollogin
+        if username=="admin" 
+          .dropdown(style='float:left')
+           button.dropbtn Διαγραφή
+           .dropdown-content
+             a(href='/products/products_delete') Διαγραφή Προιόντος
+             a(href='/shops/delete') Διαγραφή Καταστήματος         
+            
+        .dropdown(style='float:left')
+         button.dropbtn Προσθήκη
+         .dropdown-content
+           a(href='/shops/add') Προσθήκη Καταστήματος
+           a(href='/products/products_add') Προσθήκη Προιόντος
+               
+        .dropdown(style='float:left')
+         button.dropbtn Αναζήτηση
+         .dropdown-content
+           a(href='/products') Αναζήτηση Προιόντος
+           a(href='/shops/search') Αναζήτηση Καταστήματος
+        a(href='logout', style='float:right') logout
+        
+        .dropdown
+         button.dropbtn #{username}
+         .dropdown-content
+           a(href='/products/myproducts') Τα Προιόντα μου
+      else
+              a(href='/login', style='float:right') Σύνδεση
+              a(href='/register', style='float:right') Εγγραφή
+    
 
     .left
         != messages('message', locals)

@@ -4,6 +4,12 @@ html
   head
     link(rel='stylesheet', href='css/homepage.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js')
+    
 
 block content
   title Home
@@ -12,6 +18,8 @@ block content
       p(class="bottom") Copyright &copy; Online Price Tracker 2018
 
   body
+
+
 
 
 
@@ -26,17 +34,32 @@ block content
                   form#myform(action='/products/product_details', method='POST')
                     button(name='subject', type='submit', value=prod.productId) Προβολή περισσότερων
    
-  #navbar  
+  #navbar
                       a.active(href='/')
                         i.glyphicon.glyphicon-home
                      
-                      a(href='#contact') Επικοινωνία
+                    
                       if boollogin
                         if username=="admin" 
-                             a(href='/products/products_delete') Διαγραφή Προιόντος         
+                          .dropdown(style='float:left')
+                           button.dropbtn Διαγραφή
+                           .dropdown-content
+                             a(href='/products/products_delete') Διαγραφή Προιόντος
+                             a(href='/shops/delete') Διαγραφή Καταστήματος         
                         
-                        a(href='/products/products_add') Προσθήκη Προιόντος
+                        .dropdown(style='float:left')
+                         button.dropbtn Προσθήκη
+                         .dropdown-content
+                           a(href='/shops/add') Προσθήκη Καταστήματος
+                           a(href='/products/products_add') Προσθήκη Προιόντος
+                           
+                        .dropdown(style='float:left')
+                         button.dropbtn Αναζήτηση
+                         .dropdown-content
+                           a(href='/products') Αναζήτηση Προιόντος
+                           a(href='/shops/search') Αναζήτηση Καταστήματος
                         a(href='logout', style='float:right') logout
+                        
                         .dropdown
                          button.dropbtn #{username}
                          .dropdown-content
@@ -45,32 +68,107 @@ block content
                               a(href='login', style='float:right') Σύνδεση
                               a(href='register', style='float:right') Εγγραφή
           
-  .sidenav
-    div
-      form(action='/products',method = 'POST')
-        label#label1 Αναζήτηση
-        input#productname(type='text',  placeholder='Όνομα προϊόντος..',name='productname') 
-        input#distance(type='number', value='distance', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
-        label Ημερομηνία (από):
-        input#dateFrom(type='date',value='dateFrom', name='dateFrom')
-        label Ημερομηνία (μέχρι):
-        input#dateTo(type='date',value='dateTo', name='dateTo')
+  .container
+    .sidenav(class='visible-lg') 
+      div
+        form(action='/products',method = 'POST', class='visible-lg')
+          label#label1 Αναζήτηση
+          input#productname(type='text',  placeholder='Όνομα προϊόντος..',name='productname') 
+          input#distance(type='number', value='distance', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
+          label Ημερομηνία (από):
+          input#dateFrom(type='date',value='dateFrom', name='dateFrom')
+          label Ημερομηνία (μέχρι):
+          input#dateTo(type='date',value='dateTo', name='dateTo')
 
-        
-        input#tags(type='text', placeholder='Tags..', name='tags')  
-        label(for='shop_select') Κατάστημα
-          select#shop_select(name='shop_select', value='shop_select')
-            option(value='')  --- 
-            if Shop
-              each sh, i in Shop
-                option(value=sh.id)  #{sh.name}        
-        label(for='sort') Ταξινόμηση
-            select#sort(name='sort', value='sort')
-                option(value='price|ASC')  Τιμή αύξουσα
-                option(value='price|DESC')  Τιμή φθίνουσα
-        input#subb(type='submit', value='Αναζήτηση')
-      
+          
+          input#tags(type='text', placeholder='Tags..', name='tags')  
+          label(for='shop_select') Κατάστημα
+            select#shop_select(name='shop_select', value='shop_select')
+              option(value='')  --- 
+              if Shop
+                each sh, i in Shop
+                  option(value=sh.id)  #{sh.name}        
+          label(for='sort') Ταξινόμηση
+              select#sort(name='sort', value='sort')
+                  option(value='price|ASC')  Τιμή αύξουσα
+                  option(value='price|DESC')  Τιμή φθίνουσα
+          input#subb(type='submit', value='Αναζήτηση')
+            
 
+    #mySidenav.sidenav(class='visible-md',style='background-color:#0f0f0f')  
+      div
+        a.closebtn(href='javascript:void(0)', onclick='closeNav()') ×
+        form(action='/products',method = 'POST', class='visible-md')
+          input#productname(type='text',  placeholder='Όνομα προϊόντος..',name='productname') 
+          input#distance(type='number', value='distance', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
+          label Ημερομηνία (από):
+          input#dateFrom(type='date',value='dateFrom', name='dateFrom')
+          label Ημερομηνία (μέχρι):
+          input#dateTo(type='date',value='dateTo', name='dateTo')
+          input#tags(type='text', placeholder='Tags..', name='tags')  
+          label(for='shop_select') Κατάστημα
+            select#shop_select(name='shop_select', value='shop_select')
+              option(value='')  --- 
+              if Shop
+                each sh, i in Shop
+                  option(value=sh.id)  #{sh.name}        
+          label(for='sort') Ταξινόμηση
+              select#sort(name='sort', value='sort')
+                  option(value='price|ASC')  Τιμή αύξουσα
+                  option(value='price|DESC')  Τιμή φθίνουσα
+          input#subb(type='submit', value='Αναζήτηση')
+
+  
+    #mySidenav1.sidenav(class='visible-sm',style='background-color:#0f0f0f')  
+      div
+        a.closebtn(href='javascript:void(0)', onclick='closeNav1()') ×
+        form(action='/products',method = 'POST', class='visible-sm')
+          input#productname(type='text',  placeholder='Όνομα προϊόντος..',name='productname') 
+          input#distance(type='number', value='distance', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
+          label Ημερομηνία (από):
+          input#dateFrom(type='date',value='dateFrom', name='dateFrom')
+          label Ημερομηνία (μέχρι):
+          input#dateTo(type='date',value='dateTo', name='dateTo')
+          input#tags(type='text', placeholder='Tags..', name='tags')  
+          label(for='shop_select') Κατάστημα
+            select#shop_select(name='shop_select', value='shop_select')
+              option(value='')  --- 
+              if Shop
+                each sh, i in Shop
+                  option(value=sh.id)  #{sh.name}        
+          label(for='sort') Ταξινόμηση
+              select#sort(name='sort', value='sort')
+                  option(value='price|ASC')  Τιμή αύξουσα
+                  option(value='price|DESC')  Τιμή φθίνουσα
+          input#subb(type='submit', value='Αναζήτηση')
+
+
+    #mySidenav2.sidenav(class='visible-xs',style='background-color:#0f0f0f')  
+      div
+        a.closebtn(href='javascript:void(0)', onclick='closeNav2()') ×
+        form(action='/products',method = 'POST', class='visible-xs')
+          input#productname(type='text',  placeholder='Όνομα προϊόντος..',name='productname') 
+          input#distance(type='number', value='distance', name='distance', min='0', placeholder='Μέγιστη απόσταση..')
+          label Ημερομηνία (από):
+          input#dateFrom(type='date',value='dateFrom', name='dateFrom')
+          label Ημερομηνία (μέχρι):
+          input#dateTo(type='date',value='dateTo', name='dateTo')
+          input#tags(type='text', placeholder='Tags..', name='tags')  
+          label(for='shop_select') Κατάστημα
+            select#shop_select(name='shop_select', value='shop_select')
+              option(value='')  --- 
+              if Shop
+                each sh, i in Shop
+                  option(value=sh.id)  #{sh.name}        
+          label(for='sort') Ταξινόμηση
+              select#sort(name='sort', value='sort')
+                  option(value='price|ASC')  Τιμή αύξουσα
+                  option(value='price|DESC')  Τιμή φθίνουσα
+          input#subb(type='submit', value='Αναζήτηση')
+            
+  span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-sm' , onclick='openNav1()') &#9776; Αναζήτηση
+  span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-md' , onclick='openNav()') &#9776; Αναζήτηση
+  span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-xs' , onclick='openNav2()') &#9776; Αναζήτηση
 
       
 
@@ -87,4 +185,27 @@ block content
           prevScrollpos = currentScrollPos;
           }
           
+        script.
+          function openNav() {
+          document.getElementById("mySidenav").style.width = "200px";
+          }
+          function closeNav() {
+          document.getElementById("mySidenav").style.width = "0";
+          }
+        
+        script.
+          function openNav1() {
+          document.getElementById("mySidenav1").style.width = "200px";
+          }
+          function closeNav1() {
+          document.getElementById("mySidenav1").style.width = "0";
+          }
+          
+        script.
+          function openNav2() {
+          document.getElementById("mySidenav2").style.width = "200px";
+          }
+          function closeNav2() {
+          document.getElementById("mySidenav2").style.width = "0";
+          }
       

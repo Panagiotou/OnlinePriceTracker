@@ -3,6 +3,7 @@ doctype html
 html
   head
     link(rel='stylesheet', href='../css/homepage.css')
+    link(rel='stylesheet', href='../css/style.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
 
 block content
@@ -27,21 +28,37 @@ block content
                     button(name='subject', type='submit', value=shop.id) Προβολή περισσότερων
    
   #navbar  
-                      a.active(href='/')
-                        i.glyphicon.glyphicon-home
-                     
-                      a(href='#contact') Επικοινωνία
-                      if boollogin
-                        if username=="admin" 
-                             a(href='/shops/delete') Διαγραφή Καταστήματος         
-                        
-                        a(href='/shops/add') Προσθήκη Καταστήματος
-                        a(href='logout', style='float:right') logout
-                        .dropdown
-                         button.dropbtn #{username}
-                         .dropdown-content
-                              a(href='login', style='float:right') Σύνδεση
-                              a(href='register', style='float:right') Εγγραφή
+    a.active(href='/')
+      i.glyphicon.glyphicon-home
+        
+    if boollogin
+      if username=="admin" 
+        .dropdown(style='float:left')
+         button.dropbtn Διαγραφή
+         .dropdown-content
+           a(href='/products/products_delete') Διαγραφή Προιόντος
+           a(href='/shops/delete') Διαγραφή Καταστήματος         
+          
+      .dropdown(style='float:left')
+       button.dropbtn Προσθήκη
+       .dropdown-content
+         a(href='/shops/add') Προσθήκη Καταστήματος
+         a(href='/products/products_add') Προσθήκη Προιόντος
+             
+      .dropdown(style='float:left')
+       button.dropbtn Αναζήτηση
+       .dropdown-content
+         a(href='/products') Αναζήτηση Προιόντος
+         a(href='/shops/search') Αναζήτηση Καταστήματος
+      a(href='logout', style='float:right') logout
+      
+      .dropdown
+       button.dropbtn #{username}
+       .dropdown-content
+         a(href='/products/myproducts') Τα Προιόντα μου
+    else
+            a(href='/login', style='float:right') Σύνδεση
+            a(href='/register', style='float:right') Εγγραφή
           
   .sidenav
     div
@@ -76,4 +93,3 @@ block content
           document.getElementById("navbar").style.top = "-50px";
           }
           prevScrollpos = currentScrollPos;
-
