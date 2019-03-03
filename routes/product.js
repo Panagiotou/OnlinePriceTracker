@@ -27,6 +27,7 @@ conn.connect(function(err) {
 
 async function processarr(b) {
 	var telos=[];
+
 	//console.log(b);
 	return new Promise(async function(resolve , reject){
 	var sql1234 = "SELECT id FROM Product_api WHERE name = ?"
@@ -80,8 +81,8 @@ router.get('/',function(req , res){
           throw err;
         }
         else{
-		
-		
+
+
 	 var c_username='';
 	 var flag123 = false;
 	if (req.session && req.session.username) {
@@ -107,21 +108,21 @@ router.get('/',function(req , res){
 				products:'',
 				tags:'',
 				sort:''
-        	     	}       	
+        	     	}
         	}
-      		
+
       	Request(request_options,(error,response,body) => {
 	if(error){
 			return console.dir(error);
 	}
 	else{
-			let request_out = JSON.parse(body); 
+			let request_out = JSON.parse(body);
 			var start_out=request_out.start;
-			var count_out=request_out.count; 
+			var count_out=request_out.count;
 			var total_out=request_out.total;
 			var prices_out = request_out.prices;
 			var temp=0;
-			var fresult =[]; 		
+			var fresult =[];
 			console.log(prices_out);
 			console.log(prices_out.length);
 			res.render('home',{Product : prices_out,Shop : resulta ,boollogin : flag123, username : c_username});
@@ -176,7 +177,7 @@ router.post('/', async function(req,res,next){
           throw err;
         }
         else{
-  
+
          var c_username='';
 	 var flag123 = false;
 	 if (req.session && req.session.username) {
@@ -199,6 +200,7 @@ router.post('/', async function(req,res,next){
 	var search_button;
 	var test_var ='';
 	//find product_names from ids
+
 	
 		
 	
@@ -206,6 +208,13 @@ router.post('/', async function(req,res,next){
 		
 	
 	console.log(final_product_id);	
+
+	if(product_name){
+		//final_product_id =  testfunc(product_name);
+
+	}
+	console.log(final_product_id);
+
 	search_button = 1;
 	if(search_button == 1){
 		//Above are the possibly filters? based on the make a get query
@@ -234,7 +243,7 @@ router.post('/', async function(req,res,next){
 				products:final_product_id,
 				tags:tags_in,
 				sort:sort_in
-        	     	}       	
+        	     	}
         	}
       		console.log(final_product_id);
 
@@ -243,8 +252,8 @@ router.post('/', async function(req,res,next){
 			return console.dir(error);
 		}
 		else{
-			
-		
+
+
 		//console.dir(JSON.parse(body));
 		//All viarables returned from the json object after parsing it
 		let request_out = JSON.parse(body);
@@ -268,10 +277,7 @@ router.post('/', async function(req,res,next){
         			}
         			else{
         			 fresult.push(result);
-
         			 console.log(fresult);
-
-
         			}
 			});
 			 //result.description = "temp";
@@ -279,14 +285,13 @@ router.post('/', async function(req,res,next){
        			 //console.log(result.name);
        			 temp++;
     		}
-
     		*/
     		res.render('home',{Product :prices_out,Shop : resulta, boollogin : flag123, username : c_username });
 		}
-		
+
 		});
-		
-		//How the hell does this work to return actual info is beyond me	
+
+		//How the hell does this work to return actual info is beyond me
 		/*
     		while(temp<=prices_out.length){
     		 	if(temp==prices_out.lenght){
@@ -297,7 +302,7 @@ router.post('/', async function(req,res,next){
     		console.log(fresult.length);*/
 
 		//How the hell does this work to return actual info is beyond me
-  		   
+
 
 		//Render same page with new filters
 		//productlist should contain all info needed to render
@@ -328,7 +333,7 @@ router.post('/', async function(req,res,next){
 	}
 	
 	}
-}); 
+});
 
 });
 
@@ -464,7 +469,7 @@ router.post('/products_updatep',function(req , res){
     var c_username=req.session.username;
 	 var flag123 = true;
     console.log(req.body.subject);
-    
+
     // Check if session exists and if username exists
     res.render('update_product',{idp : req.body.subject, boollogin : flag123, username : c_username});
 
@@ -478,7 +483,7 @@ router.post('/products_updatep',function(req , res){
 //products update post
 router.post('/products_update',function(req , res){
 	var flags=0;
-	
+
 	var c_username='';
 	 var flag123 = false;
 	// After loggin, this will change router file
@@ -646,5 +651,3 @@ router.get('/testroute',async function(req,res,next){
 
 
 module.exports = router;
-
-
