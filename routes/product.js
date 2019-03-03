@@ -97,8 +97,8 @@ router.get('/',function(req , res){
 			url : "https://localhost:8765/observatory/api/prices",
 			method : 'GET',
 			qs: {
-				start : '',
-				count : '',
+				start : 1,
+				count : 15,
 				geoDist :'',
 				geoLng :'',
 				geoLat :'',
