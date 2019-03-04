@@ -2,12 +2,15 @@ doctype html
 
 html
   head
+    title Home
     link(rel='stylesheet', href='../css/homepage.css')
-    link(rel='stylesheet', href='../css/style.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+    script.
+      function myFunction(shop_id) {
+      window.open("https://localhost:8765/shops/view?id="+shop_id, "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+      }
 
 block content
-  title Home
   br
   footer
       p(class="bottom") Copyright &copy; Online Price Tracker 2018
@@ -24,104 +27,45 @@ block content
                 div  Όνομα Καταστήματος: #{shop.name}
                 div  Διεύθυνση: #{shop.address}
                 div Ετικέτες: #{shop.tags}
-                  form#myform(action='/shops/shop_details', method='POST')
-                    button(name='subject', type='submit', value=shop.id) Προβολή περισσότερων
+                button(name='subject', type='submit', value=shop.id, onclick='myFunction('+shop.id+')') Προβολή στο χάρτη
    
   #navbar  
-    a.active(href='/')
-      i.glyphicon.glyphicon-home
-   
-
-    if boollogin
-      .dropdown(style='float:left')
-       button.dropbtn.span.glyphicon.glyphicon-plus
-       .dropdown-content
-         a(href='/shops/add') Προσθήκη Καταστήματος
-         a(href='/products/products_add') Προσθήκη Προιόντος
-         a(href='/prices/prices_add') Προσθήκη Τιμής
-      if username=="admin" 
-        .dropdown(style='float:left')
-         button.dropbtn.span.glyphicon.glyphicon-minus
-         .dropdown-content
-           a(href='/products/products_delete') Διαγραφή Προιόντος
-           a(href='/shops/delete') Διαγραφή Καταστήματος  
-           a(href='/prices/prices_delete') Διαγραφή Τιμής       
-      
-
-         
-      .dropdown(style='float:left')
-       button.dropbtn.span.glyphicon.glyphicon-search
-       .dropdown-content
-         a(href='/products') Αναζήτηση Προιόντος
-         a(href='/shops/search') Αναζήτηση Καταστήματος
-      a(href='logout', style='float:right') logout
-      
-      .dropdown
-       button.dropbtn #{username}
-       .dropdown-content
-         a(href='/products/myproducts') Τα Προιόντα μου
-         if username=="admin" 
-           a(href='/shops/update') Update Καταστήματος
-    else
-      .dropdown(style='float:left')
-       button.dropbtn Αναζήτηση
-       .dropdown-content
-         a(href='/products') Αναζήτηση Προιόντος
-         a(href='/shops/search') Αναζήτηση Καταστήματος
-      a(href='login', style='float:right') Σύνδεση
-      a(href='register', style='float:right') Εγγραφή
-
-      
-
-  .container
-    .sidenav(class='visible-lg', style='height:300px') 
-      div
-        form(action='/shops/search',method = 'GET', class='visible-lg')
-          label#label1 Αναζήτηση
-          input#shopname(type='text',  placeholder='Όνομα καταστήματος..',name='name') 
-          input#shopname(type='text',  placeholder='Διεύθυνση καταστήματος..',name='address') 
-          input#tags(type='text', placeholder='Tags..', name='tags')   
-                  
-          input#subb(type='submit', value='Αναζήτηση')
-                    
-
-    #mySidenav.sidenav(class='visible-md',style='background-color:#0f0f0f;height:300px' )  
-      div
-        a.closebtn(href='javascript:void(0)', onclick='closeNav()') ×
-        form(action='/shops/search',method = 'GET', class='visible-md')
-          input#shopname(type='text',  placeholder='Όνομα καταστήματος..',name='name') 
-          input#shopname(type='text',  placeholder='Διεύθυνση καταστήματος..',name='address') 
-          input#tags(type='text', placeholder='Tags..', name='tags')     
-                  
-          input#subb(type='submit', value='Αναζήτηση')
-
+                      a.active(href='/')
+                        i.glyphicon.glyphicon-home
+                     
+                      a(href='#contact') Επικοινωνία
+                      if boollogin
+                        if username=="admin" 
+                             a(href='/shops/delete') Διαγραφή Καταστήματος         
+                        
+                        a(href='/shops/add') Προσθήκη Καταστήματος
+                        a(href='logout', style='float:right') logout
+                        .dropdown
+                         button.dropbtn #{username}
+                         .dropdown-content
+                              a(href='login', style='float:right') Σύνδεση
+                              a(href='register', style='float:right') Εγγραφή
           
-    #mySidenav1.sidenav(class='visible-sm',style='background-color:#0f0f0f;height:300px')  
-      div
-        a.closebtn(href='javascript:void(0)', onclick='closeNav1()') ×
-        form(action='/shops/search',method = 'GET', class='visible-sm')
-          input#shopname(type='text',  placeholder='Όνομα καταστήματος..',name='name') 
-          input#shopname(type='text',  placeholder='Διεύθυνση καταστήματος..',name='address') 
-          input#tags(type='text', placeholder='Tags..', name='tags')   
-                  
-          input#subb(type='submit', value='Αναζήτηση')
+  .sidenav
+    div
+      form(action='/shops/search',method = 'GET')
+        label#label1 Αναζήτηση
+        input#shopname(type='text',  placeholder='Όνομα καταστήματος..',name='name') 
+        input#shopname(type='text',  placeholder='Διεύθυνση καταστήματος..',name='address') 
+        input#tags(type='text', placeholder='Tags..', name='tags')  
+        label(for='shop_select') Κατάστημα
+          select#shop_select(name='shop_select', value='shop_select')
+            option(value='')  --- 
+            if shops
+              each shop, i in shops
+                option(value=shop.id)  #{shop.name}        
+        label(for='sort') Ταξινόμηση
+            select#sort(name='sort', value='sort')
+                
+        input#subb(type='submit', value='Αναζήτηση')
+      
 
 
-    #mySidenav2.sidenav(class='visible-xs',style='background-color:#0f0f0f;height:300px')  
-      div
-        a.closebtn(href='javascript:void(0)', onclick='closeNav2()') ×
-        form(action='/shops/search',method = 'GET', class='visible-xs')
-          input#shopname(type='text',  placeholder='Όνομα καταστήματος..',name='name') 
-          input#shopname(type='text',  placeholder='Διεύθυνση καταστήματος..',name='address') 
-          input#tags(type='text', placeholder='Tags..', name='tags')    
-                  
-          input#subb(type='submit', value='Αναζήτηση')
-                    
-  span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-sm' , onclick='openNav1()') &#9776; Αναζήτηση
-  span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-md' , onclick='openNav()') &#9776; Αναζήτηση
-  span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-xs' , onclick='openNav2()') &#9776; Αναζήτηση
-
-              
       
 
 
@@ -136,26 +80,3 @@ block content
           }
           prevScrollpos = currentScrollPos;
 
-        script.
-          function openNav() {
-          document.getElementById("mySidenav").style.width = "200px";
-          }
-          function closeNav() {
-          document.getElementById("mySidenav").style.width = "0";
-          }
-          
-        script.
-          function openNav1() {
-          document.getElementById("mySidenav1").style.width = "200px";
-          }
-          function closeNav1() {
-          document.getElementById("mySidenav1").style.width = "0";
-          }
-            
-        script.
-          function openNav2() {
-          document.getElementById("mySidenav2").style.width = "200px";
-          }
-          function closeNav2() {
-          document.getElementById("mySidenav2").style.width = "0";
-          }

@@ -24,7 +24,7 @@ block content
       zoom:15
       };
       var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
-      var marker = new google.maps.Marker({position: mapProp.center});
+      var marker = new google.maps.Marker({position: mapProp.center,icon:src='https://localhost:8765/static/loo.png'});
       marker.setMap(map);
       var infowindow = new google.maps.InfoWindow({content:"shop"});
       google.maps.event.addListener(marker, 'click', function() {infowindow.open(map,marker);});
