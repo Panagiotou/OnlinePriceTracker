@@ -12,25 +12,27 @@ html
     #navbar
       a.active(href='/')
         i.glyphicon.glyphicon-home
-          
+     
+    
       if boollogin
-        if username=="admin" 
-          .dropdown(style='float:left')
-           button.dropbtn Διαγραφή
-           .dropdown-content
-             a(href='/products/products_delete') Διαγραφή Προιόντος
-             a(href='/shops/delete') Διαγραφή Καταστήματος
-             a(href='/prices/prices_delete') Διαγραφή Τιμής         
-            
         .dropdown(style='float:left')
-         button.dropbtn Προσθήκη
+         button.dropbtn.span.glyphicon.glyphicon-plus
          .dropdown-content
            a(href='/shops/add') Προσθήκη Καταστήματος
            a(href='/products/products_add') Προσθήκη Προιόντος
            a(href='/prices/prices_add') Προσθήκη Τιμής
-               
+        if username=="admin" 
+          .dropdown(style='float:left')
+           button.dropbtn.span.glyphicon.glyphicon-minus
+           .dropdown-content
+             a(href='/products/products_delete') Διαγραφή Προιόντος
+             a(href='/shops/delete') Διαγραφή Καταστήματος  
+             a(href='/prices/prices_delete') Διαγραφή Τιμής       
+        
+
+           
         .dropdown(style='float:left')
-         button.dropbtn Αναζήτηση
+         button.dropbtn.span.glyphicon.glyphicon-search
          .dropdown-content
            a(href='/products') Αναζήτηση Προιόντος
            a(href='/shops/search') Αναζήτηση Καταστήματος
@@ -50,6 +52,7 @@ html
            a(href='/shops/search') Αναζήτηση Καταστήματος
         a(href='login', style='float:right') Σύνδεση
         a(href='register', style='float:right') Εγγραφή
+
 
 
     .left

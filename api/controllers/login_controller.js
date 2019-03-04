@@ -14,6 +14,7 @@ conn.connect(function(err) {
 exports.login_user = function(req, res) {
   var format = req.query.format;
   var body = req.body;
+  console.log(body);
   if(! format){
     format = "json";
   }
