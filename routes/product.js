@@ -60,7 +60,7 @@ async function testfunc (a) {
 	for(i=0; i<listProducts.length; i++){
 
 		var tempt = await processarr(listProducts[i]);
-		
+
 		telos= telos.concat(tempt);
 
 	}
@@ -93,7 +93,7 @@ router.get('/',function(req , res){
 
 	var Request = require("request");
         //this remains
-       
+
 
 	const d1 = new Date(2011,10,30);
 	const d2 = new Date(2020,10,30);
@@ -160,17 +160,17 @@ router.get('/',function(req , res){
 router.post('/', async function(req,res,next){
 	var product_name = req.body.productname ;
 	var final_product_id = [];
-	
+
 	if(product_name){
 		var resultba = await testfunc(product_name);
-		
+
 		resultba = resultba.join();
-		
+
 
 		final_product_id  =  resultba;
 	}
 	var geoDist_in = req.body.distance;
-	
+
 	//final_product_id = await testfunc(product_name);
 
 	var resulta;
@@ -192,8 +192,8 @@ router.post('/', async function(req,res,next){
   	var tags_in = req.body.tags;
 	var  start_in = req.body.start_in;
 	var count_in = req.body.count_in;
-	
-	
+
+
 	var geoLng_in = req.body.lng_in;
 	console.log(geoLng_in);
 	var geoLat_in = req.body.lat_in;
@@ -223,8 +223,14 @@ router.post('/', async function(req,res,next){
 
 	     	var Request = require("request");
 
+<<<<<<< HEAD
 		
 		if (geoDist_in){
+=======
+		if (! geoDist_in){
+      geoLng_in = '';
+      geoLat_in = '';
+>>>>>>> 7c2457b8838666e7f02f1fc551b33fb16910b0e8
 			var test_lng = 37.9929;
 			var test_lat = 23.7274;
 		}
@@ -253,8 +259,13 @@ router.post('/', async function(req,res,next){
 		}
 		else{
 
+<<<<<<< HEAD
 		
 		//console.dir(JSON.parse(body));
+=======
+
+		console.log(JSON.parse(body));
+>>>>>>> 7c2457b8838666e7f02f1fc551b33fb16910b0e8
 		//All viarables returned from the json object after parsing it
 		let request_out = JSON.parse(body);
 		var start_out=request_out.start;
