@@ -223,14 +223,13 @@ router.post('/', async function(req,res,next){
 
 	     	var Request = require("request");
 
-<<<<<<< HEAD
+
 		
-		if (geoDist_in){
-=======
+		
+
 		if (! geoDist_in){
-      geoLng_in = '';
-      geoLat_in = '';
->>>>>>> 7c2457b8838666e7f02f1fc551b33fb16910b0e8
+		      geoLng_in = '';
+		      geoLat_in = '';
 			var test_lng = 37.9929;
 			var test_lat = 23.7274;
 		}
@@ -259,13 +258,8 @@ router.post('/', async function(req,res,next){
 		}
 		else{
 
-<<<<<<< HEAD
-		
-		//console.dir(JSON.parse(body));
-=======
 
-		console.log(JSON.parse(body));
->>>>>>> 7c2457b8838666e7f02f1fc551b33fb16910b0e8
+
 		//All viarables returned from the json object after parsing it
 		let request_out = JSON.parse(body);
 		var start_out=request_out.start;
