@@ -146,7 +146,7 @@ button{
 	font-size: 100%;
 }
 
-#dateFrom, #dateTo,#productname, #tags,#category{
+#dateFrom, #dateTo,#productname, #tags,#category, #shopname{
   margin-top: 4%;
   margin-left: 10%;
   font-family: "Roboto", sans-serif;

@@ -132,11 +132,11 @@ router.post('/add', function(req, res){
    }
    //--------------------------------
   if (req.session && req.session.username) {
-    req.checkBody('name', 'Συμπληρώστε το πεδίο " Όνομα katastimatos "').notEmpty();
-    req.checkBody('address', 'Συμπληρώστε το πεδίο " dieythinsi "').notEmpty();
-    req.checkBody('lng', 'Συμπληρώστε το πεδίο " geografiko mikos "').notEmpty();
-    req.checkBody('lat', 'Συμπληρώστε το πεδίο " geografiko platos "').notEmpty();
-    req.checkBody('tags', 'Συμπληρώστε το πεδίο " tags "').notEmpty();
+    req.checkBody('name', 'Συμπληρώστε το πεδίο " Όνομα καταστήματος "').notEmpty();
+    req.checkBody('address', 'Συμπληρώστε το πεδίο " Διεύθυνση "').notEmpty();
+    req.checkBody('lng', 'Συμπληρώστε το πεδίο " Γεωγραφικό μήκος "').notEmpty();
+    req.checkBody('lat', 'Συμπληρώστε το πεδίο " Γεωγραφικό πλάτος "').notEmpty();
+    req.checkBody('tags', 'Συμπληρώστε το πεδίο " Tags "').notEmpty();
     let errors = req.validationErrors();
     if(errors){
       res.render('shop_add', {errors: errors, boollogin : flag123, username : c_username });
@@ -151,12 +151,12 @@ router.post('/add', function(req, res){
       var values = [name, address, lng, lat, tags];
       conn.query(sql, values, function (err) {
         if (err) {
-          let errors1 = [{ param: '', msg: 'Lathos', value: '' }];
+          let errors1 = [{ param: '', msg: 'Λάθος', value: '' }];
           res.render('shop_add', {errors: errors1, boollogin : flag123, username : c_username });
         }
         else{
           console.log("New Shop added to database!");
-          req.flash('success_msg','To katastima prostethike me epityxia!');
+          req.flash('success_msg','Το κατάστημα προστέθηκε με επιτυχία!');
           res.redirect('/shops/search');
         }
       });
@@ -208,7 +208,7 @@ router.post('/delete', function(req, res){
       var sql = "SELECT id FROM Shop_api WHERE id=?";
       conn.query(sql, id, function (err, result) {
         if (err) {
-          let errors1 = [{ param: '', msg: 'Lathos', value: '' }];
+          let errors1 = [{ param: '', msg: 'Λάθος', value: '' }];
           res.render('shop_delete', {errors: errors1, boollogin : flag123, username : c_username});
         }
         else if (result == '') {
@@ -221,13 +221,13 @@ router.post('/delete', function(req, res){
             var sql = "DELETE FROM Shop_api WHERE id=?";
             conn.query(sql, id, function (err, result) {
               if (err) {
-                let errors1 = [{ param: '', msg: 'Lathos', value: '' }];
+                let errors1 = [{ param: '', msg: 'Λάθος', value: '' }];
                 res.render('shop_delete', {errors: errors1, boollogin : flag123, username : c_username});
               }
               else {
                 console.log("Shop deleted from database!");
-                req.flash('success_msg','To katastima diagrafike me epityxia!');
-                res.redirect('/shops/search');
+                req.flash('success_msg','Το κατάστημα διαγράφηκε με επιτυχία!');
+                res.redirect('/shops/delete');
               }
             });
           }
@@ -235,12 +235,12 @@ router.post('/delete', function(req, res){
             var sql = "UPDATE Shop_api SET withdrawn=1 WHERE id=?";
             conn.query(sql, id, function (err, result) {
               if (err) {
-                let errors1 = [{ param: '', msg: 'Lathos', value: '' }];
+                let errors1 = [{ param: '', msg: 'Λάθος', value: '' }];
                 res.render('shop_delete', {errors: errors1, boollogin : flag123, username : c_username});
               }
               else {
                 console.log("Shop hided from database!");
-                req.flash('success_msg','To katastima kryftike me epityxia!');
+                req.flash('success_msg','Το κατάστημα κρύφθηκε με επιτυχία!');
                 res.redirect('/shops/search');
               }
             });
@@ -325,7 +325,7 @@ router.post('/update', function(req, res){
             else {
               console.log("Shop updated!");
               req.flash('success_msg','Το κατάστημα ενημερώθηκε με επιτυχία!');
-              res.redirect('/shops/search');
+              res.redirect('/shops/myshops');
             }
           });
         }
@@ -333,6 +333,34 @@ router.post('/update', function(req, res){
     }
   }
 });
+
+
+router.post('/shop_details',function(req , res){
+	 var c_username='';
+	 var flag123 = false;
+	 if (req.session && req.session.username) {
+    		// Check if session exists and if username exists
+   		 c_username = req.session.username;
+		flag123 = true;
+  	}
+	var shop_id = (req.body.subject);
+	var shop1;
+	console.log(shop_id);
+	var sql = `SELECT * FROM Shop_api WHERE id = ${shop_id}`;
+      	      conn.query(sql, function (err, result) {
+        if (err) {
+          conlose.log("edo skaei");
+          throw err;
+        }
+        else{
+        	console.log(result);
+        	res.render('shop_details',{shop : result, boollogin : flag123, username : c_username });
+        }
+
+
+	});
+});
+
 
 // logout
 router.get('/logout', function(req, res){

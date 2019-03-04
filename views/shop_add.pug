@@ -5,6 +5,7 @@ html
   head
     title Add shop
     link(rel='stylesheet', href='../css/shop.css')
+    link(rel='stylesheet', href='../css/homepage.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
      
   body 
@@ -18,13 +19,15 @@ html
            button.dropbtn Διαγραφή
            .dropdown-content
              a(href='/products/products_delete') Διαγραφή Προιόντος
-             a(href='/shops/delete') Διαγραφή Καταστήματος         
+             a(href='/shops/delete') Διαγραφή Καταστήματος
+             a(href='/prices/prices_delete') Διαγραφή Τιμής         
             
         .dropdown(style='float:left')
          button.dropbtn Προσθήκη
          .dropdown-content
            a(href='/shops/add') Προσθήκη Καταστήματος
            a(href='/products/products_add') Προσθήκη Προιόντος
+           a(href='/prices/prices_add') Προσθήκη Τιμής
                
         .dropdown(style='float:left')
          button.dropbtn Αναζήτηση
@@ -37,9 +40,16 @@ html
          button.dropbtn #{username}
          .dropdown-content
            a(href='/products/myproducts') Τα Προιόντα μου
+           if username=="admin" 
+             a(href='/shops/update') Update Καταστήματος
       else
-              a(href='/login', style='float:right') Σύνδεση
-              a(href='/register', style='float:right') Εγγραφή
+        .dropdown(style='float:left')
+         button.dropbtn Αναζήτηση
+         .dropdown-content
+           a(href='/products') Αναζήτηση Προιόντος
+           a(href='/shops/search') Αναζήτηση Καταστήματος
+        a(href='login', style='float:right') Σύνδεση
+        a(href='register', style='float:right') Εγγραφή
     
 
     .left
@@ -69,9 +79,10 @@ html
     form(action='/shops/add', method='POST')
       .add-page
         .form
-          input(type='text', placeholder='Όνομα katastimatos', name='name')
-          input(type='text', placeholder='Dieythinsi', name='address')
-          input(type='text', placeholder='Geografiko mikos', name='lng')
-          input(type='text', placeholder='Geografiko platos', name='lat')
-          input(type='text', placeholder='Etiketes', name='tags')
-          button Prosthiki
+          p(style= 'color: white; font-size: 18px') Προσθέστε κατάστημα!
+          input(type='text', placeholder='Όνομα καταστήματος', name='name')
+          input(type='text', placeholder='Διεύθυνση', name='address')
+          input(type='text', placeholder='Γεωγραφικό μήκος', name='lng')
+          input(type='text', placeholder='Γεωγραφικό πλάτος', name='lat')
+          input(type='text', placeholder='Tags', name='tags')
+          button Προσθήκη
