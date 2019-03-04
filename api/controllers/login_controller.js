@@ -14,6 +14,7 @@ conn.connect(function(err) {
 exports.login_user = function(req, res) {
   var format = req.query.format;
   var body = req.body;
+  console.log(body);
   if(! format){
     format = "json";
   }
@@ -39,6 +40,7 @@ exports.login_user = function(req, res) {
       throw err;
     }
     else if(result == ''){
+    	console.log("NOTFOUND");
       res.send("404 – Not Found");
       return;
     }
@@ -46,15 +48,16 @@ exports.login_user = function(req, res) {
       if(result[0].password == body.password){
         // authentication succesfull, generate authentication token and put it into database
         if(format == "json"){
-          res.json({"authentication_token": random_string_length8});
+          res.json({"token": random_string_length8});
         }
         else{
           res.set('Content-Type', 'text/xml');
-          var xml = `<authentication_token> ${random_string_length8} </authentication_token>`;
+          var xml = `<token> ${random_string_length8} </token>`;
           res.send(xml);
         }
       }
       else{
+      console.log("BAD REQUEST");
         res.send("400 – Bad Request");
       }
     }
