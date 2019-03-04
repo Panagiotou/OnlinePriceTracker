@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+  body
+    p Click the button to get your coordinates.
+    button(onclick='getLocation()') Try It
+    p#demo
+    script.
+      var x = document.getElementById("demo");
+      function getLocation() {
+      if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+      x.innerHTML = "Geolocation is not supported by this browser.";
+      }
+      }
+      function showPosition(position) {
+      var out1 = position.coords.latitude;
+      var out2 = position.coords.longitude;
+      alert("Latitude: " + position.coords.latitude +"  "+ "Longitude: " + position.coords.longitude);
+      }
+      var out = getLocation();
+      
+    p #{out1}SKata
+    p #{out2}Me meli
+      

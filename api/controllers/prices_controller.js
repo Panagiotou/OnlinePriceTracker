@@ -38,8 +38,7 @@ exports.list_prices = async(req, res) => {
   if(! count){
     count = 20;
   }
-	console.log(count);
-	console.log(start);
+
   if((geoDist || geoLat || geoLng) && (! (geoDist && geoLat && geoLng))){
       res.send("400 – Bad Request");
       return;

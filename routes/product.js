@@ -60,7 +60,7 @@ async function testfunc (a) {
 	for(i=0; i<listProducts.length; i++){
 
 		var tempt = await processarr(listProducts[i]);
-		console.log(tempt);
+		
 		telos= telos.concat(tempt);
 
 	}
@@ -127,8 +127,6 @@ router.get('/',function(req , res){
 			var prices_out = request_out.prices;
 			var temp=0;
 			var fresult =[];
-			console.log(prices_out);
-			console.log(prices_out.length);
 			res.render('home',{Product : prices_out,Shop : resulta ,boollogin : flag123, username : c_username});
 	}
 
@@ -162,15 +160,17 @@ router.get('/',function(req , res){
 router.post('/', async function(req,res,next){
 	var product_name = req.body.productname ;
 	var final_product_id = [];
-	console.log(product_name);
+	
 	if(product_name){
 		var resultba = await testfunc(product_name);
-		console.log("END");
+		
 		resultba = resultba.join();
-		console.log(resultba);
+		
 
 		final_product_id  =  resultba;
 	}
+	var geoDist_in = req.body.distance;
+	
 	//final_product_id = await testfunc(product_name);
 
 	var resulta;
@@ -192,10 +192,12 @@ router.post('/', async function(req,res,next){
   	var tags_in = req.body.tags;
 	var  start_in = req.body.start_in;
 	var count_in = req.body.count_in;
-	var geoDist_in = req.body.distance;
-
-	//var geoLng_in = req.body.geoLng_in;
-	//var geoLat_in = req.body.geoLat_in;
+	
+	
+	var geoLng_in = req.body.lng_in;
+	console.log(geoLng_in);
+	var geoLat_in = req.body.lat_in;
+	console.log(geoLat_in);
 	var dateFrom_in = req.body.dateFrom;
 	var dateTo_in = req.body.dateTo;
 	var shops_in = req.body.shop_select;
@@ -205,20 +207,10 @@ router.post('/', async function(req,res,next){
 	var test_var ='';
 	//find product_names from ids
 
-
-
-
-		//final_product_id =  testfunc(product_name);
-
-
-	console.log(final_product_id);
-
 	if(product_name){
 		//final_product_id =  testfunc(product_name);
 
 	}
-	console.log(final_product_id);
-
 	search_button = 1;
 	if(search_button == 1){
 		//Above are the possibly filters? based on the make a get query
@@ -227,7 +219,7 @@ router.post('/', async function(req,res,next){
 
 	     	var Request = require("request");
 
-
+		geoLng_in
 		if (geoDist_in){
 			var test_lng = 37.9929;
 			var test_lat = 23.7274;
@@ -239,8 +231,8 @@ router.post('/', async function(req,res,next){
 				start : '',
 				count : '',
 				geoDist :geoDist_in,
-				geoLng :test_lng,
-				geoLat :test_lat,
+				geoLng :geoLng_in,
+				geoLat :geoLat_in,
 				dateFrom:dateFrom_in,
 				dateTo:dateTo_in,
 				shops:shops_in,
@@ -644,13 +636,7 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/testroute',async function(req,res,next){
-	var ab = "dos,firikia";
-	console.log(ab);
-
-	const resultba = await testfunc(ab);
-	console.log("END");
-	console.log(resultba);
-	res.redirect('../login');
+	res.render('test');
 });
 
 

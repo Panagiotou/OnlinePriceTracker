@@ -92,25 +92,6 @@ block content
               select#sort(name='sort', value='sort')
                   option(value='price|ASC')  Τιμή αύξουσα
                   option(value='price|DESC')  Τιμή φθίνουσα
-              script.
-              	
-                  getLocation();                 
-                  function getLocation() {
-                  if (navigator.geolocation) {
-                  navigator.geolocation.getCurrentPosition(showPosition);
-                  } else {
-                  x.innerHTML = "Geolocation is not supported by this browser.";
-                  }
-                  }
-                  function showPosition(position) {
-                  var out1 = position.coords.latitude;
-                  var out2 = position.coords.longitude;
-                  document.getElementById("myLink").value=out1;
-                  document.getElementById("myLink2").value=out2;
-                  }
-   	  	
-          input(type='hidden', name='lat_in', id="myLink", value='5')
-          input(type='hidden', name='lng_in',id="myLink2" value='5')
           input#subb(type='submit', value='Αναζήτηση')
             
 
