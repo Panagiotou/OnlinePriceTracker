@@ -96,7 +96,7 @@ router.get('/',function(req , res){
 
 
 	const d1 = new Date(2011,10,30);
-	const d2 = new Date(2020,10,30);
+	const d2 = new Date(2030,10,30);
         let request_options = {
 			url : "https://localhost:8765/observatory/api/prices",
 			method : 'GET',
@@ -125,6 +125,9 @@ router.get('/',function(req , res){
 			var count_out=request_out.count;
 			var total_out=request_out.total;
 			var prices_out = request_out.prices;
+			
+			//shops_out  = await shopfunc();
+			
 			var temp=0;
 			var fresult =[];
 			res.render('home',{Product : prices_out,Shop : resulta ,boollogin : flag123, username : c_username});
@@ -647,7 +650,7 @@ router.get('/logout', function(req, res){
 router.get('/testroute',async function(req,res,next){
 	var lat = 23.773837999999998;
 	var lng =37.9776811;
-	res.render('shop_view', {lat:lat , lng:lng});
+	res.render('map_view', {lat:lat , lng:lng});
 });
 
 

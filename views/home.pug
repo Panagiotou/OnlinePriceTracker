@@ -33,7 +33,8 @@ block content
                 div Μαγαζί: #{prod.shopName}
                   form#myform(action='/products/product_details', method='POST')
                     button(name='subject', type='submit', value=prod.productId) Προβολή περισσότερων
-   
+                  form#myform(action='https://localhost:8765/shops/view', method='GET')
+                    button(name='id', type='submit', value=prod.shopId) Προβολή τοποθεσίας   
   #navbar
                       a.active(href='/')
                         i.glyphicon.glyphicon-home

@@ -4,7 +4,7 @@
   "description": "Online Price Tracker",
   "main": "app.js",
   "scripts": {
-    "test": "node testAPIshops",
+    "test": "node testAPIproducts && node testAPIshops ",
     "install": "npm install -g express dotenv mysql express-session passport express-validator connect-flash express-messages pug nodemon body-parser jsontoxml request",
     "update": "npm update -g",
     "start": "node app"
@@ -22,7 +22,7 @@
   "dependencies": {
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
-    "mysql": "^2.16.0",
+    "mysql": "^2.16.0", 
     "nodemon": "^1.18.10",
     "pug": "^2.0.3",
     "request": "^2.88.0"
