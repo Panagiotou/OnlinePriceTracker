@@ -20,7 +20,7 @@ block content
     script.
       function myMap() {
       var mapProp= {
-      center:new google.maps.LatLng(#{lng}, #{lat}),
+      center:new google.maps.LatLng(#{lat}, #{lng}),
       zoom:15
       };
       var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
@@ -31,4 +31,3 @@ block content
       google.maps.event.addListener(marker,'click',function() {map.setZoom(20);map.setCenter(marker.getPosition());});
       }
     script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyD3K5fcW9arMPkASrVBpeglXrq4CYVZRI4&callback=myMap')
-

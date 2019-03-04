@@ -62,13 +62,13 @@ router.post('/register', function(req, res){
       const name = req.body.name
       const surname = req.body.surname
 
-      var sql = "INSERT INTO User_api (username, password,authentication_token ) VALUES (?,?,?)";
+      //var sql = "INSERT INTO User_api (username, password,authentication_token,name,s ) VALUES (?,?,?)";
       //name , surname dont exist in DB ? add them to values too
-      var values = [username, password, ''];
+      //var values = [username, password, ''];
 
-      //var sql = "INSERT INTO User_api (username, password, name, surname) VALUES (?,?,?,?)";
-      console.log("step 1");
-      //var values = [username, password, name, surname];
+      var sql = "INSERT INTO User_api (username, password, name, surname) VALUES (?,?,?,?)";
+      //console.log("step 1");
+      var values = [username, password, name, surname];
 
       conn.query(sql, values, function (err) {
         if (err) {
