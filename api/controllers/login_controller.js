@@ -7,7 +7,7 @@ var conn = mysql.createConnection({
   database : process.env.DB_NAME
 });
 
-conn.connect(function(err) {
+conn.connect(function(err) { 
     if (err) throw err;
 });
 

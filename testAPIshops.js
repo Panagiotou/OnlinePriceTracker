@@ -8,11 +8,12 @@ var conn = mysql.createConnection({
   password : process.env.DB_PASS,
   database : process.env.DB_NAME
 });
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
 conn.connect(function(err) {
     if (err) throw err;
 });
-
+var myid;
 function test_login_post(callback){
   // Test /login POST
   console.log("Testing /login POST ... ");
@@ -34,7 +35,7 @@ function test_login_post(callback){
         }
         else{
           inDB = result[0].authentication_token;
-          if(  body['authentication_token'] == inDB){
+          if(  body['token'] == inDB){
             console.log("True");
           }
           else{
@@ -81,7 +82,7 @@ function create_test_user(callback){
       }
       else{
         if(result == ''){
-          var sql = "INSERT INTO User_api (username, password, authentication_token) VALUES ('username', 'password', 'authentication_token')";
+          var sql = "INSERT INTO User_api (username, password, authentication_token, name, surname) VALUES ('username', 'password', 'authentication_token', 'name', 'surname')";
           conn.query(sql, function (errq) {
               if (errq){ throw errq;}
               console.log("Test User with values (username = 'username', password = 'password', authentication_token = 'authentication_token') Created");
@@ -143,47 +144,137 @@ function test_shops_get(callback){
   // TODO
   var request = require('request');
   request({
-    url: baseurl + '/shops',
+    url: baseurl + '/shops?start=0&count=1',
     method: 'GET',
-    query:{"start": "0", "count": "1"},
     json: true
   }, async(error, response, body) => {
-    console.log(body);
+    var expected = {
+        "name": "name",
+        "address": "address",
+        "lng": "0",
+        "lat": "0",
+        "tags": "tags",
+      }
+    var got = body.shops[0]
+    myid = got.id;
+    if(expected.name == got.name && expected.address == got.address && expected.lng == got.lng && expected.lat == got.lat && expected.tags == got.tags){
+      console.log("True");
+    }
+    else{
+      console.log("False");
+    }
+    callback();
   });
 }
 
 function test_shops_id_get(callback){
   // Test /shops/:id GET
   console.log("Testing /shops/:id GET ... ");
-  //TODO
+  var request = require('request');
+  request({
+    url: baseurl + '/shops/' + myid,
+    method: 'GET',
+    json: true
+  }, async(error, response, body) => {
+    var expected = {
+        "name": "name",
+        "address": "address",
+        "lng": "0",
+        "lat": "0",
+      }
+    var got = body
+    if(expected.name == got.name && expected.address == got.address && expected.lng == got.lng && expected.lat == got.lat){
+      console.log("True");
+    }
+    else{
+      console.log("False");
+    }
+    callback();
+  });
 
-  callback();
 }
 
 function test_shops_id_put(callback){
   // Test /shops/:id POST
   console.log("Testing /shops/:id PUT ... ");
-  // TODO
 
-  callback();
+  var request = require('request');
+  request({
+    url: baseurl + '/shops/' + myid,
+    method: 'PUT',
+    body: {'name': 'name', 'address': 'address', 'lng': '0', 'lat': '0', 'tags': 'tags', 'withdrawn': 0},
+    headers: {'X-OBSERVATORY-AUTH': 'authentication_token'},
+    json: true
+  }, async(error, response, body) => {
+    var expected = {
+        "name": "name",
+        "address": "address",
+        "lng": "0",
+        "lat": "0",
+      }
+    var got = body
+    if(expected.name == got.name && expected.address == got.address && expected.lng == got.lng && expected.lat == got.lat){
+      console.log("True");
+    }
+    else{
+      console.log("False");
+    }
+      callback();
+  });
 }
 
 function test_shops_id_patch(callback){
   // Test /shops/:id PATCH
   console.log("Testing /shops/:id PATCH ... ");
-  // TODO
-
-  callback();
+  var request = require('request');
+  request({
+    url: baseurl + '/shops/' + myid,
+    method: 'PATCH',
+    body: {'name': 'name'},
+    headers: {'X-OBSERVATORY-AUTH': 'authentication_token'},
+    json: true
+  }, async(error, response, body) => {
+    if(body.name === 'name'){
+      console.log('True')
+    }
+    else{
+      console.log("False")
+    }
+      callback();
+  });
 }
 
 function test_shops_id_delete(callback){
   // Test /shops/:id DELETE
   console.log("Testing /shops/:id DELETE ... ");
+  var request = require('request');
+  request({
+    url: baseurl + '/shops/' + myid,
+    method: 'DELETE',
+    headers: {'X-OBSERVATORY-AUTH': 'authentication_token'},
+    json: true
+  }, async(error, response, body) => {
+    await new Promise((resolve, reject) => {
+      var sql0 = `SELECT withdrawn FROM Shop_api WHERE name = 'name' && id = '${myid}'`;
+      conn.query(sql0, function (errq, result) {
+          if (errq){
+            throw errq;
+          }
+          else{
+            if(result[0].withdrawn){
+              console.log("True")
+            }
+            else{
+              console.log("False")
+            }
+            resolve();
+          }
+        });
+      });
+      callback();
+      process.exit();
+  });
 
-  // TODO
-
-  callback();
-  process.exit();
   // This is the last function so we do process.exit() at the end
 }
 
