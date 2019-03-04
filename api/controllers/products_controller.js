@@ -8,7 +8,7 @@ var conn = mysql.createConnection({
 });
 
 conn.connect(function(err) {
-    if (err) throw err;
+    if (err) throw err; s
 });
 
 async function startcount(result, start, count){

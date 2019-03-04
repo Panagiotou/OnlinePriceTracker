@@ -96,7 +96,7 @@ router.get('/',function(req , res){
 
 
 	const d1 = new Date(2011,10,30);
-	const d2 = new Date(2020,10,30);
+	const d2 = new Date(2030,10,30);
         let request_options = {
 			url : "https://localhost:8765/observatory/api/prices",
 			method : 'GET',
@@ -125,6 +125,9 @@ router.get('/',function(req , res){
 			var count_out=request_out.count;
 			var total_out=request_out.total;
 			var prices_out = request_out.prices;
+			
+			//shops_out  = await shopfunc();
+			
 			var temp=0;
 			var fresult =[];
 			res.render('home',{Product : prices_out,Shop : resulta ,boollogin : flag123, username : c_username});
@@ -198,6 +201,10 @@ router.post('/', async function(req,res,next){
 	console.log(geoLng_in);
 	var geoLat_in = req.body.lat_in;
 	console.log(geoLat_in);
+	if(!geoDist_in){
+		geoLng_in = '';
+		geoLat_in = '';
+	}
 	var dateFrom_in = req.body.dateFrom;
 	var dateTo_in = req.body.dateTo;
 	var shops_in = req.body.shop_select;
@@ -219,9 +226,13 @@ router.post('/', async function(req,res,next){
 
 	     	var Request = require("request");
 
+
+		
+		
+
 		if (! geoDist_in){
-      geoLng_in = '';
-      geoLat_in = '';
+		      geoLng_in = '';
+		      geoLat_in = '';
 			var test_lng = 37.9929;
 			var test_lat = 23.7274;
 		}
@@ -243,7 +254,7 @@ router.post('/', async function(req,res,next){
         	     	}
         	}
       		console.log(final_product_id);
-
+		console.log(request_options);
       		Request(request_options,(error,response,body) => {
 		if(error){
 			return console.dir(error);
@@ -251,7 +262,7 @@ router.post('/', async function(req,res,next){
 		else{
 
 
-		console.log(JSON.parse(body));
+
 		//All viarables returned from the json object after parsing it
 		let request_out = JSON.parse(body);
 		var start_out=request_out.start;
@@ -637,7 +648,9 @@ router.get('/logout', function(req, res){
 });
 
 router.get('/testroute',async function(req,res,next){
-	res.render('test');
+	var lat = 23.773837999999998;
+	var lng =37.9776811;
+	res.render('map_view', {lat:lat , lng:lng});
 });
 
 

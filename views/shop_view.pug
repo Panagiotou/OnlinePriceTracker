@@ -1,0 +1,34 @@
+doctype html
+
+html
+  head
+    title Home
+    link(rel='stylesheet', href='../css/homepage.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+    script.
+      function myFunction() {
+      window.open("https://www.w3schools.com", "_blank", "toolbar=yes,scrollbars=yes,resizable=yes,top=500,left=500,width=400,height=400");
+      }
+
+block content
+  br
+  footer
+      p(class="bottom") Copyright &copy; Online Price Tracker 2018
+
+  body
+    #googleMap(style='width:100%;height:400px;')
+    script.
+      function myMap() {
+      var mapProp= {
+      center:new google.maps.LatLng(#{lng}, #{lat}),
+      zoom:15
+      };
+      var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+      var marker = new google.maps.Marker({position: mapProp.center});
+      marker.setMap(map);
+      var infowindow = new google.maps.InfoWindow({content:"shop"});
+      google.maps.event.addListener(marker, 'click', function() {infowindow.open(map,marker);});
+      google.maps.event.addListener(marker,'click',function() {map.setZoom(20);map.setCenter(marker.getPosition());});
+      }
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyD3K5fcW9arMPkASrVBpeglXrq4CYVZRI4&callback=myMap')
+

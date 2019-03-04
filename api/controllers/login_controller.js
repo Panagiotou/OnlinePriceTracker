@@ -7,13 +7,14 @@ var conn = mysql.createConnection({
   database : process.env.DB_NAME
 });
 
-conn.connect(function(err) {
+conn.connect(function(err) { 
     if (err) throw err;
 });
 
 exports.login_user = function(req, res) {
   var format = req.query.format;
   var body = req.body;
+  console.log(body);
   if(! format){
     format = "json";
   }

@@ -9,6 +9,7 @@ var conn = mysql.createConnection({
   database : process.env.DB_NAME
 });
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
+
 conn.connect(function(err) {
     if (err) throw err;
 });
