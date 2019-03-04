@@ -33,3 +33,19 @@
 .display_shops a{
 	color: #12448B;
 }
+
+.register-page{
+	width: 360px;
+	padding: 10% 0 0;
+	margin: auto;
+}
+
+#det{
+	top: 20%;
+	position: relative;
+	z-index: 1;
+	background: rgba(255, 255, 255, 0.56);
+	width: auto;
+	padding: 45px;
+	text-align: center;
+}
