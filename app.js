@@ -86,6 +86,8 @@ let product = require('./routes/product');
 app.use('/products',product);
 let shops = require('./routes/shops');
 app.use('/shops', shops);
+let prices = require('./routes/prices');
+app.use('/prices', prices);
 //Route API files
 var login_route = require('./api/routes/login');
 login_route(app);

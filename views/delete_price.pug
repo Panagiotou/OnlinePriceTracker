@@ -1,0 +1,10 @@
+extends layout2
+
+block content
+    form(action='/prices/prices_delete', method='POST')
+      title DELETE
+      .register-page
+        .form
+          p(style= 'color: white; font-size: 18px') Συμπληρώστε το ID της Προσφοράς που θέλετε να διαγράψετε 
+          input(type='text', placeholder='ID Προσφοράς', name='id_in')
+          button Διαγραφή 

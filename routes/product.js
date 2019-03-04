@@ -93,17 +93,21 @@ router.get('/',function(req , res){
 
 	var Request = require("request");
         //this remains
+       
+
+	const d1 = new Date(2011,10,30);
+	const d2 = new Date(2020,10,30);
         let request_options = {
 			url : "https://localhost:8765/observatory/api/prices",
 			method : 'GET',
 			qs: {
-				start : 1,
-				count : 15,
+				start : '',
+				count : '',
 				geoDist :'',
 				geoLng :'',
 				geoLat :'',
-				dateFrom:'',
-				dateTo:'',
+				dateFrom:d1,
+				dateTo:d2,
 				shops:'',
 				products:'',
 				tags:'',
