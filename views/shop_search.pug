@@ -56,7 +56,7 @@ block content
          .dropdown-content
            a(href='/products') Αναζήτηση Προιόντος
            a(href='/shops/search') Αναζήτηση Καταστήματος
-        a(href='logout', style='float:right') logout
+        a(href='/logout', style='float:right') logout
 
         .dropdown
          button.dropbtn #{username}
@@ -70,12 +70,12 @@ block content
          .dropdown-content
            a(href='/products') Αναζήτηση Προιόντος
            a(href='/shops/search') Αναζήτηση Καταστήματος
-        a(href='login', style='float:right') Σύνδεση
-        a(href='register', style='float:right') Εγγραφή
+        a(href='/login', style='float:right') Σύνδεση
+        a(href='/register', style='float:right') Εγγραφή
 
 
 
-    .container
+  .container
       .sidenav(class='visible-lg', style='height:300px') 
         div
           form(action='/shops/search',method = 'GET', class='visible-lg')
@@ -119,9 +119,9 @@ block content
 
             input#subb(type='submit', value='Αναζήτηση')
 
-    span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-sm' , onclick='openNav1()') &#9776; Αναζήτηση
-    span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-md' , onclick='openNav()') &#9776; Αναζήτηση
-    span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-xs' , onclick='openNav2()') &#9776; Αναζήτηση
+  span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-sm' , onclick='openNav1()') &#9776; Αναζήτηση
+  span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-md' , onclick='openNav()') &#9776; Αναζήτηση
+  span(style='padding-left: 0px; font-size:25px;cursor:pointer; top:90px; position:absolute;  color: white', class='visible-xs' , onclick='openNav2()') &#9776; Αναζήτηση
 
 
       
@@ -160,4 +160,3 @@ block content
           function closeNav2() {
           document.getElementById("mySidenav2").style.width = "0";
           }
-
