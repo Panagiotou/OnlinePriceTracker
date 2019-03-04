@@ -11,6 +11,16 @@ conn.connect(function(err) {
     if (err) throw err;
 });
 
+async function startcount(result, start, count){
+  return new Promise( async function(resolve, reject){
+    var result1 = [];
+    for(i=start; i<start+count; i++){
+      if(result[i]) await result1.push(result[i]);
+    }
+    resolve(result1);
+  });
+}
+
 exports.list_shops = function(req, res) {
   var start = req.query.start;
   var count = req.query.count;
@@ -57,17 +67,20 @@ exports.list_shops = function(req, res) {
       total = result1[0].total;
     }
   });
-  var sql = `SELECT * FROM Shop_api WHERE ('id' BETWEEN ${start} AND ${count}) AND ('withdrawn'= ${statusbool}) ORDER BY ${sort1[0]} ${sort1[1]} `;
-  conn.query(sql, function (err, result) {
+  var sql = `SELECT * FROM Shop_api WHERE ('withdrawn'= ${statusbool}) ORDER BY ${sort1[0]} ${sort1[1]} `;
+  conn.query(sql, async function (err, result) {
     if (err) {
       throw err;
     }
     else {
+      var result2 = await startcount(result, start, count);
+
+      console.log(result2);
       json_res = {
-        "start": start,
-        "count": count,
-        "total": total,
-        "shops":result
+        "start": parseInt(start),
+        "count": parseInt(count),
+        "total": result2.length,
+        "shops":result2
       }
       for (var item in json_res.shops){
         for (var ts in json_res.shops[item]){

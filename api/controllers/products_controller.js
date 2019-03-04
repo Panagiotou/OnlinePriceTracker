@@ -11,6 +11,18 @@ conn.connect(function(err) {
     if (err) throw err;
 });
 
+async function startcount(result, start, count){
+  return new Promise( async function(resolve, reject){
+    var result1 = [];
+    for(i=start; i<start+count; i++){
+      if(result[i]){
+        await result1.push(result[i]);
+      }
+    }
+    resolve(result1);
+  });
+}
+
 exports.list_products = function(req, res) {
   var start = req.query.start;
   var count = req.query.count;
@@ -59,16 +71,19 @@ exports.list_products = function(req, res) {
     }
   });
   var sql = `SELECT id,name, description, category, tags, withdrawn FROM Product_api WHERE ('withdrawn'= ${statusbool}) ORDER BY ${sort1[0]} ${sort1[1]} `;
-  conn.query(sql, function (err, result) {
+  conn.query(sql, async function (err, result) {
     if (err) {
       throw err;
     }
     else {
+      var result2 = await startcount(result, start, count, total);
+
+
       json_res = {
         "start": parseInt(start),
         "count": parseInt(count),
-        "total": parseInt(total),
-        "products":result
+        "total": result2.length,
+        "products":result2
       }
       for (var item in json_res.products){
         for (var ts in json_res.products[item]){
@@ -77,6 +92,8 @@ exports.list_products = function(req, res) {
           }
         }
       }
+
+
       if(format == "json"){
         res.json(json_res);
         res.end();
