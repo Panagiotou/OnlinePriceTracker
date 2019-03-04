@@ -8,7 +8,7 @@ var conn = mysql.createConnection({
   password : process.env.DB_PASS,
   database : process.env.DB_NAME
 });
-
+ 
 conn.connect(function(err) {
     if (err) throw err;
 });

@@ -7,7 +7,7 @@ var conn = mysql.createConnection({
   database : process.env.DB_NAME
 });
 
-conn.connect(function(err) {
+conn.connect(function(err)  
     if (err) throw err;
 });
 
@@ -110,7 +110,7 @@ exports.list_prices = async(req, res) => {
   });
 
   var sort1 = sort.split("|");
-  
+
   sql =
   `SELECT price, Price_api.id, Price_api.dateFrom AS date, productId, Product_api.name AS productName, Product_api.tags AS productTags, shopId,
    Shop_api.name AS shopName , Shop_api.tags AS shopTags, Shop_api.address AS shopAddress,
