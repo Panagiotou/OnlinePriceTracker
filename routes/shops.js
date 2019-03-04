@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 const flash = require('connect-flash');
@@ -39,7 +39,17 @@ router.get('/view', function(req, res) {
 });
 
 // Shop search
+
 router.get('/search', function(req, res){
+  //-------------EDO-----------------
+  var c_username='';
+  var flag123 = false;
+ if (req.session && req.session.username) {
+       // Check if session exists and if username exists
+      c_username = req.session.username;
+   flag123 = true;
+   }
+   //--------------------------------
   var page = req.query.page;
   var sort = req.query.sort;
   if (!page) page = 1;
@@ -77,11 +87,11 @@ router.get('/search', function(req, res){
   conn.query(sql, function (err, result) {
     if (err) {
       let errors1 = [{ param: '', msg: 'Σφάλμα', value: '' }];
-      res.render('shop_search', {errors: errors1});
+      res.render('shop_search', {errors: errors1, boollogin : flag123, username : c_username});
     }
     else if (result == '') {
       let errors1 = [{ param: '', msg: 'Δεν υπάρχει κατάστημα με αυτά τα tags.', value: '' }];
-      res.render('shop_search', {errors: errors1});
+      res.render('shop_search', {errors: errors1, boollogin : flag123, username : c_username});
     }
     else {
       var lim = start + count;
@@ -94,7 +104,9 @@ router.get('/search', function(req, res){
         "page": page_,
         "count": count_,
         "total": total_,
-        "shops": shops_
+        "shops": shops_,
+        "boollogin" : flag123,
+        "username" : c_username
       };
       console.log("Loof: " + page + " " + count_ + " " + total_ + " " + shops_[0].name + "\n");
       console.log("Pif: " + json_res + "\n");
@@ -107,8 +119,18 @@ router.get('/search', function(req, res){
 
 // Login Form
 router.get('/add', function(req, res){
+
   if (req.session && req.session.username) {
-    res.render('shop_add');
+    //-------------EDO-----------------
+    var c_username='';
+    var flag123 = false;
+   if (req.session && req.session.username) {
+         // Check if session exists and if username exists
+        c_username = req.session.username;
+     flag123 = true;
+     }
+     //--------------------------------
+    res.render('shop_add',{ boollogin : flag123, username : c_username });
   }
   else {
     res.redirect('/../login');
@@ -117,6 +139,15 @@ router.get('/add', function(req, res){
 
 // Add shop
 router.post('/add', function(req, res){
+  //-------------EDO-----------------
+  var c_username='';
+  var flag123 = false;
+ if (req.session && req.session.username) {
+       // Check if session exists and if username exists
+      c_username = req.session.username;
+   flag123 = true;
+   }
+   //--------------------------------
   if (req.session && req.session.username) {
     req.checkBody('name', 'Συμπληρώστε το πεδίο " Όνομα katastimatos "').notEmpty();
     req.checkBody('address', 'Συμπληρώστε το πεδίο " dieythinsi "').notEmpty();
@@ -125,7 +156,7 @@ router.post('/add', function(req, res){
     req.checkBody('tags', 'Συμπληρώστε το πεδίο " tags "').notEmpty();
     let errors = req.validationErrors();
     if(errors){
-      res.render('shop_add', {errors: errors});
+      res.render('shop_add', {errors: errors, boollogin : flag123, username : c_username });
     }
     else{
       const name = req.body.name;
@@ -138,7 +169,7 @@ router.post('/add', function(req, res){
       conn.query(sql, values, function (err) {
         if (err) {
           let errors1 = [{ param: '', msg: 'Lathos', value: '' }];
-          res.render('shop_add', {errors: errors1});
+          res.render('shop_add', {errors: errors1, boollogin : flag123, username : c_username });
         }
         else{
           console.log("New Shop added to database!");
@@ -157,7 +188,16 @@ router.post('/add', function(req, res){
 //Delete Shop
 router.get('/delete', function(req, res){
   if (req.session && req.session.username){
-    res.render('shop_delete');
+    //-------------EDO-----------------
+    var c_username='';
+    var flag123 = false;
+   if (req.session && req.session.username) {
+         // Check if session exists and if username exists
+        c_username = req.session.username;
+     flag123 = true;
+     }
+     //--------------------------------
+    res.render('shop_delete',  {boollogin : flag123, username : c_username});
   }
   else {
     res.redirect('/../login');
@@ -166,10 +206,19 @@ router.get('/delete', function(req, res){
 
 router.post('/delete', function(req, res){
   if (req.session && req.session.username) {
+    //-------------EDO-----------------
+    var c_username='';
+    var flag123 = false;
+   if (req.session && req.session.username) {
+         // Check if session exists and if username exists
+        c_username = req.session.username;
+     flag123 = true;
+     }
+     //--------------------------------
     req.checkBody('id', 'Συμπληρώστε το πεδίο " ID "').notEmpty();
     let errors = req.validationErrors();
     if(errors){
-      res.render('shop_delete', {errors: errors});
+      res.render('shop_delete', {errors: errors, boollogin : flag123, username : c_username});
     }
     else{
       var id = req.body.id;
@@ -177,11 +226,11 @@ router.post('/delete', function(req, res){
       conn.query(sql, id, function (err, result) {
         if (err) {
           let errors1 = [{ param: '', msg: 'Lathos', value: '' }];
-          res.render('shop_delete', {errors: errors1});
+          res.render('shop_delete', {errors: errors1, boollogin : flag123, username : c_username});
         }
         else if (result == '') {
           let errors1 = [{ param: '', msg: 'No shop with given ID.', value: '' }];
-          res.render('shop_delete', {errors: errors1});
+          res.render('shop_delete', {errors: errors1, boollogin : flag123, username : c_username});
         }
         else {
           console.log("Ready to delete shop");
@@ -190,7 +239,7 @@ router.post('/delete', function(req, res){
             conn.query(sql, id, function (err, result) {
               if (err) {
                 let errors1 = [{ param: '', msg: 'Lathos', value: '' }];
-                res.render('shop_delete', {errors: errors1});
+                res.render('shop_delete', {errors: errors1, boollogin : flag123, username : c_username});
               }
               else {
                 console.log("Shop deleted from database!");
@@ -204,7 +253,7 @@ router.post('/delete', function(req, res){
             conn.query(sql, id, function (err, result) {
               if (err) {
                 let errors1 = [{ param: '', msg: 'Lathos', value: '' }];
-                res.render('shop_delete', {errors: errors1});
+                res.render('shop_delete', {errors: errors1, boollogin : flag123, username : c_username});
               }
               else {
                 console.log("Shop hided from database!");
@@ -225,7 +274,16 @@ router.post('/delete', function(req, res){
 //Update shop
 router.get('/update', function(req, res){
   if (req.session && req.session.username){
-    res.render('shop_update');
+    //-------------EDO-----------------
+    var c_username='';
+    var flag123 = false;
+   if (req.session && req.session.username) {
+         // Check if session exists and if username exists
+        c_username = req.session.username;
+     flag123 = true;
+     }
+     //--------------------------------
+    res.render('shop_update', { boollogin : flag123, username : c_username });
   }
   else {
     res.redirect('/../login');
@@ -234,10 +292,19 @@ router.get('/update', function(req, res){
 
 router.post('/update', function(req, res){
   if (req.session && req.session.username) {
+    //-------------EDO-----------------
+    var c_username='';
+    var flag123 = false;
+   if (req.session && req.session.username) {
+         // Check if session exists and if username exists
+        c_username = req.session.username;
+     flag123 = true;
+     }
+     //--------------------------------
     req.checkBody('id', 'Συμπληρώστε το πεδίο " ID "').notEmpty();
     let errors = req.validationErrors();
     if(errors){
-      res.render('shop_update', {errors: errors});
+      res.render('shop_update', {errors: errors, boollogin : flag123, username : c_username});
     }
     else{
       var id = req.body.id;
@@ -246,11 +313,11 @@ router.post('/update', function(req, res){
         if (err) {
           console.log("Error1");
           let errors1 = [{ param: '', msg: 'Σφάλμα', value: '' }];
-          res.render('shop_update', {errors: errors1});
+          res.render('shop_update', {errors: errors1, boollogin : flag123, username : c_username});
         }
         else if (result == '') {
           let errors1 = [{ param: '', msg: 'Δεν υπάρχει κατάστημα με αυτό το ID.', value: '' }];
-          res.render('shop_update', {errors: errors1});
+          res.render('shop_update', {errors: errors1, boollogin : flag123, username : c_username});
         }
         else {
           console.log("Ready to update shop");
@@ -270,7 +337,7 @@ router.post('/update', function(req, res){
             if (err) {
               console.log('Error2');
               let errors1 = [{ param: '', msg: 'Σφάλμα', value: '' }];
-              res.render('shop_update', {errors: errors1});
+              res.render('shop_update', {errors: errors1, boollogin : flag123, username : c_username});
             }
             else {
               console.log("Shop updated!");
@@ -282,6 +349,26 @@ router.post('/update', function(req, res){
       });
     }
   }
+});
+
+// logout
+router.get('/logout', function(req, res){
+  //req.logout();
+  //req.session = null;
+  //req.logout();
+  delete req.session.username;
+  req.flash('success_msg', 'Έγινε Αποσύνδεση');
+  res.redirect('/login');
+});
+
+router.get('/testroute',async function(req,res,next){
+	var ab = "dos,firikia";
+	console.log(ab);
+
+	const resultba = await testfunc(ab);
+	console.log("END");
+	console.log(resultba);
+	res.redirect('../login');
 });
 
 module.exports = router;
