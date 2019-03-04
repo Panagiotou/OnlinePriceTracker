@@ -17,6 +17,7 @@ exports.list_products = function(req, res) {
   var status = req.query.status;
   var sort = req.query.sort;
   var format = req.query.format;
+
   if(! start){
     start = 0;
   }
@@ -57,17 +58,24 @@ exports.list_products = function(req, res) {
       total = result1[0].total;
     }
   });
-  var sql = `SELECT id,name, description, category, tags FROM Product_api WHERE ('id' BETWEEN ${start} AND ${count}) AND ('withdrawn'= ${statusbool}) ORDER BY ${sort1[0]} ${sort1[1]} `;
+  var sql = `SELECT id,name, description, category, tags, withdrawn FROM Product_api WHERE ('withdrawn'= ${statusbool}) ORDER BY ${sort1[0]} ${sort1[1]} `;
   conn.query(sql, function (err, result) {
     if (err) {
       throw err;
     }
     else {
       json_res = {
-        "start": start,
-        "count": count,
-        "total": total,
+        "start": parseInt(start),
+        "count": parseInt(count),
+        "total": parseInt(total),
         "products":result
+      }
+      for (var item in json_res.products){
+        for (var ts in json_res.products[item]){
+          if(ts === 'tags'){
+            json_res.products[item][ts] = json_res.products[item][ts].replace(']', '').replace('[', '').split(",");
+          }
+        }
       }
       if(format == "json"){
         res.json(json_res);
@@ -77,9 +85,9 @@ exports.list_products = function(req, res) {
         res.set('Content-Type', 'text/xml');
         var xml = "<?xml version=\"1.0\" encoding=\"UTF-8?\">\n<results>"
         xml += jsontoxml({
-          "start": start,
-          "count": count,
-          "total": total});
+          "start": parseInt(start),
+          "count": parseInt(count),
+          "total": parseInt(total)});
         xml += "<products>";
         for (var i in result) {
             xml +="<product>";
@@ -130,8 +138,14 @@ exports.create_a_product = async(req, res) => {
     res.end();
     return;
   }
+
   var sql = "INSERT INTO Product_api (name, description, category, tags, username) VALUES (?,?,?,?,?)";
-  var values = [body.name, body.description, body.category, body.tags, user.username];
+  if(! String(body.tags).includes(',')){
+      var values = [body.name, body.description, body.category, '[' + body.tags + ']', user.username];
+  }
+  else{
+      var values = [body.name, body.description, body.category, String(body.tags), user.username];
+  }
   conn.query(sql, values, function (err) {
     if (err) {
       res.send("400 – Bad Request");
@@ -151,6 +165,12 @@ exports.create_a_product = async(req, res) => {
         }
         else{
           json_res = result;
+          for (var item in json_res[0]){
+            if(item === 'tags'){
+              json_res[0][item] = json_res[0][item].replace(']', '').replace('[', '').split(",");
+            }
+
+          }
           if(format == "json"){
             res.json(json_res[0]);
             res.end();

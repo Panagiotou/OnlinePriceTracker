@@ -45,12 +45,13 @@ exports.login_user = function(req, res) {
     else{
       if(result[0].password == body.password){
         // authentication succesfull, generate authentication token and put it into database
+
         if(format == "json"){
-          res.json({"authentication_token": random_string_length8});
+          res.json({"token": random_string_length8});
         }
         else{
           res.set('Content-Type', 'text/xml');
-          var xml = `<authentication_token> ${random_string_length8} </authentication_token>`;
+          var xml = `<token> ${random_string_length8} </token>`;
           res.send(xml);
         }
       }

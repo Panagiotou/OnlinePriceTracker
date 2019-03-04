@@ -39,11 +39,19 @@ if (errq) throw errq;
   console.log("Table Price_api created");
 });
 
+
 // Create admin user
 var sql = "INSERT INTO User_api (username, password, authentication_token, name, surname) VALUES ('admin', 'admin', 'admin', 'admin', 'admin')";
 conn.query(sql, function (errq) {
 if (errq) throw errq;
-    console.log("Admin User Created");
+    console.log("Admin User Created")
+});
+
+// Create db user
+var sql = `INSERT INTO User_api (username, password, authentication_token, name, surname) VALUES ('${process.env.DB_USER}', '${process.env.DB_PASS}', 'admin', 'admin', 'admin')`;
+conn.query(sql, function (errq) {
+if (errq) throw errq;
+    console.log("DB User Created");
 });
 
 

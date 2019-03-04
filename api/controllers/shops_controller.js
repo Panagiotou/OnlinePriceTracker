@@ -57,7 +57,7 @@ exports.list_shops = function(req, res) {
       total = result1[0].total;
     }
   });
-  var sql = `SELECT * FROM Shop_api WHERE ('id' BETWEEN ${start} AND ${count}) AND ('withdrawn'= ${statusbool}) ORDER BY '${sort1[0]}' ${sort1[1]} `;
+  var sql = `SELECT * FROM Shop_api WHERE ('id' BETWEEN ${start} AND ${count}) AND ('withdrawn'= ${statusbool}) ORDER BY ${sort1[0]} ${sort1[1]} `;
   conn.query(sql, function (err, result) {
     if (err) {
       throw err;
@@ -68,6 +68,13 @@ exports.list_shops = function(req, res) {
         "count": count,
         "total": total,
         "shops":result
+      }
+      for (var item in json_res.shops){
+        for (var ts in json_res.shops[item]){
+          if(ts === 'tags'){
+            json_res.shops[item][ts] = json_res.shops[item][ts].replace(']', '').replace('[', '').split(",");
+          }
+        }
       }
       if(format == "json"){
         res.json(json_res);
@@ -130,8 +137,13 @@ exports.create_a_shop = async(req, res) =>{
     res.end();
     return;
   }
+  if(! String(body.tags).includes(',')){
+      var values = [body.name, body.address, parseFloat(body.lng), parseFloat(body.lat), '[' + String(body.tags) + ']'];
+  }
+  else{
+      var values = [body.name, body.address, parseFloat(body.lng), parseFloat(body.lat), String(body.tags)]
+  }
   var sql = "INSERT INTO Shop_api (name, address, lng, lat, tags) VALUES (?,?,?,?,?)";
-  var values = [body.name, body.address, parseFloat(body.lng), parseFloat(body.lat), body.tags];
   conn.query(sql, values, function (err) {
     if (err) {
       res.send("400 – Bad Request");
@@ -151,6 +163,12 @@ exports.create_a_shop = async(req, res) =>{
         }
         else{
           json_res = result;
+          for (var item in json_res[0]){
+            if(item === 'tags'){
+              json_res[0][item] = json_res[0][item].replace(']', '').replace('[', '').split(",");
+            }
+
+          }
           if(format == "json"){
             res.json(json_res[0]);
             res.end();
