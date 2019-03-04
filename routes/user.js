@@ -66,9 +66,9 @@ router.post('/register', function(req, res){
       //name , surname dont exist in DB ? add them to values too
       var values = [username, password, ''];
 
-      var sql = "INSERT INTO User_api (username, password, name, surname) VALUES (?,?,?,?)";
+      //var sql = "INSERT INTO User_api (username, password, name, surname) VALUES (?,?,?,?)";
       console.log("step 1");
-      var values = [username, password, name, surname];
+      //var values = [username, password, name, surname];
 
       conn.query(sql, values, function (err) {
         if (err) {
