@@ -6,46 +6,49 @@ html
     link(rel='stylesheet', href='../css/logreg.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
     #navbar 
-        a.active(href='/')
-          i.glyphicon.glyphicon-home 
-        if boollogin
-          if username=="admin" 
-            .dropdown(style='float:left')
-             button.dropbtn Διαγραφή
-             .dropdown-content
-               a(href='/products/products_delete') Διαγραφή Προιόντος
-               a(href='/shops/delete') Διαγραφή Καταστήματος
-               a(href='/prices/prices_delete') Διαγραφή Τιμής         
-              
+      a.active(href='/')
+        i.glyphicon.glyphicon-home
+     
+    
+      if boollogin
+        .dropdown(style='float:left')
+         button.dropbtn.span.glyphicon.glyphicon-plus
+         .dropdown-content
+           a(href='/shops/add') Προσθήκη Καταστήματος
+           a(href='/products/products_add') Προσθήκη Προιόντος
+           a(href='/prices/prices_add') Προσθήκη Τιμής
+        if username=="admin" 
           .dropdown(style='float:left')
-           button.dropbtn Προσθήκη
+           button.dropbtn.span.glyphicon.glyphicon-minus
            .dropdown-content
-             a(href='/shops/add') Προσθήκη Καταστήματος
-             a(href='/products/products_add') Προσθήκη Προιόντος
-             a(href='/prices/prices_add') Προσθήκη Τιμής
-                 
-          .dropdown(style='float:left')
-           button.dropbtn Αναζήτηση
-           .dropdown-content
-             a(href='/products') Αναζήτηση Προιόντος
-             a(href='/shops/search') Αναζήτηση Καταστήματος
-          a(href='logout', style='float:right') logout
-          
-          .dropdown
-           button.dropbtn #{username}
-           .dropdown-content
-             a(href='/products/myproducts') Τα Προιόντα μου
-             if username=="admin" 
-               a(href='/shops/update') Update Καταστήματος
-        else
-          .dropdown(style='float:left')
-           button.dropbtn Αναζήτηση
-           .dropdown-content
-             a(href='/products') Αναζήτηση Προιόντος
-             a(href='/shops/search') Αναζήτηση Καταστήματος
-          a(href='login', style='float:right') Σύνδεση
-          a(href='register', style='float:right') Εγγραφή
-                      
+             a(href='/products/products_delete') Διαγραφή Προιόντος
+             a(href='/shops/delete') Διαγραφή Καταστήματος  
+             a(href='/prices/prices_delete') Διαγραφή Τιμής       
+        
+
+           
+        .dropdown(style='float:left')
+         button.dropbtn.span.glyphicon.glyphicon-search
+         .dropdown-content
+           a(href='/products') Αναζήτηση Προιόντος
+           a(href='/shops/search') Αναζήτηση Καταστήματος
+        a(href='logout', style='float:right') logout
+        
+        .dropdown
+         button.dropbtn #{username}
+         .dropdown-content
+           a(href='/products/myproducts') Τα Προιόντα μου
+           if username=="admin" 
+             a(href='/shops/update') Update Καταστήματος
+      else
+        .dropdown(style='float:left')
+         button.dropbtn Αναζήτηση
+         .dropdown-content
+           a(href='/products') Αναζήτηση Προιόντος
+           a(href='/shops/search') Αναζήτηση Καταστήματος
+        a(href='login', style='float:right') Σύνδεση
+        a(href='register', style='float:right') Εγγραφή
+
 
   body
     .left
