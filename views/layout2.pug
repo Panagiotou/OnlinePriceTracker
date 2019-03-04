@@ -14,13 +14,15 @@ html
              button.dropbtn Διαγραφή
              .dropdown-content
                a(href='/products/products_delete') Διαγραφή Προιόντος
-               a(href='/shops/delete') Διαγραφή Καταστήματος         
+               a(href='/shops/delete') Διαγραφή Καταστήματος
+               a(href='/prices/prices_delete') Διαγραφή Τιμής         
               
           .dropdown(style='float:left')
            button.dropbtn Προσθήκη
            .dropdown-content
              a(href='/shops/add') Προσθήκη Καταστήματος
              a(href='/products/products_add') Προσθήκη Προιόντος
+             a(href='/prices/prices_add') Προσθήκη Τιμής
                  
           .dropdown(style='float:left')
            button.dropbtn Αναζήτηση
@@ -33,9 +35,16 @@ html
            button.dropbtn #{username}
            .dropdown-content
              a(href='/products/myproducts') Τα Προιόντα μου
+             if username=="admin" 
+               a(href='/shops/update') Update Καταστήματος
         else
-                a(href='login', style='float:right') Σύνδεση
-                a(href='register', style='float:right') Εγγραφή
+          .dropdown(style='float:left')
+           button.dropbtn Αναζήτηση
+           .dropdown-content
+             a(href='/products') Αναζήτηση Προιόντος
+             a(href='/shops/search') Αναζήτηση Καταστήματος
+          a(href='login', style='float:right') Σύνδεση
+          a(href='register', style='float:right') Εγγραφή
                       
 
   body

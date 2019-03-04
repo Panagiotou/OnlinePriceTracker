@@ -1,9 +1,6 @@
-doctype html
-
-//- use if your pug files have similarities to avoid copying large blocks of same code.
 html
   head
-    title Update shop
+    title Add shop
     link(rel='stylesheet', href='../css/shop.css')
     link(rel='stylesheet', href='../css/homepage.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
@@ -20,7 +17,7 @@ html
            .dropdown-content
              a(href='/products/products_delete') Διαγραφή Προιόντος
              a(href='/shops/delete') Διαγραφή Καταστήματος
-             a(href='/prices/prices_delete') Διαγραφή Τιμής        
+             a(href='/prices/prices_delete') Διαγραφή Τιμής         
             
         .dropdown(style='float:left')
          button.dropbtn Προσθήκη
@@ -50,6 +47,7 @@ html
            a(href='/shops/search') Αναζήτηση Καταστήματος
         a(href='login', style='float:right') Σύνδεση
         a(href='register', style='float:right') Εγγραφή
+    
 
     .left
         != messages('message', locals)
@@ -74,14 +72,16 @@ html
         prevScrollpos = currentScrollPos;
         }
 
-    block content    
-    form(action='/shops/update', method='POST')
-      .update-page
-        .form
-          input(type='text', placeholder='ID Καταστήματος', name='id')
-          input(type='text', placeholder='Νέο όνομα', name='name')
-          input(type='text', placeholder='Νέα διεύθυνση', name='address')
-          input(type='text', placeholder='Νέο γεωγραφικό μήκος', name='lng')
-          input(type='text', placeholder='Νέο γεωγραφικό πλάτος', name='lat')
-          input(type='text', placeholder='Νέα tags', name='tags')
-          button Ενημέρωση
+    block content
+          
+          title Details
+          .register-page
+            .form#det
+             if shop
+              each shopi,i in shop
+                    p  ID: #{shopi.id}
+                    p  Όνομα Καταστήματος: #{shopi.name}
+                    p  Διεύθυνση Καταστήματος : #{shopi.address}
+                    p  Συντεταγμένες: #{shopi.lng} #{shopi.lat}
+                    p  Tags Καταστήματος: #{shopi.tags}
+                    

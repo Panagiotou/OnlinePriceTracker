@@ -7,20 +7,20 @@ block content
         .form
           p(style= 'color: white; font-size: 18px') Προσθέστε τα στοιχεία!
           input(type='number', placeholder='Τιμή προσφοράς', name='price_in')
-          label Ημερομηνία (από):
+          label(style= 'color: white;') Ημερομηνία (από):
           input#dateFrom(type='date',value='dateFrom', name='dateFrom')
-          label Ημερομηνία (μέχρι):
+          label(style= 'color: white;') Ημερομηνία (μέχρι):
           input#dateTo(type='date',value='dateTo', name='dateTo')
           
-          label(for='product_select') Προιόν
-            select#product_select(name='product_select', value='product_select')
+          label(for='product_select',  style= 'color: white;') Προιόν
+            select#product_select(name='product_select', value='product_select', style= 'color: black;')
               option(value='')  --- 
               if Product
                 each sha, i in Product
                   option(value=sha.id)  #{sha.name} #{sha.id}
           
-          label(for='shop_select') Κατάστημα
-            select#shop_select(name='shop_select', value='shop_select')
+          label(for='shop_select', style= 'color: white;') Κατάστημα
+            select#shop_select(name='shop_select', value='shop_select',  style= 'color: black;')
               option(value='')  --- 
               if Shop
                 each sh, i in Shop
