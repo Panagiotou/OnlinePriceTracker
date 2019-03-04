@@ -43,12 +43,12 @@ html
              a(href='/shops/update') Update Καταστήματος
       else
         .dropdown(style='float:left')
-         button.dropbtn Αναζήτηση
+         button.dropbtn.span.glyphicon.glyphicon-search
          .dropdown-content
            a(href='/products') Αναζήτηση Προιόντος
            a(href='/shops/search') Αναζήτηση Καταστήματος
-        a(href='login', style='float:right') Σύνδεση
-        a(href='register', style='float:right') Εγγραφή
+        a(href='/login', style='float:right') Σύνδεση
+        a(href='/register', style='float:right') Εγγραφή
 
     
 
@@ -77,14 +77,14 @@ html
 
     block content
           
-          title Details
-          .register-page
-            .form#det
-             if shop
-              each shopi,i in shop
-                    p  ID: #{shopi.id}
-                    p  Όνομα Καταστήματος: #{shopi.name}
-                    p  Διεύθυνση Καταστήματος : #{shopi.address}
-                    p  Συντεταγμένες: #{shopi.lng} #{shopi.lat}
-                    p  Tags Καταστήματος: #{shopi.tags}
+            title Details
+            .register-page
+              .form#det
+               if shop
+                each shopi,i in shop
+                      p  ID: #{shopi.id}
+                      p  Όνομα Καταστήματος: #{shopi.name}
+                      p  Διεύθυνση Καταστήματος : #{shopi.address}
+                      p  Συντεταγμένες: #{shopi.lng} #{shopi.lat}
+                      p  Tags Καταστήματος: #{shopi.tags}
                     
