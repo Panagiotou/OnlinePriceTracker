@@ -7,6 +7,35 @@ html
     link(rel='stylesheet', href='../css/shop.css')
     link(rel='stylesheet', href='../css/homepage.css')
     link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+    script.
+      function showPosition(position) {
+        document.getElementById('lng').value = position.coords.longitude;
+        document.getElementById('lat').value = position.coords.latitude;
+      }
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        }
+        else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+      
+      function check_clicked() {
+        var lng_ob = document.getElementById('lng');
+        var lat_ob = document.getElementById('lat');
+        lng_ob.value = "";
+        lat_ob.value = "";
+        if (document.getElementById('check_coords').checked) {
+          lng_ob.disabled = true;
+          lat_ob.disabled = true;
+          getLocation();
+        }
+        else {
+          lng_ob.disabled = false;
+          lat_ob.disabled = false;
+        }
+      }
      
   body 
     #navbar
@@ -84,7 +113,13 @@ html
           input(type='text', placeholder='ID Καταστήματος', name='id')
           input(type='text', placeholder='Νέο όνομα', name='name')
           input(type='text', placeholder='Νέα διεύθυνση', name='address')
-          input(type='text', placeholder='Νέο γεωγραφικό μήκος', name='lng')
-          input(type='text', placeholder='Νέο γεωγραφικό πλάτος', name='lat')
+          table
+            tr
+              td
+                input(type='checkbox', id='check_coords' onclick='check_clicked()')
+              td
+                span(style='color:white') &nbsp;&nbsp;Χρήση των συντεταγμένων μου
+          input(type='text', id='lng', placeholder='Νέο γεωγραφικό μήκος', name='lng')
+          input(type='text', id='lat', placeholder='Νέο γεωγραφικό πλάτος', name='lat')
           input(type='text', placeholder='Νέα tags', name='tags')
           button Ενημέρωση
