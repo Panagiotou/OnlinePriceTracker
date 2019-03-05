@@ -49,3 +49,9 @@
 	padding: 45px;
 	text-align: center;
 }
+
+#check_coords{
+	width: 500px;
+	position: absolute;
+	bottom: 57%;
+}
