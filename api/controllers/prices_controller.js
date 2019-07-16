@@ -129,7 +129,6 @@ exports.list_prices = async(req, res) => {
   (${stringDistance})
   ORDER BY ${sort1[0]} ${sort1[1]}
   ;`
-  console.log(sql);
     conn.query(sql, async (err, result) =>{
       if (err) {
         throw(err);
