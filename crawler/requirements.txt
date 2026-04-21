@@ -1,5 +1,5 @@
 selenium==3.141.0
 mysql-connector-python-rf==2.2.2
 beautifulsoup4==4.6.3
-python-dotenv==0.9.1
+python-dotenv==1.2.2
 lxml==4.2.5
